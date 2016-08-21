@@ -12,6 +12,8 @@ import astropy
 from astropy.convolution import Gaussian2DKernel, Gaussian1DKernel, convolve_fft, convolve
 import scipy
 from scipy.optimize import curve_fit
+import pickle
+import pyfits
 plt.close('all')
 plt.ioff()
 
@@ -51,8 +53,8 @@ class kin_map():
 
     def generate_blurred_map(self, kernel_size):
         self.blrcube    = self.cube.copy()*nan
-
         self.kernel = Gaussian2DKernel(kernel_size)
+
         print 'Convolving map...'
         for i in arange(self.zsize):
             self.blrcube[i] = convolve_fft(self.cube[i], self.kernel)
@@ -64,13 +66,13 @@ class kin_map():
         self.edisp_int  = np.zeros((self.xsize, self.ysize))*np.nan
 
         for i in arange(self.cube.shape[1]):
-            for j in arange(self.cube.shape[2]):                
-                spec = self.cube[:,i,j]
+            for j in arange(self.cube.shape[2]):  
+                krnl = Gaussian1DKernel(1)
+                spec = convolve_fft(self.cube[:,i,j], krnl)
                 try:
-                    c_a, v_a = curve_fit(gauss, self.vscale, spec, p0 = [nanmax(spec), 0, 30, spec[0]])           
-                    if (isfinite(sqrt(v_a[1,1]))) & (c_a[2] > 0.) & (isfinite(sqrt(v_a[2,2]))) & \
-                    (c_a[0] > 0) & (sqrt(v_a[2,2]) < 20) & (sqrt(v_a[1,1]) < 20):
+                    c_a, v_a = curve_fit(gauss, self.vscale, spec, p0 = [nanmax(spec), 0, 60, spec[0]])  
 
+                    if (sqrt(v_a[1,1]) < 200):
                         self.vel_int[i,j]   = c_a[1]
                         self.evel_int[i,j]  = v_a[1,1]
                         self.disp_int[i,j]  = c_a[2]
@@ -87,11 +89,13 @@ class kin_map():
         self.edisp_obs  = np.zeros((self.xsize, self.ysize))*np.nan
         for i in arange(self.blrcube.shape[1]):
             for j in arange(self.blrcube.shape[2]):                
-                spec = self.blrcube[:,i,j]
+                krnl = Gaussian1DKernel(1)
+                spec = convolve_fft(self.blrcube[:,i,j], krnl)
+
                 try:
                     c_a, v_a = curve_fit(gauss, self.vscale, spec, p0 = [nanmax(spec), 0, 30, spec[0]])           
                     if (isfinite(sqrt(v_a[1,1]))) & (c_a[2] > 0.) & (isfinite(sqrt(v_a[2,2]))) & \
-                    (c_a[0] > 0) & (sqrt(v_a[2,2]) < 20) & (sqrt(v_a[1,1]) < 20):
+                    (c_a[0] > 0) & (sqrt(v_a[2,2]) < 200) & (sqrt(v_a[1,1]) < 200):
 
                         self.vel_obs[i,j]   = c_a[1]
                         self.evel_obs[i,j]  = v_a[1,1]
@@ -103,13 +107,17 @@ class kin_map():
 
         pass
 
+    def save(self, filename):
+        file = open(filename, 'w+')
+        file.write(pickle.dumps(self.__dict__))
+        file.close()
 
 
 
 
 
 if __name__ == '__main__':
-    mcrx_file = glob.glob('*mcrx.fits')
+    mcrx_file = glob.glob('./data/mcrx.fits')
     if len(mcrx_file) == 0: print 'missing mcrx.fits file'
     else: mcrx_data = fits.open(mcrx_file[0])
 
@@ -123,34 +131,52 @@ if __name__ == '__main__':
     window = where((vel_kms > -500) & (vel_kms < 500))[0]
 
 
-    for cam_n in arange(1):
+    for cam_n in arange(10):
         camera = mcrx_data['CAMERA%i'%(cam_n)]
+        camera = mcrx_data['CAMERA%i-NONSCATTER'%(cam_n)]        
         kmap = kin_map(camera.data[window], vel_kms[window], lam[window],  cam_n)
-        kmap.rebin([40,40])
-        kmap.generate_blurred_map(kernel_size = 1)
+        kmap.rebin([20,20])
+        kmap.generate_blurred_map(kernel_size = 0.5)
         kmap.generate_intrinsic_kin_map()
         kmap.generate_observed_kin_map()
+        kmap.save('kin_cube%i.kmap'%(cam_n))
+        
+
+        if False:
+            pyfits.writeto('./data/orig_cube.fits', kmap.orig_cube, clobber = True)
+            pyfits.writeto('./data/cube.fits', kmap.cube, clobber = True)
+            pyfits.writeto('./data/blurred_cube.fits', kmap.blrcube, clobber = True)
+
+        if False:
+            fig = figure(1)
+            ax1 = fig.add_subplot(221)
+            ax2 = fig.add_subplot(222)
+            ax3 = fig.add_subplot(223)
+            ax4 = fig.add_subplot(224)
+
+            cmap = matplotlib.cm.jet
+            cmap.set_bad('k', 1.0)
+            ax1.imshow(kmap.vel_int, cmap = cmap, interpolation = 'nearest', vmin = -150, vmax = 150.)
+            ax3.imshow(kmap.vel_obs, cmap = cmap, interpolation = 'nearest', vmin = -150, vmax = 150.)
+
+            cmap = matplotlib.cm.viridis
+            cmap.set_bad('k', 1.0)
+            ax2.imshow(kmap.disp_int, cmap = cmap, interpolation = 'nearest', vmin = 10., vmax = 60.)
+            ax4.imshow(kmap.disp_obs, cmap = cmap, interpolation = 'nearest', vmin = 10., vmax = 60.)
 
 
+            savefig('./figures/test%i.png'%(cam_n))
+            plt.close('all')
 
 
-        figure(1)
-        ax1 = fig.add_subplot(221)
-        ax2 = fig.add_fig.add_subplot(222)
-        ax3 = fig.add_subplot(223)
-        ax4 = fig.add_subplot(224)
-
-        cmap = matplotlib.cm.jet
-        cmap.set_bad('k', 1.0)
-        ax1.imshow(kmap.vel_int, cmap = cmap, interpolation = 'nearest')
-        ax2.imshow(kmap.disp_int, interpolation = 'nearest')
-        ax3.imshow(kmap.vel_obs, cmap = cmap, interpolation = 'nearest')
-        ax4.imshow(kmap.disp_obs, interpolation = 'nearest')
-
-
-        savefig('test.png')
-        plt.close('all')
-
+        if False:
+            fig = figure(1)
+            ax1 = fig.add_subplot(111)
+            cmap = matplotlib.cm.jet
+            cmap.set_bad('k', 1.0)
+            ax1.plot(kmap.vscale, kmap.orig_cube[:,150,150])
+            savefig('./figures/plot%i.png'%(cam_n))
+            plt.close('all')
 
 
 
