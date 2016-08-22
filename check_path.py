@@ -4,4 +4,4 @@ import glob
 
 mcrx = glob.glob("mcrx.fits")
 
-print os.getcwd()
+print os.basename(os.getcwd().replace('/ifu','').replace('_sunrise',''))
