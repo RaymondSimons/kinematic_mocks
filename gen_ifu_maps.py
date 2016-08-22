@@ -14,6 +14,7 @@ import scipy
 from scipy.optimize import curve_fit
 import pickle
 import pyfits
+import os
 
 def gauss(x, *p):
     A, mu, sigma, A0= p
