@@ -140,7 +140,7 @@ if __name__ == '__main__':
     window = where((vel_kms > -500) & (vel_kms < 500))[0]
 
     ncams = mcrx_data['MCRX'].header['N_CAMERA']
-
+    ncams = 1
     for cam_n in arange(ncams):
         camera = mcrx_data['CAMERA%i-NONSCATTER'%(cam_n)]        
         kmap = kin_map(camera.data[window], vel_kms[window], lam[window],  cam_n)
