@@ -15,7 +15,7 @@ from scipy.optimize import curve_fit
 import pickle
 import pyfits
 import os
-import numpy
+import numpy as np
 from numpy import *
 
 def gauss(x, *p):
