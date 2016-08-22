@@ -6,10 +6,17 @@ mcrx = glob.glob("mcrx.fits")
 
 
 
-print os.path.basename(os.getcwd().replace('/ifu','').replace('_sunrise',''))
+kmap_dir = '/nobackupp2/rcsimons/sunrise_testing/kmaps'
+
 
 basepath = os.path.dirname(os.getcwd().replace('/ifu','').replace('_sunrise',''))
-print basepath[len(basepath)-6::]
+
+
+
+simname = basepath[len(basepath)-6::]
+snapname = os.path.basename(os.getcwd().replace('/ifu','').replace('_sunrise',''))
+
+print simname, snapname
 
 
 
