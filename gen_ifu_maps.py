@@ -117,8 +117,19 @@ class kin_map():
 
 
 if __name__ == '__main__':
-    mcrx_file = glob.glob('./data/mcrx.fits')
+    kmap_dir = '/nobackupp2/rcsimons/sunrise_testing/kmaps/VELA_v2'
+
+
+    basepath = os.path.dirname(os.getcwd().replace('/ifu','').replace('_sunrise',''))
+    simname = basepath[len(basepath)-6::]
+    snapname = os.path.basename(os.getcwd().replace('/ifu','').replace('_sunrise',''))
+    kmap_name = '/nobackupp2/rcsimons/sunrise_testing/kmaps/VELA_v2/'+simname+'/'+snapname
+    if not os.path.lexists('/nobackupp2/rcsimons/sunrise_testing/kmaps/VELA_v2/'+simname):
+        os.mkdir('/nobackupp2/rcsimons/sunrise_testing/kmaps/VELA_v2/'+simname)
+
+    mcrx_file = glob.glob('mcrx.fits')
     if len(mcrx_file) == 0: print 'missing mcrx.fits file'
+    kmap_dir = '/nobackupp2/rcsimons/sunrise_testing/kmaps'
     else: mcrx_data = fits.open(mcrx_file[0])
 
 
@@ -130,16 +141,16 @@ if __name__ == '__main__':
     vel_kms = vel_kms_0 - vel_kms_0[loc_Ha]     
     window = where((vel_kms > -500) & (vel_kms < 500))[0]
 
+    ncams = mcrx_data['MCRX'].header['N_CAMERA']
 
-    for cam_n in arange(10):
-        camera = mcrx_data['CAMERA%i'%(cam_n)]
+    for cam_n in arange(ncams):
         camera = mcrx_data['CAMERA%i-NONSCATTER'%(cam_n)]        
         kmap = kin_map(camera.data[window], vel_kms[window], lam[window],  cam_n)
         kmap.rebin([20,20])
         kmap.generate_blurred_map(kernel_size = 0.5)
         kmap.generate_intrinsic_kin_map()
         kmap.generate_observed_kin_map()
-        kmap.save('kin_cube%i.kmap'%(cam_n))
+        kmap.save(kmap_name + '_%i.kmap'%(cam_n))
         
 
         if False:
