@@ -124,7 +124,7 @@ if __name__ == '__main__':
     basepath = os.path.dirname(os.getcwd().replace('/ifu','').replace('_sunrise',''))
     simname = basepath[len(basepath)-6::]
     snapname = os.path.basename(os.getcwd().replace('/ifu','').replace('_sunrise',''))
-    kmap_name = '/nobackupp2/rcsimons/sunrise_testing/kmaps/VELA_v2/'+simname+'/'+snapname
+    kmap_name = '/nobackupp2/rcsimons/sunrise_testing/kmaps/VELA_v2/'+simname+'/'+snapname+'/'+snapname
     if not os.path.lexists('/nobackupp2/rcsimons/sunrise_testing/kmaps/VELA_v2/'+simname):
         os.mkdir('/nobackupp2/rcsimons/sunrise_testing/kmaps/VELA_v2/'+simname)
 
