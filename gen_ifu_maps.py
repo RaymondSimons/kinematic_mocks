@@ -128,7 +128,11 @@ if __name__ == '__main__':
     if not os.path.lexists('/nobackupp2/rcsimons/sunrise_testing/kmaps/VELA_v2/'+simname):
         os.mkdir('/nobackupp2/rcsimons/sunrise_testing/kmaps/VELA_v2/'+simname)
 
-    print 'Generating kinematic maps in /nobackupp2/rcsimons/sunrise_testing/kmaps/VELA_v2/'+simname
+    if not os.path.lexists('/nobackupp2/rcsimons/sunrise_testing/kmaps/VELA_v2/'+simname+'/'+snapname):
+        os.mkdir('/nobackupp2/rcsimons/sunrise_testing/kmaps/VELA_v2/'+simname+'/'+snapname)
+
+
+    print 'Generating kinematic maps in /nobackupp2/rcsimons/sunrise_testing/kmaps/VELA_v2/'+simname+'/'+snapname
 
     mcrx_file = glob.glob('mcrx.fits')
     kmap_dir = '/nobackupp2/rcsimons/sunrise_testing/kmaps'
@@ -154,6 +158,7 @@ if __name__ == '__main__':
         kmap.generate_blurred_map(kernel_size = 0.5)
         kmap.generate_intrinsic_kin_map()
         kmap.generate_observed_kin_map()
+        print '\t\t\t Saving to '+kmap_name + '_%i.kmap'%(cam_n)
         kmap.save(kmap_name + '_%i.kmap'%(cam_n))
         
 
