@@ -20,7 +20,8 @@ print simname, snapname
 
 kmap_name = '/nobackupp2/rcsimons/sunrise_testing/kmaps/VELA_v2/'+simname+'/'+snapname
 print kmap_name
-print os.path.lexists('/nobackupp2/rcsimons/sunrise_testing/kmaps/VELA_v2/'+simname)
+if not os.path.lexists('/nobackupp2/rcsimons/sunrise_testing/kmaps/VELA_v2/'+simname):
+	os.mkdir('/nobackupp2/rcsimons/sunrise_testing/kmaps/VELA_v2/'+simname)
 
 
 
