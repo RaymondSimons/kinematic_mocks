@@ -128,8 +128,8 @@ if __name__ == '__main__':
         os.mkdir('/nobackupp2/rcsimons/sunrise_testing/kmaps/VELA_v2/'+simname)
 
     mcrx_file = glob.glob('mcrx.fits')
-    if len(mcrx_file) == 0: print 'missing mcrx.fits file'
     kmap_dir = '/nobackupp2/rcsimons/sunrise_testing/kmaps'
+    if len(mcrx_file) == 0: print 'missing mcrx.fits file'
     else: mcrx_data = fits.open(mcrx_file[0])
 
 
