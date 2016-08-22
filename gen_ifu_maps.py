@@ -128,6 +128,8 @@ if __name__ == '__main__':
     if not os.path.lexists('/nobackupp2/rcsimons/sunrise_testing/kmaps/VELA_v2/'+simname):
         os.mkdir('/nobackupp2/rcsimons/sunrise_testing/kmaps/VELA_v2/'+simname)
 
+    print 'Generating kinematic maps in /nobackupp2/rcsimons/sunrise_testing/kmaps/VELA_v2/'+simname
+
     mcrx_file = glob.glob('mcrx.fits')
     kmap_dir = '/nobackupp2/rcsimons/sunrise_testing/kmaps'
     if len(mcrx_file) == 0: print 'missing mcrx.fits file'
@@ -143,8 +145,9 @@ if __name__ == '__main__':
     window = where((vel_kms > -500) & (vel_kms < 500))[0]
 
     ncams = mcrx_data['MCRX'].header['N_CAMERA']
-    ncams = 1
+
     for cam_n in arange(ncams):
+        print '\t\t Running on camera %i'%(cam_n)
         camera = mcrx_data['CAMERA%i-NONSCATTER'%(cam_n)]        
         kmap = kin_map(camera.data[window], vel_kms[window], lam[window],  cam_n)
         kmap.rebin([20,20])
