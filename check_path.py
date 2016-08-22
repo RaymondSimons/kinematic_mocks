@@ -4,4 +4,4 @@ import glob
 
 mcrx = glob.glob("mcrx.fits")
 
-print mcrx
+print os.getcwd()
