@@ -9,7 +9,7 @@ for fname in files:
 	print simdir+'/'+fname_fits+'/ifu/mcrx.fits'
 	fle = glob.glob(simdir+'/'+fname+'/ifu/mcrx.fits')[0]
 	mcrx = pyfits.open(fle)
-	data = mcrx['CAMERA0-NONSCATTER'].data[1]
+	data = mcrx['CAMERA1-NONSCATTER'].data
 	print shape(data)
 	pyfits.writeto('/nobackupp2/rcsimons/sunrise_testing/jwst/'+fname_fits, data, clobber = True)
 
