@@ -8,6 +8,7 @@ for fname in files:
 	print fname
 	fname_fits = fname+'_cam1.fits'
 	fle = glob.glob(simdir+'/'+fname_fits+'/ifu/mcrx.fits')
+	print fle
 	mcrx = pyfits.open(fle)
 	data = mcrx['CAMERA0-NONSCATTER'].data[1]
 
