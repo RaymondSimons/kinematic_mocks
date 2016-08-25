@@ -12,7 +12,7 @@ for fname in files:
 	mcrx = pyfits.open(fle)
 	data = mcrx['CAMERA0-NONSCATTER'].data[1]
 
-	pyfits.writeto('/nobackupp2/rcsimons/sunrise_testing/jwst', data, clobber = True)
+	pyfits.writeto('/nobackupp2/rcsimons/sunrise_testing/jwst/'+fname_fits, data, clobber = True)
 
 
 	print '/nobackupp2/rcsimons/sunrise_testing/jwst/'+fname_fits
