@@ -12,7 +12,7 @@ for fname in files:
 	fle = glob.glob(simdir+'/'+fname+'/ifu/mcrx.fits')[0]
 	#mcrx = pyfits.open(fle)
 	#data = mcrx['CAMERA1-NONSCATTER'].data
-	print shape(data)
+	
 	#pyfits.writeto('/nobackupp2/rcsimons/sunrise_testing/jwst/'+fname_fits, data, clobber = True)
 	os.system('cp '+fle+' /nobackupp2/rcsimons/sunrise_testing/jwst/'+fname+'_mcrx.fits')
 
