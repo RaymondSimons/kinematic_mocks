@@ -7,7 +7,7 @@ simdir = '/nobackupp2/gfsnyder/VELA_sunrise/Runs/VELA_v2/VELA28'
 for fname in files:
 	fname_fits = fname+'_cam1.fits'
 	print simdir+'/'+fname_fits+'/ifu/mcrx.fits'
-	fle = glob.glob(simdir+'/'+fname_fits+'/ifu/mcrx.fits')
+	fle = glob.glob(simdir+'/'+fname+'/ifu/mcrx.fits')
 	print fle
 	mcrx = pyfits.open(fle)
 	data = mcrx['CAMERA0-NONSCATTER'].data[1]
