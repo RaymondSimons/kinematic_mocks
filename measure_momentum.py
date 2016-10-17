@@ -1,5 +1,6 @@
 import numpy as np
-
+from numpy import *
+import os, sys, argparse
 
 #This file will be used to store the profile of the momentum
 def parse():
