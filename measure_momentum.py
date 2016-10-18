@@ -118,7 +118,41 @@ if __name__ == "__main__":
         idx = np.argwhere(galprops['snap_files']==os.path.abspath(snapfile))[0][0]
 
 
+        ds = yt.load(snapfile)
+        dd = ds.all_data()
 
+        print 'Loading gas velocity...'
+        gas_vx = dd['gas', 'velocity_x']
+        gas_vy = dd['gas', 'velocity_y']
+        gas_vz = dd['gas', 'velocity_z']
+
+        print 'Loading gas temperature...'
+        gas_temp = dd['gas', 'temperature']
+
+        print 'Loading gas cell mass...'
+        gas_mass = dd['gas', 'cell_mass']
+
+        print 'Loading cell potential...'
+        gas_potential = dd['gas', 'potential']
+
+        print 'Loading gas cell position...'
+        gas_x = dd['index', 'x'].in_units('kpc')
+        gas_y = dd['index', 'y'].in_units('kpc')
+        gas_z = dd['index', 'z'].in_units('kpc')
+
+
+
+        print 'Loading star positions...'
+        star_x = dd['stars', 'particle_position_x'].in_units('kpc')
+        star_y = dd['stars', 'particle_position_y'].in_units('kpc')
+        star_z = dd['stars', 'particle_position_z'].in_units('kpc')
+        star_mass = dd['stars', 'particle_mass'].in_units('Msun')
+        star_creation_time = dd['stars', 'particle_creation_time'].in_units('yr')
+        star_age_all = ds.arr(cosmo.age(ds.current_redshift).value, 'Gyr').in_units('yr') - star_creation_time
+        print 'Loading star velocities...'
+        star_vx = dd['stars', 'particle_velocity_x'].in_units('km/s')
+        star_vy = dd['stars', 'particle_velocity_y'].in_units('km/s')
+        star_vz = dd['stars', 'particle_velocity_z'].in_units('km/s')
 
 
         stars_L = galprops['stars_L'][idx]
