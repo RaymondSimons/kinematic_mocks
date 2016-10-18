@@ -102,9 +102,13 @@ if __name__ == "__main__":
         assert os.path.lexists(snap_dir)
 
 
-                    
 
-        out_dir = os.path.join('/nobackupp2/rcsimons/momentum_measurements/', simname, snap_dir)
+        out_sim_dir = os.path.join('/nobackupp2/rcsimons/momentum_measurements/', simname)
+        print os.path.lexists(out_sim_dir)
+        if not os.path.lexists(out_sim_dir):
+            os.mkdir(out_sim_dir)                    
+
+        out_dir = os.path.join(out_sim_dir, snap_dir)
         print os.path.lexists(out_dir)
         if not os.path.lexists(out_dir):
             os.mkdir(out_dir)
