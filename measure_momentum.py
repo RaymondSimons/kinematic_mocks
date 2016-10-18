@@ -86,6 +86,7 @@ if __name__ == "__main__":
     galprops = np.load(galprops_file)[()]
 
 
+
     for snapfile in new_snapfiles:
 
         aname = (os.path.basename(snapfile)).split('_')[-1].rstrip('.d')
