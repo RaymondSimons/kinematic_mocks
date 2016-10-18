@@ -134,6 +134,10 @@ if __name__ == "__main__":
 
 
         col_list = []
+        prihdr = fits.Header()
+        prihdr['COMMENT'] = "Storing the momentum properties in this FITS file."
+        prihdu = fits.PrimaryHDU(header=prihdr)
+        col_list.append(prihdu)
         col_list.append(fits.ImageHDU(data = np.empty((10,10)), name = 'Gas circularity_z'))
         col_list.append(fits.ImageHDU(data = np.empty((10,10)), name = 'Gas circularity_z'))
         col_list.append(fits.ImageHDU(data = np.empty((10,10)), name = 'Gas circularity_r'))
@@ -142,9 +146,6 @@ if __name__ == "__main__":
         col_list.append(fits.ImageHDU(data = np.empty((10,10)), name = 'Old Stars circularity_z'))
         col_list.append(fits.ImageHDU(data = np.empty((10,10)), name = 'Old Stars circularity_r'))
 
-        prihdr = fits.Header()
-        prihdr['COMMENT'] = "Storing the momentum properties in this FITS file."
-        prihdu = fits.PrimaryHDU(header=prihdr)
         thdulist = fits.HDUList(col_list)
         thdulist.writeto(out_dir+'/'+aname+'_kinematics.fits', clobber = True)
 
