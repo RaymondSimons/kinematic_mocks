@@ -97,7 +97,7 @@ if __name__ == "__main__":
                     
         galprops_file = simname+'_galprops.npy'
 
-        out_dir = os.path.join('/nobackupp2/rcsimons/', snap_dir)
+        out_dir = os.path.join('/nobackupp2/rcsimons/momentum_measurements/', snap_dir)
         print os.path.lexists(out_dir)
         if not os.path.lexists(out_dir):
             os.mkdir(out_dir)
