@@ -2,7 +2,8 @@ import numpy as np
 from numpy import *
 import os, sys, argparse
 import glob
-
+import astropy
+from astropy.io import fits
 
 #This file will be used to store the profile of the momentum
 def parse():
@@ -132,30 +133,20 @@ if __name__ == "__main__":
 
 
 
+        col_list = []
+        col_list.append(fits.ImageHDU(data = np.empty(10,10), name = 'Gas circularity_z'))
+        col_list.append(fits.ImageHDU(data = np.empty(10,10), name = 'Gas circularity_z'))
+        col_list.append(fits.ImageHDU(data = np.empty(10,10), name = 'Gas circularity_r'))
+        col_list.append(fits.ImageHDU(data = np.empty(10,10), name = 'Young Stars circularity_z'))
+        col_list.append(fits.ImageHDU(data = np.empty(10,10), name = 'Young Stars circularity_r'))
+        col_list.append(fits.ImageHDU(data = np.empty(10,10), name = 'Old Stars circularity_z'))
+        col_list.append(fits.ImageHDU(data = np.empty(10,10), name = 'Old Stars circularity_r'))
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        prihdr = fits.Header()
+        prihdr['COMMENT'] = "Storing the momentum properties in this FITS file."
+        prihdu = fits.PrimaryHDU(header=prihdr)
+        thdulist = fits.HDUList(col_list)
+        thdulist.writeto(out_dir+'/'+aname+'_kinematics.fits', clobber = True)
 
 
 
