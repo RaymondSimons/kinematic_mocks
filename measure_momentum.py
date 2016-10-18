@@ -104,7 +104,7 @@ if __name__ == "__main__":
 
                     
 
-        out_dir = os.path.join('/nobackupp2/rcsimons/momentum_measurements/', snap_dir)
+        out_dir = os.path.join('/nobackupp2/rcsimons/momentum_measurements/', simname, snap_dir)
         print os.path.lexists(out_dir)
         if not os.path.lexists(out_dir):
             os.mkdir(out_dir)
