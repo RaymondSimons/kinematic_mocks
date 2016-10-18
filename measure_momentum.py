@@ -141,8 +141,8 @@ if __name__ == "__main__":
         prihdr['COMMENT'] = "Storing the momentum properties in this FITS file."
         prihdu = fits.PrimaryHDU(header=prihdr)
         col_list.append(prihdu)
-        col_list.append(fits.ImageHDU(data = stars_L), name = 'Stars_L')
-        col_list.append(fits.ImageHDU(data = gas_L), name = 'Gas_L')
+        col_list.append(fits.ImageHDU(data = stars_L, name = 'Stars_L'))
+        col_list.append(fits.ImageHDU(data = gas_L, name = 'Gas_L'))
         col_list.append(fits.ImageHDU(data = np.empty((10,10)), name = 'Gas_circularity_z'))
         col_list.append(fits.ImageHDU(data = np.empty((10,10)), name = 'Gas_circularity_z'))
         col_list.append(fits.ImageHDU(data = np.empty((10,10)), name = 'Gas_circularity_r'))
