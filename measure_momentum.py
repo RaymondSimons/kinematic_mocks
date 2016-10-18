@@ -128,7 +128,7 @@ if __name__ == "__main__":
             
         L = L_sum/np.sqrt(np.sum(L_sum*L_sum))
 
-        print L
+        print stars_L, gas_L
 
 
 
