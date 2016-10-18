@@ -134,13 +134,13 @@ if __name__ == "__main__":
 
 
         col_list = []
-        col_list.append(fits.ImageHDU(data = np.empty(10,10), name = 'Gas circularity_z'))
-        col_list.append(fits.ImageHDU(data = np.empty(10,10), name = 'Gas circularity_z'))
-        col_list.append(fits.ImageHDU(data = np.empty(10,10), name = 'Gas circularity_r'))
-        col_list.append(fits.ImageHDU(data = np.empty(10,10), name = 'Young Stars circularity_z'))
-        col_list.append(fits.ImageHDU(data = np.empty(10,10), name = 'Young Stars circularity_r'))
-        col_list.append(fits.ImageHDU(data = np.empty(10,10), name = 'Old Stars circularity_z'))
-        col_list.append(fits.ImageHDU(data = np.empty(10,10), name = 'Old Stars circularity_r'))
+        col_list.append(fits.ImageHDU(data = np.empty((10,10)), name = 'Gas circularity_z'))
+        col_list.append(fits.ImageHDU(data = np.empty((10,10)), name = 'Gas circularity_z'))
+        col_list.append(fits.ImageHDU(data = np.empty((10,10)), name = 'Gas circularity_r'))
+        col_list.append(fits.ImageHDU(data = np.empty((10,10)), name = 'Young Stars circularity_z'))
+        col_list.append(fits.ImageHDU(data = np.empty((10,10)), name = 'Young Stars circularity_r'))
+        col_list.append(fits.ImageHDU(data = np.empty((10,10)), name = 'Old Stars circularity_z'))
+        col_list.append(fits.ImageHDU(data = np.empty((10,10)), name = 'Old Stars circularity_r'))
 
         prihdr = fits.Header()
         prihdr['COMMENT'] = "Storing the momentum properties in this FITS file."
