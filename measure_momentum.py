@@ -96,7 +96,7 @@ if __name__ == "__main__":
 
         print "Timestep name: ", aname
 
-        snap_dir = os.path.dirname(snapfile.rstrip('_sunrise')) #os.path.join(simname+'_'+aname+'_sunrise')
+        snap_dir = os.path.dirname(snapfile) #os.path.join(simname+'_'+aname+'_sunrise')
 
         print "Sunrise directory: ", snap_dir
         assert os.path.lexists(snap_dir)
@@ -108,7 +108,7 @@ if __name__ == "__main__":
         if not os.path.lexists(out_sim_dir):
             os.mkdir(out_sim_dir)                    
 
-        out_dir = os.path.join(out_sim_dir, snap_dir)
+        out_dir = os.path.join(out_sim_dir, snap_dir.rstrip('_sunrise'))
         print os.path.lexists(out_dir)
         if not os.path.lexists(out_dir):
             os.mkdir(out_dir)
