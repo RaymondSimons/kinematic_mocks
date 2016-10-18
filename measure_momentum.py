@@ -82,6 +82,10 @@ if __name__ == "__main__":
 
     # Loop over snapshot to generate cameras and projection plots, 
     # parallelization happens while generating the plots.
+    galprops_file = simname+'_galprops.npy'
+    galprops = np.load(galprops_file)[()]
+
+
     for snapfile in new_snapfiles:
 
         aname = (os.path.basename(snapfile)).split('_')[-1].rstrip('.d')
@@ -95,14 +99,11 @@ if __name__ == "__main__":
 
 
                     
-        galprops_file = simname+'_galprops.npy'
 
         out_dir = os.path.join('/nobackupp2/rcsimons/momentum_measurements/', snap_dir)
         print os.path.lexists(out_dir)
         if not os.path.lexists(out_dir):
             os.mkdir(out_dir)
-
-        galprops = np.load(galprops_file)[()]
 
 
         if os.path.abspath(snapfile) not in galprops['snap_files']: continue
@@ -112,19 +113,27 @@ if __name__ == "__main__":
 
 
 
-    stars_L = galprops['stars_L'][idx]
-    gas_L 	= galprops['gas_L'][idx]
+        stars_L = galprops['stars_L'][idx]
+        gas_L 	= galprops['gas_L'][idx]
 
 
-    try:
-        L_sum = stars_L + gas_L
-    except TypeError:
-        L_sum = gas_L
+        try:
+            L_sum = stars_L + gas_L
+        except TypeError:
+            L_sum = gas_L
 
-        
-    L = L_sum/np.sqrt(np.sum(L_sum*L_sum))
+            
+        L = L_sum/np.sqrt(np.sum(L_sum*L_sum))
 
-    print L
+        print L
+
+
+
+
+
+
+
+
 
 
 
