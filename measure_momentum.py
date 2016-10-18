@@ -151,7 +151,7 @@ if __name__ == "__main__":
         col_list.append(fits.ImageHDU(data = np.empty((10,10)), name = 'Old Stars circularity_r'))
 
         thdulist = fits.HDUList(col_list)
-        thdulist.writeto(out_dir+'/'+snap_dir.replace('_sunrise','_kinematics.fits'), clobber = True)
+        thdulist.writeto(out_dir+'/'+'kinematics.fits', clobber = True)
 
 
 
