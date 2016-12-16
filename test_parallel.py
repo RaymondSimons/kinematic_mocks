@@ -3,7 +3,7 @@ import time
 import astropy
 
 def test(x = 5):
-    for i in range(400000000): pass
+    time.sleep(2)
     print x
     f = open('./temp/'+str(x), 'w+')
     f.close()
