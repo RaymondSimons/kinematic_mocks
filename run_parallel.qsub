@@ -10,5 +10,5 @@
 #PBS -e sunrise_export_pbs.err
 #PBS -V
 
-python test_parallel > parallel_test.out > parallel_test.err
+python test_parallel.py > parallel_test.out > parallel_test.err
 
