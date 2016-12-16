@@ -3,7 +3,7 @@
 #PBS -l select=1:ncpus=8:model=has
 #PBS -l walltime=02:00:00
 #PBS -q devel
-#PBS -N sunrise_export
+#PBS -N parallel_test
 #PBS -M rsimons@jhu.edu
 #PBS -m abe
 #PBS -o sunrise_export_pbs.out
