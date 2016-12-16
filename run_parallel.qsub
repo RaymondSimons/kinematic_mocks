@@ -1,0 +1,14 @@
+#!/bin/bash
+#PBS -S /bin/bash
+#PBS -l select=1:ncpus=8:model=has
+#PBS -l walltime=02:00:00
+#PBS -q devel
+#PBS -N sunrise_export
+#PBS -M gsnyder@stsci.edu
+#PBS -m abe
+#PBS -o sunrise_export_pbs.out
+#PBS -e sunrise_export_pbs.err
+#PBS -V
+
+python test_parallel > parallel_test.out > parallel_test.err
+
