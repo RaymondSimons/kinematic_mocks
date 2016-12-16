@@ -15,12 +15,12 @@ def test2(x = 10):
     f.close()
 
 a = time.time()
-Parallel(n_jobs = -1)(delayed(test)(i) for i in range(8))
+Parallel(n_jobs = -1)(delayed(test)(i) for i in range(16))
 b = time.time()
 print 'Finished parallel in:', b - a
 
 
 e = time.time()
-Parallel(n_jobs = 1)(delayed(test2)(i) for i in range(8))
+Parallel(n_jobs = 1)(delayed(test2)(i) for i in range(16))
 f = time.time()
 print 'Finished series in:', f - e
