@@ -15,7 +15,7 @@ def test2(x = 10):
     f.close()
 
 a = time.time()
-Parallel(n_jobs = 6)(delayed(test)(i) for i in range(24))
+Parallel(n_jobs = 12)(delayed(test)(i) for i in range(24))
 b = time.time()
 print 'Finished parallel in:', b - a
 
