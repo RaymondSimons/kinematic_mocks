@@ -4,11 +4,13 @@ import astropy
 
 def test(x = 5):
     print x
+    for i in range(1000000): pass
     f = open('./temp/'+str(x), 'w+')
     f.close()
 
 def test2(x = 10):
     print x
+    for i in range(1000000): pass
     f = open('./temp/new_'+str(x), 'w+')
     f.close()
 
@@ -21,4 +23,4 @@ print 'Finished parallel in:', b - a
 e = time.time()
 Parallel(n_jobs = 1)(delayed(test2)(i) for i in range(10))
 f = time.time()
-print 'Finished series in:', e - f
+print 'Finished series in:', f - e
