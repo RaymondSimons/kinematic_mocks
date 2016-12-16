@@ -3,10 +3,12 @@ import time
 import astropy
 
 def test(x = 5):
+    print x
     f = open('./temp/'+str(x), 'w+')
     f.close()
 
 def test2(x = 10):
+    print x
     f = open('./temp/new_'+str(x), 'w+')
     f.close()
 
