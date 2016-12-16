@@ -3,7 +3,7 @@ import time
 import astropy
 
 def test(x = 5):
-    for i in range(100000000): pass
+    for i in range(400000000): pass
     print x
     f = open('./temp/'+str(x), 'w+')
     f.close()
@@ -15,7 +15,7 @@ def test2(x = 10):
     f.close()
 
 a = time.time()
-Parallel(n_jobs = -1)(delayed(test)(i) for i in range(32))
+Parallel(n_jobs = -1)(delayed(test)(i) for i in range(24))
 b = time.time()
 print 'Finished parallel in:', b - a
 

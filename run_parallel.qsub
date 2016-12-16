@@ -1,6 +1,6 @@
 #!/bin/bash
 #PBS -S /bin/bash
-#PBS -l select=1:ncpus=16:model=has
+#PBS -l select=1:ncpus=24:model=has
 #PBS -l walltime=02:00:00
 #PBS -q devel
 #PBS -N parallel_test
