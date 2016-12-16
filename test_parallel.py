@@ -1,6 +1,6 @@
 from joblib import Parallel, delayed
 import time
-import astropt
+import astropy
 
 def test(x = 5):
     f = open('./temp/'+str(x), 'w+')
