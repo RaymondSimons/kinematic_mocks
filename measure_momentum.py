@@ -4,6 +4,8 @@ import os, sys, argparse
 import glob
 import astropy
 from astropy.io import fits
+import astropy
+from astropy.cosmology import Plank15 as cosmo
 
 #This file will be used to store the profile of the momentum
 def parse():
@@ -149,6 +151,7 @@ if __name__ == "__main__":
         star_mass = dd['stars', 'particle_mass'].in_units('Msun')
         star_creation_time = dd['stars', 'particle_creation_time'].in_units('yr')
         star_age_all = ds.arr(cosmo.age(ds.current_redshift).value, 'Gyr').in_units('yr') - star_creation_time
+
         print 'Loading star velocities...'
         star_vx = dd['stars', 'particle_velocity_x'].in_units('km/s')
         star_vy = dd['stars', 'particle_velocity_y'].in_units('km/s')
@@ -170,11 +173,13 @@ if __name__ == "__main__":
         print stars_L, gas_L
 
 
+
         col_list = []
         prihdr = fits.Header()
         prihdr['COMMENT'] = "Storing the momentum properties in this FITS file."
         prihdu = fits.PrimaryHDU(header=prihdr)
         col_list.append(prihdu)
+        col_list.append(fits.ImageHDU(data = young_stars_L, name = 'Young_Stars_L'))        
         col_list.append(fits.ImageHDU(data = stars_L, name = 'Stars_L'))
         col_list.append(fits.ImageHDU(data = gas_L, name = 'Gas_L'))
         col_list.append(fits.ImageHDU(data = np.empty((10,10)), name = 'Gas_circularity_z'))
