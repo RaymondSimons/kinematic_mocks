@@ -81,7 +81,7 @@ def measure_momentum(snapfile):
     snap_dir = os.path.dirname(snapfile) #os.path.join(simname+'_'+aname+'_sunrise')
     simname = snapfile.split('_')[0]
 
-    mom = momentum_obj(simname, aname)
+    mom = momentum_obj(simname, aname, snapfile)
     mom.write()
 
 
