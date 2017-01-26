@@ -143,7 +143,7 @@ def measure_momentum(snapfile, out_sim_dir):
     fits_name = out_sim_dir+'/'+simname+'_'+aname+'_momentum.fits'
     mom = momentum_obj(simname, aname, snapfile, fits_name)
     #mom.write()
-    #mom.load()
+    mom.load()
     mom.write_fits()
 
 
