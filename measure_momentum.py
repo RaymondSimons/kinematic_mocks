@@ -60,7 +60,7 @@ class momentum_obj():
             assert self.stars_vx.shape > 5
         except AttributeError,AssertionError:
             print "No star particles found, skipping: ", ds._file_amr
-            break
+            return 0
 
 
 
@@ -103,6 +103,7 @@ class momentum_obj():
 
 
         print 'Finished loading...'
+        return 1
 
 
     def calc_momentum(self, nir_cat, nir_disc_cat):
@@ -276,19 +277,20 @@ def measure_momentum(snapfile, out_sim_dir, nir_cat, nir_disc_cat):
     
 
     mom = momentum_obj(simname, aname, snapfile, fits_name)
-    mom.load()
+    check = mom.load()
+
+    if check != 0:
+
+        in_nir = where(nir_cat[:,0] == aname)[0]
+        if len(in_nir) == 0: return
+        nir_cat = nir_cat[in_nir[0]]
+        nir_disc_cat = nir_disc_cat[in_nir[0]]
 
 
-    in_nir = where(nir_cat[:,0] == aname)[0]
-    if len(in_nir) == 0: return
-    nir_cat = nir_cat[in_nir[0]]
-    nir_disc_cat = nir_disc_cat[in_nir[0]]
-
-
-    mom.calc_momentum(nir_cat, nir_disc_cat)
-    mom.measure_potential()
-    mom.measure_circularity()
-    mom.write_fits()
+        mom.calc_momentum(nir_cat, nir_disc_cat)
+        mom.measure_potential()
+        mom.measure_circularity()
+        mom.write_fits()
 
 
 
