@@ -38,7 +38,7 @@ if __name__ == "__main__":
     for sn in snaps:
         aname = sn.split('_')[-1].rstrip('.d')
         fname = qsub_direct+'/momentum_%s_%s.qsub'%(gal, aname)
-        fsh.write('qsub %s'fname)
+        fsh.write('qsub %s'%fname)
         f = open(fname, 'w+')
 
         f.write('#PBS -S /bin/bash\n')
