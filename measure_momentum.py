@@ -153,7 +153,6 @@ if __name__ == "__main__":
 
     args = parse()
     import yt
-    print args
 
     if args['snap_files'] is not None:
         snaps = [args['snap_files']]
