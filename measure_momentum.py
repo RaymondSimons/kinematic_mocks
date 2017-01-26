@@ -60,7 +60,7 @@ class momentum_obj():
             assert self.stars_vx.shape > 5
         except AttributeError,AssertionError:
             print "No star particles found, skipping: ", ds._file_amr
-            continue
+            break
 
 
 
