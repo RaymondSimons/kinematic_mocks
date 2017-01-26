@@ -5,7 +5,7 @@ import glob
 import astropy
 from astropy.io import fits
 import astropy
-from astropy.cosmology import Plank15 as cosmo
+from astropy.cosmology import Planck15 as cosmo
 
 #This file will be used to store the profile of the momentum
 def parse():
@@ -58,6 +58,8 @@ if __name__ == "__main__":
     simname = os.path.basename(dirname) #assumes directory name for simulation name
     print "Simulation name:  ", simname
 
+
+    '''
     particle_headers = []
     particle_data = []
     stars_data = []
@@ -192,7 +194,7 @@ if __name__ == "__main__":
 
         thdulist = fits.HDUList(col_list)
         thdulist.writeto(out_dir+'/'+'kinematics.fits', clobber = True)
-
+    '''
 
 
 
