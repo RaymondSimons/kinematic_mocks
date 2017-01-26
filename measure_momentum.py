@@ -106,6 +106,8 @@ class momentum_obj():
     def calc_momentum(self, nir_cat, nir_disc_cat):
         print 'Calculating momentum...'
 
+        ds = yt.load(self.snapfile)
+        
         id_cen_star      = nir_cat[1].astype('int')
         cold_cen         = nir_disc_cat[1:4].astype('float')
         cen_star_offset  = nir_cat[2:5].astype('float')
@@ -116,7 +118,7 @@ class momentum_obj():
         cen_y = self.stars_y[id_cen_star-1]   - ds.arr(cen_star_offset[1], 'kpc')
         cen_z = self.stars_z[id_cen_star-1]   - ds.arr(cen_star_offset[2], 'kpc')
         cen_vx = self.stars_vx[id_cen_tar-1]  - ds.arr(cen_star_voffset[0], 'km/s')
-        cen_vy = self.stars_vy[id_cen_tar-1]  - ds.arr(cen_star_voffset[1] , 'km/s')
+        cen_vy = self.stars_vy[id_cen_tar-1]  - ds.arr(cen_star_voffset[1], 'km/s')
         cen_vz = self.stars_vz[id_cen_star-1] - ds.arr(cen_star_voffset[2], 'km/s')
 
 
