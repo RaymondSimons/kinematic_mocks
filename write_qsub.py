@@ -42,8 +42,8 @@ if __name__ == "__main__":
     if args['gal'] is not None: gal = args['gal']
     else: gal = 'VELA28'
 
-    snaps = glob.glob('/nobackupp2/gfsnyder/VELA_sunrise/Runs/VELA_v2/%'+gal+'/*.d')
-    print 'hi'
+    snaps = glob.glob('/nobackupp2/gfsnyder/VELA_sunrise/Runs/VELA_v2/'+gal+'/*.d')
+    print snaps
     for sn in snaps:
         aname = sn.split('_')[-1].rstrip('.d').strip('a')
         print aname
