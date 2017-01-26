@@ -51,7 +51,7 @@ if __name__ == "__main__":
     f.write('#PBS -e ./out_err/%s.err\n'%gal)
     f.write('#PBS -V\n')
 
-    f.write('cd /nobackupp2/gfsnyder/VELA_sunrise/Runs/VELA_v2/%s'%gal)
+    f.write('cd /nobackupp2/gfsnyder/VELA_sunrise/Runs/VELA_v2/%s\n'%gal)
     f.write('python /u/rcsimons/scripts/kinematic_mocks/measure_momentum.py')
 
     f.close()
