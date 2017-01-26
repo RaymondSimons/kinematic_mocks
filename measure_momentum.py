@@ -46,21 +46,15 @@ def parse():
 
 
 class momentum_obj():
-    def __init__(self, simname, aname, snapfile, fits_name):
+    def __init__(self, ds, simname, aname, snapfile, fits_name):
+        self.ds = yt.load(snapfile)
         self.simname = simname
         self.aname = aname
         self.snapfile = snapfile
         self.fits_name = fits_name
 
-
-    def write(self):
-        print self.simname
-        print self.aname
-        print self.snapfile
-
-
     def load(self, ds):
-        dd = ds.all_data()
+        dd = self.ds.all_data()
 
 
         print 'Loading star velocities...'
@@ -119,12 +113,12 @@ class momentum_obj():
 
 
         #Determine offset
-        self.cen_x  = self.stars_x[id_cen_star-1]  - ds.arr(self.cen_star_offset[0], 'kpc')
-        self.cen_y  = self.stars_y[id_cen_star-1]  - ds.arr(self.cen_star_offset[1], 'kpc')
-        self.cen_z  = self.stars_z[id_cen_star-1]  - ds.arr(self.cen_star_offset[2], 'kpc')
-        self.cen_vx = self.stars_vx[id_cen_star-1] - ds.arr(self.cen_star_voffset[0], 'km/s')
-        self.cen_vy = self.stars_vy[id_cen_star-1] - ds.arr(self.cen_star_voffset[1], 'km/s')
-        self.cen_vz = self.stars_vz[id_cen_star-1] - ds.arr(self.cen_star_voffset[2], 'km/s')
+        self.cen_x  = self.stars_x[id_cen_star-1]  - self.ds.arr(self.cen_star_offset[0], 'kpc')
+        self.cen_y  = self.stars_y[id_cen_star-1]  - self.ds.arr(self.cen_star_offset[1], 'kpc')
+        self.cen_z  = self.stars_z[id_cen_star-1]  - self.ds.arr(self.cen_star_offset[2], 'kpc')
+        self.cen_vx = self.stars_vx[id_cen_star-1] - self.ds.arr(self.cen_star_voffset[0], 'km/s')
+        self.cen_vy = self.stars_vy[id_cen_star-1] - self.ds.arr(self.cen_star_voffset[1], 'km/s')
+        self.cen_vz = self.stars_vz[id_cen_star-1] - self.ds.arr(self.cen_star_voffset[2], 'km/s')
 
 
 
@@ -176,7 +170,7 @@ class momentum_obj():
 
 
     def measure_potential(self, ds, r_min = 0.1, r_max = 100, r_cen1 = 10, r_cen2 = 25, r_step1 = 0.2, r_step2 = 1, r_step3 = 5):
-        center = ds.arr([self.cen_x, self.cen_y, self.cen_z], 'kpc')
+        center = self.ds.arr([self.cen_x, self.cen_y, self.cen_z], 'kpc')
 
         rad_steps = concatenate((arange(r_min,  r_cen1, r_step1), 
                                  arange(r_cen1, r_cen2, r_step2),
@@ -185,7 +179,7 @@ class momentum_obj():
 
         for i in arange(0,len(rad_steps)):
             print i, rad_steps[i], len(rad_steps)
-            gc_sphere =  ds.sphere(center, ds.arr(rad_steps[i],'kpc'))
+            gc_sphere =  ds.sphere(center, self.ds.arr(rad_steps[i],'kpc'))
             baryon_mass, particle_mass = gc_sphere.quantities.total_quantity(["cell_mass", "particle_mass"])
             self.mass_profile[0,i] = rad_steps[i]
             self.mass_profile[1,i] = baryon_mass + particle_mass
@@ -193,12 +187,12 @@ class momentum_obj():
 
     def measure_circularity(self):
         G = astropy.constants.G.to('kpc^3/Msun*s^2') # in kpc^3/Msun*s^2
-        internal_mass_gas = ds.arr(self.spl(self.gas_pos_mag),'g').in_units('Msun')
-        self.vcirc_gas = ds.arr(sqrt(G*internal_mass_gas/(self.gas_pos_mag)),'kpc/s').in_units('km/s')
+        internal_mass_gas = self.ds.arr(self.spl(self.gas_pos_mag),'g').in_units('Msun')
+        self.vcirc_gas = self.ds.arr(sqrt(G*internal_mass_gas/(self.gas_pos_mag)),'kpc/s').in_units('km/s')
         self.jcirc_gas = self.vcirc_gas * self.gas_pos_mag
 
-        internal_mass_stars = ds.arr(self.spl(self.stars_pos_mag),'g').in_units('Msun')
-        self.vcirc_stars = ds.arr(sqrt(G*internal_mass_stars/(self.stars_pos_mag)),'kpc/s').in_units('km/s')
+        internal_mass_stars = self.ds.arr(self.spl(self.stars_pos_mag),'g').in_units('Msun')
+        self.vcirc_stars = self.ds.arr(sqrt(G*internal_mass_stars/(self.stars_pos_mag)),'kpc/s').in_units('km/s')
         self.jcirc_stars = self.vcirc_stars * self.stars_pos_mag
 
         self.L_mag = sqrt(self.L_disk[0]**2.+self.L_disk[1]**2.+self.L_disk[2]**2.)
@@ -277,10 +271,10 @@ def measure_momentum(snapfile, out_sim_dir, nir_cat, nir_disc_cat):
     simname = snapfile.split('_')[0]
     fits_name = out_sim_dir+'/'+simname+'_'+aname+'_momentum.fits'
 
-    ds = yt.load(snapfile)
+    
 
     mom = momentum_obj(simname, aname, snapfile, fits_name)
-    mom.load(ds)
+    mom.load()
 
 
     in_nir = where(nir_cat[:,0] == aname)[0]
@@ -289,9 +283,9 @@ def measure_momentum(snapfile, out_sim_dir, nir_cat, nir_disc_cat):
     nir_disc_cat = nir_disc_cat[in_nir[0]]
 
 
-    mom.calc_momentum(ds, nir_cat, nir_disc_cat)
-    mom.
-
+    mom.calc_momentum(nir_cat, nir_disc_cat)
+    mom.measure_potential()
+    mom.measure_circularity()
     mom.write_fits()
 
 
@@ -457,7 +451,6 @@ if __name__ == "__main__":
         thdulist = fits.HDUList(col_list)
         thdulist.writeto(out_dir+'/'+'kinematics.fits', clobber = True)
     '''
-
 
 
 
