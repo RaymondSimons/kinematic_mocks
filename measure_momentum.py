@@ -96,6 +96,8 @@ class momentum_obj():
         self.star_vz = dd['stars', 'particle_velocity_z'].in_units('km/s')
         '''
 
+        print 'Finished loading...'
+
 
     def write_fits(self):
         master_hdulist = []
@@ -109,7 +111,7 @@ class momentum_obj():
         master_hdulist.append(prihdu)
 
         colhdr = fits.Header()
-        master_hdulist.append(fits.ImageHDU(data = zip(self.gas_vx, self.gas_vy, self.gas_vz), header = colhdr, name = 'gas velocity'))
+        master_hdulist.append(fits.ImageHDU(data = self.gas_vx, header = colhdr, name = 'gas velocity'))
 
 
         '''
