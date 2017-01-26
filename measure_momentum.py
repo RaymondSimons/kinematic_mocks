@@ -58,7 +58,7 @@ class momentum_obj():
 
 
     def load(self):
-        ds = yt.load(self.snapfile)
+        ds = yt.load(self.snapfile, limit_level = 8)
         dd = ds.all_data()
 
 
@@ -109,7 +109,7 @@ class momentum_obj():
     def calc_momentum(self, nir_cat, nir_disc_cat):
         print 'Calculating momentum...'
 
-        ds = yt.load(self.snapfile, limit_level = 8)
+        ds = yt.load(self.snapfile)
         
         id_cen_star      = nir_cat[1].astype('int')
         cold_cen         = nir_disc_cat[1:4].astype('float')
