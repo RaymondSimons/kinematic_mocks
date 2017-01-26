@@ -189,7 +189,7 @@ class momentum_obj():
         self.jz_gas         = costheta_gas*self.gas_j_mag
  
         costheta_stars      = np.dot(self.L_disk, self.stars_j_cen)/(self.stars_j_mag*self.L_mag)
-        self.jz_stars       = costheta_stars*self._stars_j_mag
+        self.jz_stars       = costheta_stars*self.stars_j_mag
  
         self.epsilon_gas    = self.jz_gas/self.jcirc_gas
         self.epsilon_stars  = self.jz_stars/self.jcirc_stars
