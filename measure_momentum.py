@@ -230,7 +230,7 @@ def measure_momentum(snapfile, out_sim_dir, nir_cat, nir_disc_cat):
     L_disk   = nir_disc_cat[7:10].astype('float')
 
 
-    ds = yt.load(self.snapfile, limit_level = 8)
+    ds = yt.load(self.snapfile, limit_level = 3)
 
     mom.load(ds)
     mom.calc_momentum(ds, nir_cat, nir_disc_cat)
