@@ -89,9 +89,6 @@ class momentum_obj():
         print 'Loading cell potential...'
         self.gas_potential = dd['gas', 'potential']
 
-
-
-
         self.star_mass = dd['stars', 'particle_mass'].in_units('Msun')
         self.star_creation_time = dd['stars', 'particle_creation_time'].in_units('yr')
         self.star_age = ds.arr(cosmo.age(ds.current_redshift).value, 'Gyr').in_units('yr') - self.star_creation_time
@@ -113,12 +110,12 @@ class momentum_obj():
 
 
         #Determine offset
-        self.cen_x  = self.stars_x[id_cen_star-1]  - self.ds.arr(self.cen_star_offset[0], 'kpc')
-        self.cen_y  = self.stars_y[id_cen_star-1]  - self.ds.arr(self.cen_star_offset[1], 'kpc')
-        self.cen_z  = self.stars_z[id_cen_star-1]  - self.ds.arr(self.cen_star_offset[2], 'kpc')
-        self.cen_vx = self.stars_vx[id_cen_star-1] - self.ds.arr(self.cen_star_voffset[0], 'km/s')
-        self.cen_vy = self.stars_vy[id_cen_star-1] - self.ds.arr(self.cen_star_voffset[1], 'km/s')
-        self.cen_vz = self.stars_vz[id_cen_star-1] - self.ds.arr(self.cen_star_voffset[2], 'km/s')
+        self.cen_x  = self.stars_x[self.id_cen_star-1]  - self.ds.arr(self.cen_star_offset[0], 'kpc')
+        self.cen_y  = self.stars_y[self.id_cen_star-1]  - self.ds.arr(self.cen_star_offset[1], 'kpc')
+        self.cen_z  = self.stars_z[self.id_cen_star-1]  - self.ds.arr(self.cen_star_offset[2], 'kpc')
+        self.cen_vx = self.stars_vx[self.id_cen_star-1] - self.ds.arr(self.cen_star_voffset[0], 'km/s')
+        self.cen_vy = self.stars_vy[self.id_cen_star-1] - self.ds.arr(self.cen_star_voffset[1], 'km/s')
+        self.cen_vz = self.stars_vz[self.id_cen_star-1] - self.ds.arr(self.cen_star_voffset[2], 'km/s')
 
 
 
