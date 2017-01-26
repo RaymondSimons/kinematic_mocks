@@ -52,7 +52,7 @@ if __name__ == "__main__":
     f.write('#PBS -V\n')
 
     f.write('cd /nobackupp2/gfsnyder/VELA_sunrise/Runs/VELA_v2/%s\n'%gal)
-    f.write('python /u/rcsimons/scripts/kinematic_mocks/measure_momentum.py\n\n\n')
+    f.write('python /u/rcsimons/scripts/kinematic_mocks/measure_momentum.py > ./out_err/%s.out 2> ./out_err/%s.err\n\n\n'%(gal, gal))
 
     f.close()
 
