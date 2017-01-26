@@ -43,6 +43,7 @@ if __name__ == "__main__":
     else: gal = 'VELA28'
 
     snaps = glob.glob('/nobackupp2/gfsnyder/VELA_sunrise/Runs/VELA_v2/%'+gal+'/*.d')
+    print 'hi'
     for sn in snaps:
         aname = sn.split('_')[-1].rstrip('.d').strip('a')
         print aname
