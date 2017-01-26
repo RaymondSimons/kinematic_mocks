@@ -53,7 +53,7 @@ class momentum_obj():
         self.snapfile = snapfile
         self.fits_name = fits_name
 
-    def load(self, ds):
+    def load(self):
         dd = self.ds.all_data()
 
 
@@ -101,7 +101,7 @@ class momentum_obj():
         print 'Finished loading...'
 
 
-    def calc_momentum(self, ds, nir_cat, nir_disc_cat):
+    def calc_momentum(self, nir_cat, nir_disc_cat):
         print 'Calculating momentum...'
         
         self.id_cen_star      = nir_cat[1].astype('int')
@@ -169,7 +169,7 @@ class momentum_obj():
         self.gas_j_mag  = sqrt(self.gas_jx_cen**2. + self.gas_jy_cen**2. + self.gas_jz_cen**2.)
 
 
-    def measure_potential(self, ds, r_min = 0.1, r_max = 100, r_cen1 = 10, r_cen2 = 25, r_step1 = 0.2, r_step2 = 1, r_step3 = 5):
+    def measure_potential(self, r_min = 0.1, r_max = 100, r_cen1 = 10, r_cen2 = 25, r_step1 = 0.2, r_step2 = 1, r_step3 = 5):
         center = self.ds.arr([self.cen_x, self.cen_y, self.cen_z], 'kpc')
 
         rad_steps = concatenate((arange(r_min,  r_cen1, r_step1), 
