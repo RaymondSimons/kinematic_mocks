@@ -63,9 +63,9 @@ class momentum_obj():
 
         print 'Loading gas velocity...'
         self.gas_vx = dd['gas', 'velocity_x']
+        '''
         self.gas_vy = dd['gas', 'velocity_y']
         self.gas_vz = dd['gas', 'velocity_z']
-        '''
         print 'Loading gas temperature...'
         self.gas_temp = dd['gas', 'temperature']
 
@@ -111,7 +111,7 @@ class momentum_obj():
         master_hdulist.append(prihdu)
 
         colhdr = fits.Header()
-        master_hdulist.append(fits.ImageHDU(data = self.gas_vx, header = colhdr, name = 'gas velocity'))
+        master_hdulist.append(fits.ImageHDU(data = zip(self.gas_vx, self.gas_vx, self.gas_vx), header = colhdr, name = 'gas velocity'))
 
 
         '''
