@@ -54,7 +54,16 @@ class momentum_obj():
         dd = self.ds.all_data()
 
         print 'Loading star velocities...'
-        self.stars_vx = dd['stars', 'particle_velocity_x'].in_units('km/s')
+
+        try:
+            self.stars_vx = dd['stars', 'particle_velocity_x'].in_units('km/s')
+            assert self.stars_vx.shape > 5
+        except AttributeError,AssertionError:
+            print "No star particles found, skipping: ", ds._file_amr
+            continue
+
+
+
         self.stars_vy = dd['stars', 'particle_velocity_y'].in_units('km/s')
         self.stars_vz = dd['stars', 'particle_velocity_z'].in_units('km/s')
 
@@ -164,7 +173,7 @@ class momentum_obj():
         self.gas_j_mag  = sqrt(self.gas_jx_cen**2. + self.gas_jy_cen**2. + self.gas_jz_cen**2.)
 
 
-    def measure_potential(self, r_min = 0.1,  r_step1 = 1., r_cen1 = 10, r_step2 = 3.,  r_cen2 = 30, r_step3 = 10., r_max = 100.):
+    def measure_potential(self, r_min = 0.1,  r_step1 = 0.1, r_cen1 = 10, r_step2 = 1.,  r_cen2 = 30, r_step3 = 5., r_max = 100.):
         
         center = self.ds.arr([self.cen_x, self.cen_y, self.cen_z], 'kpc')
 
