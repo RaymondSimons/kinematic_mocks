@@ -37,7 +37,7 @@ if __name__ == "__main__":
 
 
 
-    fname = qsub_direct+'/meas_moment_'+gal+'.qsub'
+    fname = qsub_direct+'/momeentum_'+gal+'.qsub'
     f = open(fname, 'w+')
 
     f.write('#PBS -S /bin/bash\n')
