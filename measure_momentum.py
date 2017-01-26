@@ -63,6 +63,15 @@ class momentum_obj():
         self.stars_y = dd['stars', 'particle_position_y'].in_units('kpc')
         self.stars_z = dd['stars', 'particle_position_z'].in_units('kpc')
 
+        print 'Loading star mass...'
+        self.star_mass = dd['stars', 'particle_mass'].in_units('Msun')
+
+        print 'Loading star age...'
+        self.star_creation_time = dd['stars', 'particle_creation_time'].in_units('yr')
+        self.star_age = self.ds.arr(cosmo.age(self.ds.current_redshift).value, 'Gyr').in_units('yr') - self.star_creation_time
+
+
+
         print 'Loading gas velocity...'
         self.gas_vx = dd['gas', 'velocity_x'].in_units('km/s')
         self.gas_vy = dd['gas', 'velocity_y'].in_units('km/s')
@@ -82,9 +91,6 @@ class momentum_obj():
         print 'Loading cell potential...'
         self.gas_potential = dd['gas', 'potential']
 
-        self.star_mass = dd['stars', 'particle_mass'].in_units('Msun')
-        self.star_creation_time = dd['stars', 'particle_creation_time'].in_units('yr')
-        self.star_age = self.ds.arr(cosmo.age(self.ds.current_redshift).value, 'Gyr').in_units('yr') - self.star_creation_time
 
 
         print 'Finished loading...'
@@ -158,7 +164,8 @@ class momentum_obj():
         self.gas_j_mag  = sqrt(self.gas_jx_cen**2. + self.gas_jy_cen**2. + self.gas_jz_cen**2.)
 
 
-    def measure_potential(self, r_min = 0.1, r_max = 100, r_cen1 = 10, r_cen2 = 25, r_step1 = 0.2, r_step2 = 1, r_step3 = 5):
+    def measure_potential(self, r_min = 0.1,  r_step1 = 1., r_cen1 = 10, r_step2 = 3.,  r_cen2 = 30, r_step3 = 10., r_max = 100.):
+        
         center = self.ds.arr([self.cen_x, self.cen_y, self.cen_z], 'kpc')
 
         rad_steps = concatenate((arange(r_min,  r_cen1, r_step1), 
@@ -197,10 +204,11 @@ class momentum_obj():
 
 
         costheta_gas   = np.dot(self.L_disk, self.gas_pos_cen)/(self.gas_pos_mag*self.L_mag)
-        self.zz_gas    = costheta_gas * self.gas_pos_mag
+        self.zz_gas    = self.ds.arr(costheta_gas * self.gas_pos_mag, 'kpc')
         self.rr_gas    = sqrt(self.gas_pos_mag**2. - self.zz_gas**2.)
+
         costheta_stars = np.dot(self.L_disk, self.stars_pos_cen)/(self.stars_pos_mag*self.L_mag)
-        self.zz_stars  = costheta_stars * self.stars_pos_mag
+        self.zz_stars  = self.ds.arr(costheta_stars * self.stars_pos_mag, 'kpc')
         self.rr_stars  = sqrt(self.stars_pos_mag**2. - self.zz_stars**2.)
 
 
