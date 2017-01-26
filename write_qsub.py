@@ -38,7 +38,7 @@ if __name__ == "__main__":
 
 
     fname = qsub_direct+'/meas_moment_'+gal+'.qsub'
-    f = open(fname)
+    f = open(fname, 'w+')
 
     f.write('#PBS -S /bin/bash\n')
     f.write('#PBS -l select=1:ncpus=20:model=has\n')
