@@ -43,7 +43,7 @@ def parse():
 
 
 def measure_momentum(snapfile):
-    print snapfile
+    print 'Measuring momentum for '+ snapfile
 
 
 if __name__ == "__main__":
