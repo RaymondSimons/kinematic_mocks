@@ -53,9 +53,8 @@ def measure_momentum(snapfile):
     print "\tSunrise directory: ", snap_dir
     assert os.path.lexists(snap_dir)
 
-
     simname = (snapfile).split('_')[0]
-    print "\nSimulation name:  ", simname
+    print "\tSimulation name:  ", simname
 
 
 
