@@ -100,7 +100,7 @@ class momentum_obj():
 
 
     def write_fits(self):
-        print '\tGenerating fits...'
+        print '\tGenerating fits for %s...'%self.aname
         master_hdulist = []
         prihdr = fits.Header()
         prihdr['COMMENT'] = "Storing the momentum measurements in this FITS file."
