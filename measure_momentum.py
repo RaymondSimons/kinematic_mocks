@@ -217,34 +217,29 @@ class momentum_obj():
         master_hdulist.append(prihdu)
 
         colhdr = fits.Header()
-        master_hdulist.append(fits.ImageHDU(data = np.stack((self.stars_x_cen , self.stars_y_cen , self.stars_z_cen))   , header = colhdr, name = 'stars_xyz_position'))
-        master_hdulist.append(fits.ImageHDU(data = np.stack((self.gas_x_cen , self.gas_y_cen , self.gas_z_cen))         , header = colhdr, name = 'gas_xyz_position'))
-        master_hdulist.append(fits.ImageHDU(data = np.stack((self.rr_stars, self.zz_stars))                             , header = colhdr, name = 'stars_cylindrical_position'))
-        master_hdulist.append(fits.ImageHDU(data = np.stack((self.rr_gas, self.zz_gas))                                 , header = colhdr, name = 'gas_cylindrical_position'))
-        master_hdulist.append(fits.ImageHDU(data = np.stack((self.stars_jx_cen, self.stars_jy_cen, self.stars_jz_cen))  , header = colhdr, name = 'stars_momentum'))
-        master_hdulist.append(fits.ImageHDU(data = np.stack((self.gas_jx_cen, self.gas_jy_cen, self.gas_jz_cen))        , header = colhdr, name = 'gas_momentum'))
-        master_hdulist.append(fits.ImageHDU(data = self.epsilon_stars                                                   , header = colhdr, name = 'stars_epsilon'))
-        master_hdulist.append(fits.ImageHDU(data = self.epsilon_gas                                                     , header = colhdr, name = 'gas_epsilon'))
-        master_hdulist.append(fits.ImageHDU(data = self.mass_profile                                                    , header = colhdr, name = 'mass_profile'))
-        master_hdulist.append(fits.ImageHDU(data = self.gas_temp                                                        , header = colhdr, name = 'gas_temperature'))
-        master_hdulist.append(fits.ImageHDU(data = self.gas_mass                                                        , header = colhdr, name = 'gas_mass'))
-        master_hdulist.append(fits.ImageHDU(data = self.star_mass                                                       , header = colhdr, name = 'star_mass'))
-        master_hdulist.append(fits.ImageHDU(data = self.star_creation_time                                              , header = colhdr, name = 'star_creation_time'))
-        master_hdulist.append(fits.ImageHDU(data = self.star_age                                                        , header = colhdr, name = 'star_age'))
-
-
-
-
-
-
-
+        master_hdulist.append(fits.ImageHDU(data = np.stack((self.stars_x_cen , self.stars_y_cen , self.stars_z_cen))  , header = colhdr, name = 'stars_xyz_position'))
+        master_hdulist.append(fits.ImageHDU(data = np.stack((self.gas_x_cen , self.gas_y_cen , self.gas_z_cen))        , header = colhdr, name = 'gas_xyz_position'))
+        master_hdulist.append(fits.ImageHDU(data = np.stack((self.rr_stars, self.zz_stars))                            , header = colhdr, name = 'stars_cylindrical_position'))
+        master_hdulist.append(fits.ImageHDU(data = np.stack((self.rr_gas, self.zz_gas))                                , header = colhdr, name = 'gas_cylindrical_position'))
+        master_hdulist.append(fits.ImageHDU(data = np.stack((self.stars_jx_cen, self.stars_jy_cen, self.stars_jz_cen)) , header = colhdr, name = 'stars_momentum'))
+        master_hdulist.append(fits.ImageHDU(data = np.stack((self.gas_jx_cen, self.gas_jy_cen, self.gas_jz_cen))       , header = colhdr, name = 'gas_momentum'))
+        master_hdulist.append(fits.ImageHDU(data = self.epsilon_stars                                                  , header = colhdr, name = 'stars_epsilon'))
+        master_hdulist.append(fits.ImageHDU(data = self.epsilon_gas                                                    , header = colhdr, name = 'gas_epsilon'))
+        master_hdulist.append(fits.ImageHDU(data = self.mass_profile                                                   , header = colhdr, name = 'mass_profile'))
+        master_hdulist.append(fits.ImageHDU(data = self.gas_temp                                                       , header = colhdr, name = 'gas_temperature'))
+        master_hdulist.append(fits.ImageHDU(data = self.gas_mass                                                       , header = colhdr, name = 'gas_mass'))
+        master_hdulist.append(fits.ImageHDU(data = self.star_mass                                                      , header = colhdr, name = 'star_mass'))
+        master_hdulist.append(fits.ImageHDU(data = self.star_creation_time                                             , header = colhdr, name = 'star_creation_time'))
+        master_hdulist.append(fits.ImageHDU(data = self.star_age                                                       , header = colhdr, name = 'star_age')
 
 
         thdulist = fits.HDUList(master_hdulist)
+
+
+
+
         print '\tSaving to ' + self.fits_name
         thdulist.writeto(self.fits_name, clobber = True)
-
-
 
         return master_hdulist
 
@@ -290,11 +285,8 @@ if __name__ == "__main__":
     args = parse()
     import yt
 
-    if args['snap_files'] is not None:
-        snaps = [args['snap_files']]
-    else:
-        snaps = np.asarray(glob.glob("*.d"))
-
+    if args['snap_files'] is not None: snaps = [args['snap_files']]
+    else: snaps = np.asarray(glob.glob("*.d"))
         
     print "Generating Sunrise Input for: ", snaps
 
@@ -317,35 +309,12 @@ if __name__ == "__main__":
         print 'Creating momentum directory for %s'%out_sim_dir
         os.mkdir(out_sim_dir)                
 
-
-
-    particle_headers = []
-    particle_data = []
-    stars_data = []
     new_snapfiles = []
     for sn in snaps:
         aname = sn.split('_')[-1].rstrip('.d')
-        particle_headers.append('PMcrd'+aname+'.DAT')
-        particle_data.append('PMcrs0'+aname+'.DAT')
-        stars_data.append('stars_'+aname+'.dat')
         snap_dir = os.path.join(simname+'_'+aname+'_sunrise')
-        
-        #print "Sunrise directory: ", snap_dir
-        if not os.path.lexists(snap_dir):
-            os.mkdir(snap_dir)        
-
         newf = os.path.join(snap_dir,sn)
         new_snapfiles.append(newf)
-        if not os.path.lexists(newf):
-            os.symlink(os.path.abspath(sn),newf)
-            os.symlink(os.path.abspath(particle_headers[-1]),os.path.join(snap_dir,particle_headers[-1]))
-            os.symlink(os.path.abspath(particle_data[-1]),os.path.join(snap_dir,particle_data[-1]))
-            os.symlink(os.path.abspath(stars_data[-1]),os.path.join(snap_dir,stars_data[-1]))
-
-
-
-
-
 
     new_snapfiles = np.asarray(new_snapfiles)
 
