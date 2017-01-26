@@ -56,6 +56,45 @@ class momentum_obj():
         print self.snapfile
 
 
+    def load(self):
+        ds = yt.load(mom.snapfile)
+        dd = ds.all_data()
+
+        print 'Loading gas velocity...'
+        self.gas_vx = dd['gas', 'velocity_x']
+        self.gas_vy = dd['gas', 'velocity_y']
+        self.gas_vz = dd['gas', 'velocity_z']
+
+        print 'Loading gas temperature...'
+        self.gas_temp = dd['gas', 'temperature']
+
+        print 'Loading gas cell mass...'
+        self.gas_mass = dd['gas', 'cell_mass']
+
+        print 'Loading cell potential...'
+        self.gas_potential = dd['gas', 'potential']
+
+        print 'Loading gas cell position...'
+        self.gas_x = dd['index', 'x'].in_units('kpc')
+        self.gas_y = dd['index', 'y'].in_units('kpc')
+        self.gas_z = dd['index', 'z'].in_units('kpc')
+
+
+
+        print 'Loading star positions...'
+        self.star_x = dd['stars', 'particle_position_x'].in_units('kpc')
+        self.star_y = dd['stars', 'particle_position_y'].in_units('kpc')
+        self.star_z = dd['stars', 'particle_position_z'].in_units('kpc')
+        self.star_mass = dd['stars', 'particle_mass'].in_units('Msun')
+        self.star_creation_time = dd['stars', 'particle_creation_time'].in_units('yr')
+        self.star_age_all = ds.arr(cosmo.age(ds.current_redshift).value, 'Gyr').in_units('yr') - star_creation_time
+
+        print 'Loading star velocities...'
+        self.star_vx = dd['stars', 'particle_velocity_x'].in_units('km/s')
+        self.star_vy = dd['stars', 'particle_velocity_y'].in_units('km/s')
+        self.star_vz = dd['stars', 'particle_velocity_z'].in_units('km/s')
+
+
 
     def get_hdulist(self, master_hdulist):
         colhdr = fits.Header()
@@ -83,10 +122,7 @@ def measure_momentum(snapfile):
 
     mom = momentum_obj(simname, aname, snapfile)
     mom.write()
-
-    ds = yt.load(snapfile)
-    dd = ds.all_data()
-
+    mom.load()
 
 
 
