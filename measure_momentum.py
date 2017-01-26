@@ -112,7 +112,7 @@ class momentum_obj():
         master_hdulist.append(prihdu)
 
         colhdr = fits.Header()
-        master_hdulist.append(fits.ImageHDU(data = np.stack(self.gas_vx, self.gas_vx, self.gas_vx), header = colhdr, name = 'gas velocity'))
+        master_hdulist.append(fits.ImageHDU(data = np.stack((self.gas_vx, self.gas_vx, self.gas_vx)), header = colhdr, name = 'gas velocity'))
 
 
         '''
