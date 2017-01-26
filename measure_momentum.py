@@ -72,12 +72,19 @@ class momentum_obj():
         self.stars_y = dd['stars', 'particle_position_y'].in_units('kpc')
         self.stars_z = dd['stars', 'particle_position_z'].in_units('kpc')
 
-        '''
         print 'Loading gas velocity...'
         self.gas_vx = dd['gas', 'velocity_x'].in_units('km/s')
         self.gas_vy = dd['gas', 'velocity_y'].in_units('km/s')
         self.gas_vz = dd['gas', 'velocity_z'].in_units('km/s')
         
+
+        print 'Loading gas cell position...'
+        self.gas_x = dd['index', 'x'].in_units('kpc')
+        self.gas_y = dd['index', 'y'].in_units('kpc')
+        self.gas_z = dd['index', 'z'].in_units('kpc')
+
+
+        '''
         print 'Loading gas temperature...'
         self.gas_temp = dd['gas', 'temperature']
 
@@ -87,10 +94,6 @@ class momentum_obj():
         print 'Loading cell potential...'
         self.gas_potential = dd['gas', 'potential']
 
-        print 'Loading gas cell position...'
-        self.gas_x = dd['index', 'x'].in_units('kpc')
-        self.gas_y = dd['index', 'y'].in_units('kpc')
-        self.gas_z = dd['index', 'z'].in_units('kpc')
 
 
 
@@ -114,30 +117,58 @@ class momentum_obj():
         cen_star_voffset = nir_cat[5:8].astype('float')
 
         #Determine offset
-        cen_x = self.stars_x[id_cen_star-1]   - ds.arr(cen_star_offset[0], 'kpc')
-        cen_y = self.stars_y[id_cen_star-1]   - ds.arr(cen_star_offset[1], 'kpc')
-        cen_z = self.stars_z[id_cen_star-1]   - ds.arr(cen_star_offset[2], 'kpc')
-        cen_vx = self.stars_vx[id_cen_star-1]  - ds.arr(cen_star_voffset[0], 'km/s')
-        cen_vy = self.stars_vy[id_cen_star-1]  - ds.arr(cen_star_voffset[1], 'km/s')
+        cen_x  = self.stars_x[id_cen_star-1]  - ds.arr(cen_star_offset[0], 'kpc')
+        cen_y  = self.stars_y[id_cen_star-1]  - ds.arr(cen_star_offset[1], 'kpc')
+        cen_z  = self.stars_z[id_cen_star-1]  - ds.arr(cen_star_offset[2], 'kpc')
+        cen_vx = self.stars_vx[id_cen_star-1] - ds.arr(cen_star_voffset[0], 'km/s')
+        cen_vy = self.stars_vy[id_cen_star-1] - ds.arr(cen_star_voffset[1], 'km/s')
         cen_vz = self.stars_vz[id_cen_star-1] - ds.arr(cen_star_voffset[2], 'km/s')
 
 
-        #Recenter positions and velocities
-        self.stars_x_cen = self.stars_x - cen_x
-        self.stars_y_cen = self.stars_y - cen_y
-        self.stars_z_cen = self.stars_z - cen_z
-        self.stars_vx_cen = self.stars_vx - cen_vx
-        self.stars_vy_cen = self.stars_vy - cen_vy
-        self.stars_vz_cen = self.stars_vz - cen_vz
 
-        #Calculate momentum
+
+        #Recenter positions and velocities for stars
+        self.stars_x_cen   = self.stars_x  - cen_x
+        self.stars_y_cen   = self.stars_y  - cen_y
+        self.stars_z_cen   = self.stars_z  - cen_z
         self.stars_pos_mag = sqrt(self.stars_x_cen**2.  + self.stars_y_cen**2.  + self.stars_z_cen**2.)
+
+        self.stars_vx_cen  = self.stars_vx - cen_vx
+        self.stars_vy_cen  = self.stars_vy - cen_vy
+        self.stars_vz_cen  = self.stars_vz - cen_vz
         self.stars_vel_mag = sqrt(self.stars_vx_cen**2. + self.stars_vy_cen**2. + self.stars_vz_cen**2.)
 
+        #Recenter positions and velocities for gas
+        self.gas_x_cen   = self.gas_x  - cen_x
+        self.gas_y_cen   = self.gas_y  - cen_y
+        self.gas_z_cen   = self.gas_z  - cen_z
+        self.gas_pos_mag = sqrt(self.gas_x_cen**2.  + self.gas_y_cen**2.  + self.gas_z_cen**2.)
+
+        self.gas_vx_cen  = self.gas_vx - cen_vx
+        self.gas_vy_cen  = self.gas_vy - cen_vy
+        self.gas_vz_cen  = self.gas_vz - cen_vz
+        self.gas_vel_mag = sqrt(self.gas_vx_cen**2. + self.gas_vy_cen**2. + self.gas_vz_cen**2.)
+
+
+
+
+
+        #Calculate momentum for stars
         self.stars_jx_cen = self.stars_vz_cen * self.stars_y_cen - self.stars_z_cen * self.stars_vy_cen
         self.stars_jy_cen = self.stars_vx_cen * self.stars_z_cen - self.stars_x_cen * self.stars_vz_cen
         self.stars_jz_cen = self.stars_vy_cen * self.stars_x_cen - self.stars_y_cen * self.stars_vx_cen
-        self.stars_j_mag = sqrt(self.stars_jx_cen**2. + self.stars_jy_cen**2. + self.stars_jz_cen**2.)
+        self.stars_j_mag  = sqrt(self.stars_jx_cen**2. + self.stars_jy_cen**2. + self.stars_jz_cen**2.)
+
+
+        #Calculate momentum for gas
+        self.gas_jx_cen = self.gas_vz_cen * self.gas_y_cen - self.gas_z_cen * self.gas_vy_cen
+        self.gas_jy_cen = self.gas_vx_cen * self.gas_z_cen - self.gas_x_cen * self.gas_vz_cen
+        self.gas_jz_cen = self.gas_vy_cen * self.gas_x_cen - self.gas_y_cen * self.gas_vx_cen
+        self.gas_j_mag  = sqrt(self.gas_jx_cen**2. + self.gas_jy_cen**2. + self.gas_jz_cen**2.)
+
+
+
+
 
 
     def write_fits(self):
@@ -153,8 +184,10 @@ class momentum_obj():
         master_hdulist.append(prihdu)
 
         colhdr = fits.Header()
-        master_hdulist.append(fits.ImageHDU(data = np.stack((self.stars_jx_cen, self.stars_jx_cen, self.stars_jx_cen)), header = colhdr, name = 'stars_momentum'))
-        master_hdulist.append(fits.ImageHDU(data = np.stack((self.stars_x_cen, self.stars_y_cen, self.stars_z_cen)), header = colhdr, name = 'stars_radius'))
+        master_hdulist.append(fits.ImageHDU(data = np.stack((self.stars_x_cen , self.stars_y_cen , self.stars_z_cen)), header = colhdr , name = 'stars_position'))
+        master_hdulist.append(fits.ImageHDU(data = np.stack((self.gas_x_cen , self.gas_y_cen , self.gas_z_cen)), header = colhdr , name = 'gas_position'))
+        master_hdulist.append(fits.ImageHDU(data = np.stack((self.stars_jx_cen, self.stars_jy_cen, self.stars_jz_cen)), header = colhdr, name = 'stars_momentum'))
+        master_hdulist.append(fits.ImageHDU(data = np.stack((self.gas_jx_cen, self.gas_jy_cen, self.gas_jz_cen)), header = colhdr, name = 'gas_momentum'))
 
 
         '''
