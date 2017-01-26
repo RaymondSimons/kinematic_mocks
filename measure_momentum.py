@@ -148,7 +148,7 @@ def measure_momentum(snapfile, out_sim_dir, nir_cat, nir_disc_cat):
     print aname
     in_nir = where(nir_cat[:,0] == aname)
     if len(in_nir) == 0: return
-    print good
+    print in_nir
 
     #mom.write()
     #mom.load()
