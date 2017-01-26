@@ -48,7 +48,7 @@ class momentum_obj():
         self.simname = simname
         self.aname = aname
         self.snapfile = snapfile
-        self.fits_name = 
+        self.fits_name = fits_name
 
 
     def write(self):
