@@ -23,11 +23,6 @@ def parse():
     return args
 
 
-
-gal = 'VELA28'
-
-
-
 if __name__ == "__main__":
     args = parse()
     if args['gal'] is not None: gal = args['gal']
@@ -43,7 +38,7 @@ if __name__ == "__main__":
     f.write('#PBS -S /bin/bash\n')
     f.write('#PBS -l select=1:ncpus=20:model=has\n')
     f.write('#PBS -l walltime=02:00:00\n')
-    f.write('#PBS -q normal\n')
+    f.write('#PBS -q devel\n')
     f.write('#PBS -N momentum_measurements\n')
     f.write('#PBS -M rsimons@jhu.edu\n')
     f.write('#PBS -m abe\n')
