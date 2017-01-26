@@ -25,12 +25,12 @@ def parse():
 
 
 if __name__ == "__main__":
-    fsh = open(qsub_direct+'/'+gal+'_submit_momentum.sh')
     args = parse()
     if args['gal'] is not None: gal = args['gal']
     else: gal = 'VELA28'
 
     qsub_direct = '/nobackupp2/rcsimons/momentum_measurements/qsub'
+    fsh = open(qsub_direct+'/'+gal+'_submit_momentum.sh')
 
     snaps = np.asarray(glob.glob("/nobackupp2/gfsnyder/VELA_sunrise/Runs/VELA_v2/%s/*.d"%gal))
 
