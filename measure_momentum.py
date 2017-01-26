@@ -42,16 +42,60 @@ def parse():
 
 
 
+
+class momentum_obj():
+    def __init__(self, simname, aname, snapfile):
+        self.simname = simname
+        self.aname = aname
+        self.snapfile = snapfile
+
+
+    def write(self):
+        print self.simname
+
+
+
+    def get_hdulist(self, master_hdulist):
+        colhdr = fits.Header()
+        master_hdulist.append(fits.ImageHDU(data = self.orig_cube, header = self.orig_cube_hdr, name = 'cam%i_orig_cube'%self.camera))
+        master_hdulist.append(fits.ImageHDU(data = self.cube, header = self.cube_hdr, name = 'cam%i_obs_cube'%self.camera))
+        master_hdulist.append(fits.ImageHDU(data = array([self.disp_int, self.edisp_int]), name = 'cam%i_disp_int'%self.camera))
+        master_hdulist.append(fits.ImageHDU(data = array([self.disp_obs, self.edisp_obs]), name = 'cam%i_disp_obs'%self.camera))
+        master_hdulist.append(fits.ImageHDU(data = array([self.vel_int,self.evel_int]), name = 'cam%i_vel_int'%self.camera))
+        master_hdulist.append(fits.ImageHDU(data = array([self.vel_obs,self.evel_obs]), name = 'cam%i_vel_obs'%self.camera))
+        master_hdulist.append(fits.ImageHDU(data = self.ha_obs, name = 'cam%i_ha_obs'%self.camera))
+        master_hdulist.append(fits.ImageHDU(data = self.ha_int, name = 'cam%i_ha_int'%self.camera))
+
+        return master_hdulist
+
+
+
+
+
+
+
 def measure_momentum(snapfile):
     print 'Measuring momentum for '+ snapfile
-
     aname = (os.path.basename(snapfile)).split('_')[-1].rstrip('.d')
-    print "\tTimestep name: ", aname
 
     snap_dir = os.path.dirname(snapfile) #os.path.join(simname+'_'+aname+'_sunrise')
+    simname = snapfile.split('_')[0]
 
-    print "\tSunrise directory: ", snap_dir
-    assert os.path.lexists(snap_dir)
+    mom = momentum_obj(simname, aname)
+    mom.write()
+
+
+    '''
+    master_hdulist = []
+    prihdr = fits.Header()
+    prihdr['COMMENT'] = "Storing the kinematic maps in this FITS file."
+    prihdr['ncams'] = str(ncams)
+    prihdu = fits.PrimaryHDU(header=prihdr)    
+    master_hdulist.append(prihdu)
+
+    '''
+
+
 
 
 
