@@ -84,6 +84,13 @@ def measure_momentum(snapfile):
     mom = momentum_obj(simname, aname, snapfile)
     mom.write()
 
+    ds = yt.load(snapfile)
+    dd = ds.all_data()
+
+
+
+
+
 
     '''
     master_hdulist = []
@@ -169,28 +176,6 @@ if __name__ == "__main__":
 
 
     for snapfile in new_snapfiles:
-
-        aname = (os.path.basename(snapfile)).split('_')[-1].rstrip('.d')
-
-        print "Timestep name: ", aname
-
-        snap_dir = os.path.dirname(snapfile) #os.path.join(simname+'_'+aname+'_sunrise')
-
-        print "Sunrise directory: ", snap_dir
-        assert os.path.lexists(snap_dir)
-
-
-
-        out_sim_dir = os.path.join('/nobackupp2/rcsimons/momentum_measurements/', simname)
-        print os.path.lexists(out_sim_dir)
-        if not os.path.lexists(out_sim_dir):
-            os.mkdir(out_sim_dir)                    
-
-        out_dir = os.path.join(out_sim_dir, snap_dir.rstrip('_sunrise'))
-        print os.path.lexists(out_dir)
-        if not os.path.lexists(out_dir):
-            os.mkdir(out_dir)
-
 
         if os.path.abspath(snapfile) not in galprops['snap_files']: continue
         idx = np.argwhere(galprops['snap_files']==os.path.abspath(snapfile))[0][0]
