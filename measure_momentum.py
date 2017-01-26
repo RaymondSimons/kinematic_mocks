@@ -146,7 +146,7 @@ def measure_momentum(snapfile, out_sim_dir, nir_cat, nir_disc_cat):
     fits_name = out_sim_dir+'/'+simname+'_'+aname+'_momentum.fits'
     mom = momentum_obj(simname, aname, snapfile, fits_name)
     print aname
-    in_nir = where(nir_cat[:,0] == aname)[0][0]
+    in_nir = where(nir_cat[:,0] == aname)
     if len(in_nir) == 0: return
     print good
 
