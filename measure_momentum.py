@@ -53,7 +53,6 @@ class momentum_obj():
     def load(self):
         dd = self.ds.all_data()
 
-
         print 'Loading star velocities...'
         self.stars_vx = dd['stars', 'particle_velocity_x'].in_units('km/s')
         self.stars_vy = dd['stars', 'particle_velocity_y'].in_units('km/s')
@@ -69,13 +68,10 @@ class momentum_obj():
         self.gas_vy = dd['gas', 'velocity_y'].in_units('km/s')
         self.gas_vz = dd['gas', 'velocity_z'].in_units('km/s')
         
-
         print 'Loading gas cell position...'
         self.gas_x = dd['index', 'x'].in_units('kpc')
         self.gas_y = dd['index', 'y'].in_units('kpc')
         self.gas_z = dd['index', 'z'].in_units('kpc')
-
-
 
         print 'Loading gas temperature...'
         self.gas_temp = dd['gas', 'temperature']
@@ -88,7 +84,7 @@ class momentum_obj():
 
         self.star_mass = dd['stars', 'particle_mass'].in_units('Msun')
         self.star_creation_time = dd['stars', 'particle_creation_time'].in_units('yr')
-        self.star_age = ds.arr(cosmo.age(ds.current_redshift).value, 'Gyr').in_units('yr') - self.star_creation_time
+        self.star_age = ds.arr(cosmo.age(self.ds.current_redshift).value, 'Gyr').in_units('yr') - self.star_creation_time
 
 
         print 'Finished loading...'
@@ -221,21 +217,15 @@ class momentum_obj():
         master_hdulist.append(prihdu)
 
         colhdr = fits.Header()
-        master_hdulist.append(fits.ImageHDU(data = np.stack((self.stars_x_cen , self.stars_y_cen , self.stars_z_cen)), header = colhdr , name = 'stars_xyz_position'))
-        master_hdulist.append(fits.ImageHDU(data = np.stack((self.gas_x_cen , self.gas_y_cen , self.gas_z_cen)), header = colhdr , name = 'gas_xyz_position'))
-
-        master_hdulist.append(fits.ImageHDU(data = np.stack((self.rr_stars, self.zz_stars)), header = colhdr , name = 'stars_cylindrical_position'))
-        master_hdulist.append(fits.ImageHDU(data = np.stack((self.rr_gas, self.zz_gas)), header = colhdr , name = 'gas_cylindrical_position'))
-
-        master_hdulist.append(fits.ImageHDU(data = np.stack((self.stars_jx_cen, self.stars_jy_cen, self.stars_jz_cen)), header = colhdr, name = 'stars_momentum'))
-        master_hdulist.append(fits.ImageHDU(data = np.stack((self.gas_jx_cen, self.gas_jy_cen, self.gas_jz_cen)), header = colhdr, name = 'gas_momentum'))
-
-        master_hdulist.append(fits.ImageHDU(data = self.epsilon_stars, header = colhdr, name = 'stars_epsilon'))
+        master_hdulist.append(fits.ImageHDU(data = np.stack((self.stars_x_cen , self.stars_y_cen , self.stars_z_cen))   , header = colhdr , name = 'stars_xyz_position'))
+        master_hdulist.append(fits.ImageHDU(data = np.stack((self.gas_x_cen , self.gas_y_cen , self.gas_z_cen))         , header = colhdr , name = 'gas_xyz_position'))
+        master_hdulist.append(fits.ImageHDU(data = np.stack((self.rr_stars, self.zz_stars))                             , header = colhdr , name = 'stars_cylindrical_position'))
+        master_hdulist.append(fits.ImageHDU(data = np.stack((self.rr_gas, self.zz_gas))                                 , header = colhdr , name = 'gas_cylindrical_position'))
+        master_hdulist.append(fits.ImageHDU(data = np.stack((self.stars_jx_cen, self.stars_jy_cen, self.stars_jz_cen))  , header = colhdr, name = 'stars_momentum'))
+        master_hdulist.append(fits.ImageHDU(data = np.stack((self.gas_jx_cen, self.gas_jy_cen, self.gas_jz_cen))        , header = colhdr, name = 'gas_momentum'))
+        master_hdulist.append(fits.ImageHDU(data = self.epsilon_stars                                                   , header = colhdr, name = 'stars_epsilon'))
         master_hdulist.append(fits.ImageHDU(data = self.epsilon_gas  , header = colhdr, name = 'gas_epsilon'))
-
         master_hdulist.append(fits.ImageHDU(data = self.mass_profile  , header = colhdr, name = 'mass_profile'))
-
-
         master_hdulist.append(fits.ImageHDU(data = self.gas_temp  , header = colhdr, name = 'gas_temperature'))
         master_hdulist.append(fits.ImageHDU(data = self.gas_mass  , header = colhdr, name = 'gas_mass'))
         master_hdulist.append(fits.ImageHDU(data = self.star_mass  , header = colhdr, name = 'star_mass'))
