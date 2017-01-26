@@ -82,7 +82,7 @@ if __name__ == "__main__":
         stars_data.append('stars_'+aname+'.dat')
         snap_dir = os.path.join(simname+'_'+aname+'_sunrise')
         
-        print "Sunrise directory: ", snap_dir
+        #print "Sunrise directory: ", snap_dir
         if not os.path.lexists(snap_dir):
             os.mkdir(snap_dir)        
 
