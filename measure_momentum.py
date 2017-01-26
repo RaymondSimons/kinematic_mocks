@@ -65,7 +65,7 @@ class momentum_obj():
         self.gas_vx = dd['gas', 'velocity_x']
         self.gas_vy = dd['gas', 'velocity_y']
         self.gas_vz = dd['gas', 'velocity_z']
-
+        '''
         print 'Loading gas temperature...'
         self.gas_temp = dd['gas', 'temperature']
 
@@ -94,7 +94,7 @@ class momentum_obj():
         self.star_vx = dd['stars', 'particle_velocity_x'].in_units('km/s')
         self.star_vy = dd['stars', 'particle_velocity_y'].in_units('km/s')
         self.star_vz = dd['stars', 'particle_velocity_z'].in_units('km/s')
-
+        '''
 
 
     def write_fits(self):
@@ -108,10 +108,11 @@ class momentum_obj():
         prihdu = fits.PrimaryHDU(header=prihdr)    
         master_hdulist.append(prihdu)
 
+        colhdr = fits.Header()
+        master_hdulist.append(fits.ImageHDU(data = zip(self.gas_vx, self.gas_vy, self.gas_vz), header = colhdr, name = 'gas velocity'))
+
 
         '''
-        colhdr = fits.Header()
-        master_hdulist.append(fits.ImageHDU(data = self.orig_cube, header = self.orig_cube_hdr, name = 'cam%i_orig_cube'%self.camera))
         master_hdulist.append(fits.ImageHDU(data = self.cube, header = self.cube_hdr, name = 'cam%i_obs_cube'%self.camera))
         master_hdulist.append(fits.ImageHDU(data = array([self.disp_int, self.edisp_int]), name = 'cam%i_disp_int'%self.camera))
         master_hdulist.append(fits.ImageHDU(data = array([self.disp_obs, self.edisp_obs]), name = 'cam%i_disp_obs'%self.camera))
