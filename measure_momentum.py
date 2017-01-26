@@ -230,7 +230,7 @@ class momentum_obj():
         master_hdulist.append(fits.ImageHDU(data = self.gas_mass                                                       , header = colhdr, name = 'gas_mass'))
         master_hdulist.append(fits.ImageHDU(data = self.star_mass                                                      , header = colhdr, name = 'star_mass'))
         master_hdulist.append(fits.ImageHDU(data = self.star_creation_time                                             , header = colhdr, name = 'star_creation_time'))
-        master_hdulist.append(fits.ImageHDU(data = self.star_age                                                       , header = colhdr, name = 'star_age')
+        master_hdulist.append(fits.ImageHDU(data = self.star_age                                                       , header = colhdr, name = 'star_age'))
 
 
         thdulist = fits.HDUList(master_hdulist)
