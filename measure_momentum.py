@@ -53,9 +53,6 @@ def measure_momentum(snapfile):
     print "\tSunrise directory: ", snap_dir
     assert os.path.lexists(snap_dir)
 
-    simname = (snapfile).split('_')[0]
-    print "\tSimulation name:  ", simname
-
 
 
 
@@ -80,7 +77,11 @@ if __name__ == "__main__":
     simname = os.path.basename(dirname) #assumes directory name for simulation name
     print "Simulation name:  ", simname
 
-
+    out_sim_dir = os.path.join('/nobackupp2/rcsimons/momentum_measurements/', simname)
+    print os.path.lexists(out_sim_dir)
+    if not os.path.lexists(out_sim_dir):
+        print 'Creating momentum directory for %s'%out_sim_dir
+        os.mkdir(out_sim_dir)                
 
 
 
