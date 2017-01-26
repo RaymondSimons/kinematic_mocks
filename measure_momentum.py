@@ -122,10 +122,6 @@ class momentum_obj():
         '''
 
         thdulist = fits.HDUList(master_hdulist)
-        thdulist.writeto(out_dir+'/'+'kinematics.fits', clobber = True)        
-
-
-        thdulist = fits.HDUList(master_hdulist)
         print '\t\t\t Saving to ' + self.fits_name
         thdulist.writeto(self.fits_name, clobber = True)
 
