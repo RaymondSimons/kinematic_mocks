@@ -57,7 +57,7 @@ class momentum_obj():
 
 
     def load(self):
-        ds = yt.load(mom.snapfile)
+        ds = yt.load(self.snapfile)
         dd = ds.all_data()
 
         print 'Loading gas velocity...'
