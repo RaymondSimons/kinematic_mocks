@@ -47,8 +47,8 @@ if __name__ == "__main__":
     f.write('#PBS -N momentum_measurements\n')
     f.write('#PBS -M rsimons@jhu.edu\n')
     f.write('#PBS -m abe\n')
-    f.write('#PBS -o ./out_err/%s.out\n'%aname)
-    f.write('#PBS -e ./out_err/%s.err\n'%aname)
+    f.write('#PBS -o ./out_err/%s.out\n'%gal)
+    f.write('#PBS -e ./out_err/%s.err\n'%gal)
     f.write('#PBS -V\n')
 
     f.write('cd /nobackupp2/gfsnyder/VELA_sunrise/Runs/VELA_v2/%s'%gal)
