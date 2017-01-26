@@ -76,7 +76,7 @@ class momentum_obj():
         self.gas_z = dd['index', 'z'].in_units('kpc')
 
 
-        '''
+
         print 'Loading gas temperature...'
         self.gas_temp = dd['gas', 'temperature']
 
@@ -90,7 +90,6 @@ class momentum_obj():
         self.star_creation_time = dd['stars', 'particle_creation_time'].in_units('yr')
         self.star_age = ds.arr(cosmo.age(ds.current_redshift).value, 'Gyr').in_units('yr') - self.star_creation_time
 
-        '''
 
         print 'Finished loading...'
 
@@ -151,7 +150,7 @@ class momentum_obj():
         self.stars_jx_cen = self.stars_vz_cen * self.stars_y_cen - self.stars_z_cen * self.stars_vy_cen
         self.stars_jy_cen = self.stars_vx_cen * self.stars_z_cen - self.stars_x_cen * self.stars_vz_cen
         self.stars_jz_cen = self.stars_vy_cen * self.stars_x_cen - self.stars_y_cen * self.stars_vx_cen
-        self.stars_j_cen = array([self.stars_jx_cen, self.stars_jy_cen, self.stars_jz_cen])
+        self.stars_j_cen  = array([self.stars_jx_cen, self.stars_jy_cen, self.stars_jz_cen])
         self.stars_j_mag  = sqrt(self.stars_jx_cen**2. + self.stars_jy_cen**2. + self.stars_jz_cen**2.)
 
 
@@ -159,7 +158,7 @@ class momentum_obj():
         self.gas_jx_cen = self.gas_vz_cen * self.gas_y_cen - self.gas_z_cen * self.gas_vy_cen
         self.gas_jy_cen = self.gas_vx_cen * self.gas_z_cen - self.gas_x_cen * self.gas_vz_cen
         self.gas_jz_cen = self.gas_vy_cen * self.gas_x_cen - self.gas_y_cen * self.gas_vx_cen
-        self.gas_j_cen = array([self.gas_jx_cen, self.gas_jy_cen, self.gas_jz_cen])
+        self.gas_j_cen  = array([self.gas_jx_cen, self.gas_jy_cen, self.gas_jz_cen])
         self.gas_j_mag  = sqrt(self.gas_jx_cen**2. + self.gas_jy_cen**2. + self.gas_jz_cen**2.)
 
 
@@ -177,42 +176,36 @@ class momentum_obj():
             baryon_mass, particle_mass = gc_sphere.quantities.total_quantity(["cell_mass", "particle_mass"])
             self.mass_profile[0,i] = rad_steps[i]
             self.mass_profile[1,i] = baryon_mass + particle_mass
-        self.spl = UnivariateSpline(total_mass[0,:], total_mass[1,:])
+        self.spl = UnivariateSpline(self.mass_profile[0,:], self.mass_profile[1,:])
 
     def measure_circularity(self):
         G = astropy.constants.G.to('kpc^3/Msun*s^2') # in kpc^3/Msun*s^2
-        internal_mass_gas = self.ds.arr(self.spl(self.gas_pos_mag),'g').in_units('Msun')
-        self.vcirc_gas = self.ds.arr(sqrt(G*internal_mass_gas/(self.gas_pos_mag)),'kpc/s').in_units('km/s')
-        self.jcirc_gas = self.vcirc_gas * self.gas_pos_mag
+        internal_mass_gas   = self.ds.arr(self.spl(self.gas_pos_mag),'g').in_units('Msun')
+        self.vcirc_gas      = self.ds.arr(sqrt(G*internal_mass_gas/(self.gas_pos_mag)),'kpc/s').in_units('km/s')
+        self.jcirc_gas      = self.vcirc_gas * self.gas_pos_mag
 
         internal_mass_stars = self.ds.arr(self.spl(self.stars_pos_mag),'g').in_units('Msun')
-        self.vcirc_stars = self.ds.arr(sqrt(G*internal_mass_stars/(self.stars_pos_mag)),'kpc/s').in_units('km/s')
-        self.jcirc_stars = self.vcirc_stars * self.stars_pos_mag
-
-        self.L_mag = sqrt(self.L_disk[0]**2.+self.L_disk[1]**2.+self.L_disk[2]**2.)
-
-        costheta_gas = np.dot(self.L_disk, self.gas_j_cen)/(self.gas_j_mag*self.L_mag)
-        self.jz_gas = costheta_gas*self.gas_j_mag
-
-        costheta_stars = np.dot(self.L_disk, self.stars_j_cen)/(self.stars_j_mag*self.L_mag)
-        self.jz_stars = costheta_stars*self._stars_j_mag
-
-        self.epsilon_gas   = self.jz_gas/self.jcirc_gas
-        self.epsilon_stars = self.jz_stars/self.jcirc_stars
-
+        self.vcirc_stars    = self.ds.arr(sqrt(G*internal_mass_stars/(self.stars_pos_mag)),'kpc/s').in_units('km/s')
+        self.jcirc_stars    = self.vcirc_stars * self.stars_pos_mag
+        self.L_mag          = sqrt(self.L_disk[0]**2.+self.L_disk[1]**2.+self.L_disk[2]**2.)
+ 
+        costheta_gas        = np.dot(self.L_disk, self.gas_j_cen)/(self.gas_j_mag*self.L_mag)
+        self.jz_gas         = costheta_gas*self.gas_j_mag
+ 
+        costheta_stars      = np.dot(self.L_disk, self.stars_j_cen)/(self.stars_j_mag*self.L_mag)
+        self.jz_stars       = costheta_stars*self._stars_j_mag
+ 
+        self.epsilon_gas    = self.jz_gas/self.jcirc_gas
+        self.epsilon_stars  = self.jz_stars/self.jcirc_stars
 
 
-        costheta_gas = np.dot(self.L_disk, self.gas_pos_cen)/(self.gas_pos_mag*self.L_mag)
-        self.zz_gas = costheta_gas * self.gas_pos_mag
-        self.rr_gas = sqrt(self.gas_pos_mag**2. - self.zz_gas**2.)
+
+        costheta_gas   = np.dot(self.L_disk, self.gas_pos_cen)/(self.gas_pos_mag*self.L_mag)
+        self.zz_gas    = costheta_gas * self.gas_pos_mag
+        self.rr_gas    = sqrt(self.gas_pos_mag**2. - self.zz_gas**2.)
         costheta_stars = np.dot(self.L_disk, self.stars_pos_cen)/(self.stars_pos_mag*self.L_mag)
-        self.zz_stars = costheta_stars * self.stars_pos_mag
-        self.rr_stars = sqrt(self.stars_pos_mag**2. - self.zz_stars**2.)
-
-
-
-
-
+        self.zz_stars  = costheta_stars * self.stars_pos_mag
+        self.rr_stars  = sqrt(self.stars_pos_mag**2. - self.zz_stars**2.)
 
 
     def write_fits(self):
@@ -241,6 +234,19 @@ class momentum_obj():
         master_hdulist.append(fits.ImageHDU(data = self.epsilon_gas  , header = colhdr, name = 'gas_epsilon'))
 
         master_hdulist.append(fits.ImageHDU(data = self.mass_profile  , header = colhdr, name = 'mass_profile'))
+
+
+        master_hdulist.append(fits.ImageHDU(data = self.gas_temp  , header = colhdr, name = 'gas_temperature'))
+        master_hdulist.append(fits.ImageHDU(data = self.gas_mass  , header = colhdr, name = 'gas_mass'))
+        master_hdulist.append(fits.ImageHDU(data = self.star_mass  , header = colhdr, name = 'star_mass'))
+        master_hdulist.append(fits.ImageHDU(data = self.star_creation_time  , header = colhdr, name = 'star_creation_time'))
+        master_hdulist.append(fits.ImageHDU(data = self.star_age  , header = colhdr, name = 'star_age'))
+
+
+
+
+
+
 
 
 
