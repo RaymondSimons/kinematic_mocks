@@ -61,11 +61,23 @@ class momentum_obj():
         ds = yt.load(self.snapfile)
         dd = ds.all_data()
 
+
+        print 'Loading star velocities...'
+        self.stars_vx = dd['stars', 'particle_velocity_x'].in_units('km/s')
+        self.stars_vy = dd['stars', 'particle_velocity_y'].in_units('km/s')
+        self.stars_vz = dd['stars', 'particle_velocity_z'].in_units('km/s')
+
+        print 'Loading star positions...'
+        self.stars_x = dd['stars', 'particle_position_x'].in_units('kpc')
+        self.stars_y = dd['stars', 'particle_position_y'].in_units('kpc')
+        self.stars_z = dd['stars', 'particle_position_z'].in_units('kpc')
+
+        '''
         print 'Loading gas velocity...'
         self.gas_vx = dd['gas', 'velocity_x'].in_units('km/s')
         self.gas_vy = dd['gas', 'velocity_y'].in_units('km/s')
         self.gas_vz = dd['gas', 'velocity_z'].in_units('km/s')
-        '''
+        
         print 'Loading gas temperature...'
         self.gas_temp = dd['gas', 'temperature']
 
@@ -82,21 +94,48 @@ class momentum_obj():
 
 
 
-        print 'Loading star positions...'
-        self.star_x = dd['stars', 'particle_position_x'].in_units('kpc')
-        self.star_y = dd['stars', 'particle_position_y'].in_units('kpc')
-        self.star_z = dd['stars', 'particle_position_z'].in_units('kpc')
         self.star_mass = dd['stars', 'particle_mass'].in_units('Msun')
         self.star_creation_time = dd['stars', 'particle_creation_time'].in_units('yr')
         self.star_age = ds.arr(cosmo.age(ds.current_redshift).value, 'Gyr').in_units('yr') - self.star_creation_time
 
-        print 'Loading star velocities...'
-        self.star_vx = dd['stars', 'particle_velocity_x'].in_units('km/s')
-        self.star_vy = dd['stars', 'particle_velocity_y'].in_units('km/s')
-        self.star_vz = dd['stars', 'particle_velocity_z'].in_units('km/s')
         '''
 
         print 'Finished loading...'
+
+
+    def calc_momentum(nir_cat, nir_disc_cat):
+        print 'Calculating momentum...'
+        
+        id_cen_star      = nir_cat[1].astype('int')
+        cold_cen         = nir_disc_cat[1:4].astype('float')
+        cen_star_offset  = nir_cat[2:5].astype('float')
+        cen_star_voffset = nir_cat[5:8].astype('float')
+
+        #Determine offset
+        cen_x = self.stars_x[id_cen_star-1] - cen_star_offset[0]
+        cen_y = self.stars_y[id_cen_star-1] - cen_star_offset[1]
+        cen_z = self.stars_z[id_cen_star-1] - cen_star_offset[2]
+        cen_vx = self.stars_vx[id_cen_tar-1] - cen_star_voffset[0]
+        cen_vy = self.stars_vy[id_cen_tar-1] - cen_star_voffset[1] 
+        cen_vz = self.stars_vz[id_cen_star-1] - cen_star_voffset[2]
+
+
+        #Recenter positions and velocities
+        self.stars_x_cen = self.stars_x - cen_vx
+        self.stars_y_cen = self.stars_y - cen_vy
+        self.stars_z_cen = self.stars_z - cen_vz
+        self.stars_vx_cen = self.stars_vx - cen_vx
+        self.stars_vy_cen = self.stars_vy - cen_vy
+        self.stars_vz_cen = self.stars_vz - cen_vz
+
+        #Calculate momentum
+        self.stars_pos_mag = sqrt(self.stars_x_cen**2.  + self.stars_y_cen**2.  + self.stars_z_cen**2.)
+        self.stars_vel_mag = sqrt(self.stars_vx_cen**2. + self.stars_vy_cen**2. + self.stars_vz_cen**2.)
+
+        self.stars_jx_cen = self.stars_vz_cen * self.stars_y_cen - self.stars_z_cen * self.stars_vy_cen
+        self.stars_jy_cen = self.stars_vx_cen * self.stars_z_cen - self.stars_x_cen * self.stars_vz_cen
+        self.stars_jz_cen = self.stars_vy_cen * self.stars_x_cen - self.stars_y_cen * self.stars_vx_cen
+        self.stars_j_mag = sqrt(self.stars_jx_cen**2. + self.stars_jy_cen**2. + self.stars_jz_cen**2.)
 
 
     def write_fits(self):
@@ -112,7 +151,8 @@ class momentum_obj():
         master_hdulist.append(prihdu)
 
         colhdr = fits.Header()
-        master_hdulist.append(fits.ImageHDU(data = np.stack((self.gas_vx, self.gas_vy, self.gas_vz)), header = colhdr, name = 'gas_velocity'))
+        master_hdulist.append(fits.ImageHDU(data = np.stack((self.stars_jx_cen, self.stars_jx_cen, self.stars_jx_cen)), header = colhdr, name = 'stars_momentum'))
+        master_hdulist.append(fits.ImageHDU(data = np.stack((self.stars_x_cen, self.stars_y_cen, self.stars_z_cen)), header = colhdr, name = 'stars_radius'))
 
 
         '''
@@ -139,23 +179,27 @@ class momentum_obj():
 
 
 
+
 def measure_momentum(snapfile, out_sim_dir, nir_cat, nir_disc_cat):
     print 'Measuring momentum for '+ snapfile
     aname = (os.path.basename(snapfile)).split('_')[-1].rstrip('.d')
     simname = snapfile.split('_')[0]
     fits_name = out_sim_dir+'/'+simname+'_'+aname+'_momentum.fits'
     mom = momentum_obj(simname, aname, snapfile, fits_name)
+    mom.load()
+
+
+
     in_nir = where(nir_cat[:,0] == aname)[0]
     if len(in_nir) == 0: return
     nir_cat = nir_cat[in_nir[0]]
     nir_disc_cat = nir_disc_cat[in_nir[0]]
     L_disk_s = nir_cat[8:11].astype('float')
-    print L_disk_s
+    L_disk           = nir_disc_cat[7:10].astype('float')
 
-
-    #mom.write()
-    #mom.load()
-    #mom.write_fits()
+    mom.load()
+    mom.calc_momentum(nir_cat, nir_disc_cat)
+    mom.write_fits()
 
 
 
