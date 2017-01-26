@@ -44,10 +44,11 @@ def parse():
 
 
 class momentum_obj():
-    def __init__(self, simname, aname, snapfile):
+    def __init__(self, simname, aname, snapfile, fits_name):
         self.simname = simname
         self.aname = aname
         self.snapfile = snapfile
+        self.fits_name = 
 
 
     def write(self):
@@ -87,7 +88,7 @@ class momentum_obj():
         self.star_z = dd['stars', 'particle_position_z'].in_units('kpc')
         self.star_mass = dd['stars', 'particle_mass'].in_units('Msun')
         self.star_creation_time = dd['stars', 'particle_creation_time'].in_units('yr')
-        self.star_age_all = ds.arr(cosmo.age(ds.current_redshift).value, 'Gyr').in_units('yr') - star_creation_time
+        self.star_age = ds.arr(cosmo.age(ds.current_redshift).value, 'Gyr').in_units('yr') - self.star_creation_time
 
         print 'Loading star velocities...'
         self.star_vx = dd['stars', 'particle_velocity_x'].in_units('km/s')
@@ -96,7 +97,19 @@ class momentum_obj():
 
 
 
-    def get_hdulist(self, master_hdulist):
+    def write_fits(self):
+        master_hdulist = []
+        prihdr = fits.Header()
+        prihdr['COMMENT'] = "Storing the momentum measurements in this FITS file."
+        prihdr['simname'] = self.simname
+        prihdr['scale'] = self.aname.strip('a')
+        prihdr['snapfile'] = self.snapfile
+
+        prihdu = fits.PrimaryHDU(header=prihdr)    
+        master_hdulist.append(prihdu)
+
+
+        '''
         colhdr = fits.Header()
         master_hdulist.append(fits.ImageHDU(data = self.orig_cube, header = self.orig_cube_hdr, name = 'cam%i_orig_cube'%self.camera))
         master_hdulist.append(fits.ImageHDU(data = self.cube, header = self.cube_hdr, name = 'cam%i_obs_cube'%self.camera))
@@ -106,6 +119,17 @@ class momentum_obj():
         master_hdulist.append(fits.ImageHDU(data = array([self.vel_obs,self.evel_obs]), name = 'cam%i_vel_obs'%self.camera))
         master_hdulist.append(fits.ImageHDU(data = self.ha_obs, name = 'cam%i_ha_obs'%self.camera))
         master_hdulist.append(fits.ImageHDU(data = self.ha_int, name = 'cam%i_ha_int'%self.camera))
+        '''
+
+        thdulist = fits.HDUList(col_list)
+        thdulist.writeto(out_dir+'/'+'kinematics.fits', clobber = True)        
+
+
+        thdulist = fits.HDUList(master_hdulist)
+        print '\t\t\t Saving to ' + self.fits_name
+        thdulist.writeto(self.fits_name, clobber = True)
+
+
 
         return master_hdulist
 
@@ -119,25 +143,11 @@ def measure_momentum(snapfile):
     print 'Measuring momentum for '+ snapfile
     aname = (os.path.basename(snapfile)).split('_')[-1].rstrip('.d')
     simname = snapfile.split('_')[0]
-
-    mom = momentum_obj(simname, aname, snapfile)
+    fits_name = simname+'_'+aname+'_momentum.fits'
+    mom = momentum_obj(simname, aname, snapfile, fits_name)
     mom.write()
-    mom.load()
-
-
-
-
-
-    '''
-    master_hdulist = []
-    prihdr = fits.Header()
-    prihdr['COMMENT'] = "Storing the kinematic maps in this FITS file."
-    prihdr['ncams'] = str(ncams)
-    prihdu = fits.PrimaryHDU(header=prihdr)    
-    master_hdulist.append(prihdu)
-
-    '''
-
+    #mom.load()
+    mom.write_fits()
 
 
 
