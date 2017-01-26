@@ -32,9 +32,6 @@ def parse():
     #parser.add_argument('-d', '--distance', default=100000, type=float,
     #                    help='Distance between cameras and the center of the galaxy (in [kpc]).')
 
-    #parser.add_argument('-f', '--fov', default=50, type=float,
-    #                    help='Field of view of the cameras at the image plane (in [kpc]).')
-
     #parser.add_argument('--no_export',action='store_true',
     #                    help='Do not export data to fits for Sunrise.') 
 
@@ -176,7 +173,7 @@ class momentum_obj():
 
         for i in arange(0,len(rad_steps)):
             print i, rad_steps[i], len(rad_steps)
-            gc_sphere =  ds.sphere(center, self.ds.arr(rad_steps[i],'kpc'))
+            gc_sphere =  self.ds.sphere(center, self.ds.arr(rad_steps[i],'kpc'))
             baryon_mass, particle_mass = gc_sphere.quantities.total_quantity(["cell_mass", "particle_mass"])
             self.mass_profile[0,i] = rad_steps[i]
             self.mass_profile[1,i] = baryon_mass + particle_mass
@@ -358,98 +355,6 @@ if __name__ == "__main__":
 
 
     Parallel(n_jobs = -1)(delayed(measure_momentum)(new_snapfiles[i], out_sim_dir, nir_cat, nir_disc_cat) for i in arange(len(new_snapfiles)))
-
-
-
-    '''
-    # Loop over snapshot to generate cameras and projection plots, 
-    # parallelization happens while generating the plots.
-    galprops_file = simname+'_galprops.npy'
-    galprops = np.load(galprops_file)[()]
-
-
-
-    for snapfile in new_snapfiles:
-
-        if os.path.abspath(snapfile) not in galprops['snap_files']: continue
-        idx = np.argwhere(galprops['snap_files']==os.path.abspath(snapfile))[0][0]
-
-
-        ds = yt.load(snapfile)
-        dd = ds.all_data()
-
-        print 'Loading gas velocity...'
-        gas_vx = dd['gas', 'velocity_x']
-        gas_vy = dd['gas', 'velocity_y']
-        gas_vz = dd['gas', 'velocity_z']
-
-        print 'Loading gas temperature...'
-        gas_temp = dd['gas', 'temperature']
-
-        print 'Loading gas cell mass...'
-        gas_mass = dd['gas', 'cell_mass']
-
-        print 'Loading cell potential...'
-        gas_potential = dd['gas', 'potential']
-
-        print 'Loading gas cell position...'
-        gas_x = dd['index', 'x'].in_units('kpc')
-        gas_y = dd['index', 'y'].in_units('kpc')
-        gas_z = dd['index', 'z'].in_units('kpc')
-
-
-
-        print 'Loading star positions...'
-        star_x = dd['stars', 'particle_position_x'].in_units('kpc')
-        star_y = dd['stars', 'particle_position_y'].in_units('kpc')
-        star_z = dd['stars', 'particle_position_z'].in_units('kpc')
-        star_mass = dd['stars', 'particle_mass'].in_units('Msun')
-        star_creation_time = dd['stars', 'particle_creation_time'].in_units('yr')
-        star_age_all = ds.arr(cosmo.age(ds.current_redshift).value, 'Gyr').in_units('yr') - star_creation_time
-
-        print 'Loading star velocities...'
-        star_vx = dd['stars', 'particle_velocity_x'].in_units('km/s')
-        star_vy = dd['stars', 'particle_velocity_y'].in_units('km/s')
-        star_vz = dd['stars', 'particle_velocity_z'].in_units('km/s')
-
-
-        stars_L = galprops['stars_L'][idx]
-        gas_L 	= galprops['gas_L'][idx]
-
-
-        try:
-            L_sum = stars_L + gas_L
-        except TypeError:
-            L_sum = gas_L
-
-            
-        L = L_sum/np.sqrt(np.sum(L_sum*L_sum))
-
-        print stars_L, gas_L
-
-
-
-        col_list = []
-        prihdr = fits.Header()
-        prihdr['COMMENT'] = "Storing the momentum properties in this FITS file."
-        prihdu = fits.PrimaryHDU(header=prihdr)
-        col_list.append(prihdu)
-        col_list.append(fits.ImageHDU(data = young_stars_L, name = 'Young_Stars_L'))        
-        col_list.append(fits.ImageHDU(data = stars_L, name = 'Stars_L'))
-        col_list.append(fits.ImageHDU(data = gas_L, name = 'Gas_L'))
-        col_list.append(fits.ImageHDU(data = np.empty((10,10)), name = 'Gas_circularity_z'))
-        col_list.append(fits.ImageHDU(data = np.empty((10,10)), name = 'Gas_circularity_z'))
-        col_list.append(fits.ImageHDU(data = np.empty((10,10)), name = 'Gas_circularity_r'))
-        col_list.append(fits.ImageHDU(data = np.empty((10,10)), name = 'Young_Stars_circularity_z'))
-        col_list.append(fits.ImageHDU(data = np.empty((10,10)), name = 'Young_Stars_circularity_r'))
-        col_list.append(fits.ImageHDU(data = np.empty((10,10)), name = 'Old_Stars_circularity_z'))
-        col_list.append(fits.ImageHDU(data = np.empty((10,10)), name = 'Old_Stars_circularity_r'))
-
-        thdulist = fits.HDUList(col_list)
-        thdulist.writeto(out_dir+'/'+'kinematics.fits', clobber = True)
-    '''
-
-
 
 
 
