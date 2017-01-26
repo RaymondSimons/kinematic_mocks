@@ -18,14 +18,6 @@ def parse():
 
     parser.add_argument('gal', nargs='?', default=None, help='Snapshot files to be analyzed.')
 
-    #parser.add_argument('-s', '--snap_base', default='10MpcBox_csf512_',
-    #                    help='Base of the snapshots file names.') 
-
-    #parser.add_argument('-d', '--distance', default=100000, type=float,
-    #                    help='Distance between cameras and the center of the galaxy (in [kpc]).')
-
-    #parser.add_argument('--no_export',action='store_true',
-    #                    help='Do not export data to fits for Sunrise.') 
 
     args = vars(parser.parse_args())
     return args
@@ -38,28 +30,45 @@ gal = 'VELA28'
 
 if __name__ == "__main__":
     args = parse()
-
     if args['gal'] is not None: gal = args['gal']
     else: gal = 'VELA28'
 
-    snaps = glob.glob('/nobackupp2/gfsnyder/VELA_sunrise/Runs/VELA_v2/'+gal+'/*.d')
-    print snaps
-    for sn in snaps:
-        aname = sn.split('_')[-1].rstrip('.d').strip('a')
-        print aname
+    qsub_direct = '/nobackupp2/rcsimons/momentum_measurements/qsub'
+
+
+
+    fname = qsub_direct+'/meas_moment_'+gal+'.qsub'
+    f = open(fname)
+
+    f.write('#PBS -S /bin/bash\n')
+    f.write('#PBS -l select=1:ncpus=20:model=has\n')
+    f.write('#PBS -l walltime=01:00:00\n')
+    f.write('#PBS -q normal\n')
+    f.write('#PBS -N momentum_measurements\n')
+    f.write('#PBS -M rsimons@jhu.edu\n')
+    f.write('#PBS -m abe\n')
+    f.write('#PBS -o ./out_err/%s.out\n'%aname)
+    f.write('#PBS -e ./out_err/%s.err\n'%aname)
+    f.write('#PBS -V\n')
+
+    f.write('cd /nobackupp2/gfsnyder/VELA_sunrise/Runs/VELA_v2/%s'%gal)
+    f.write('python /u/rcsimons/scripts/kinematic_mocks/measure_momentum.py')
+
+    f.close()
 
 
 
 
 
 
-#PBS -S /bin/bash
-#PBS -l select=1:ncpus=1:model=has
-#PBS -l walltime=04:00:00
-#PBS -q normal
-#PBS -N sunrise_export
-#PBS -M gsnyder@stsci.edu
-#PBS -m abe
-#PBS -o sunrise_export_a0.200pbs.out
-#PBS -e sunrise_export_a0.200pbs.err
-#PBS -V
+
+
+
+
+
+
+
+
+
+
+
