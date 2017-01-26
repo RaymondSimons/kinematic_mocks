@@ -139,15 +139,18 @@ class momentum_obj():
 
 
 
-def measure_momentum(snapfile, out_sim_dir):
+def measure_momentum(snapfile, out_sim_dir, nir_cat, nir_disc_cat):
     print 'Measuring momentum for '+ snapfile
     aname = (os.path.basename(snapfile)).split('_')[-1].rstrip('.d')
     simname = snapfile.split('_')[0]
     fits_name = out_sim_dir+'/'+simname+'_'+aname+'_momentum.fits'
     mom = momentum_obj(simname, aname, snapfile, fits_name)
     #mom.write()
-    mom.load()
-    mom.write_fits()
+    #mom.load()
+    #mom.write_fits()
+
+
+
 
 
 
@@ -171,6 +174,12 @@ if __name__ == "__main__":
 
     dirname = os.path.dirname(abssnap)
     simname = os.path.basename(dirname) #assumes directory name for simulation name
+
+    nir_cat_name = simname[0:-2]+'_v2_'+simname[-2:]
+    nir_cat = np.loadtxt('/nobackupp2/rcsimons/catalogs/nir_catalogs/GEN3/'+nir_cat_name+'/galaxy_catalogue/Nir_simplified_disc_cat.txt', skiprows = 1, dtype='str')
+    nir_disc_cat = np.loadtxt('/nobackupp2/rcsimons/catalogs/nir_catalogs/GEN3/'+nir_cat_name+'/galaxy_catalogue/Nir_disc_cat.txt', skiprows = 1, dtype='str')
+
+
     print "Simulation name:  ", simname
 
     out_sim_dir = os.path.join('/nobackupp2/rcsimons/momentum_measurements/', simname)
@@ -205,10 +214,14 @@ if __name__ == "__main__":
             os.symlink(os.path.abspath(stars_data[-1]),os.path.join(snap_dir,stars_data[-1]))
 
 
+
+
+
+
     new_snapfiles = np.asarray(new_snapfiles)
 
 
-    Parallel(n_jobs = -1)(delayed(measure_momentum)(new_snapfiles[i], out_sim_dir) for i in arange(len(new_snapfiles)))
+    Parallel(n_jobs = -1)(delayed(measure_momentum)(new_snapfiles[i], out_sim_dir, nir_cat, nir_disc_cat) for i in arange(len(new_snapfiles)))
 
 
 
