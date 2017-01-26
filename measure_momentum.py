@@ -145,10 +145,13 @@ def measure_momentum(snapfile, out_sim_dir, nir_cat, nir_disc_cat):
     simname = snapfile.split('_')[0]
     fits_name = out_sim_dir+'/'+simname+'_'+aname+'_momentum.fits'
     mom = momentum_obj(simname, aname, snapfile, fits_name)
-    print aname
     in_nir = where(nir_cat[:,0] == aname)[0]
     if len(in_nir) == 0: return
-    print in_nir
+    nir_cat = nir_cat[in_nir[0]]
+    nir_disc_cat = nir_disc_cat[in_nir[0]]
+    L_disk_s = nir_cat[8:11].astype('float')
+    print L_disk_s
+
 
     #mom.write()
     #mom.load()
