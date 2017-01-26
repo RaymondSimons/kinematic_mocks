@@ -7,6 +7,8 @@ from astropy.io import fits
 import astropy
 from astropy.cosmology import Planck15 as cosmo
 from joblib import Parallel, delayed
+import scipy
+from scipy.interpolate import UnivariateSpline
 
 
 
@@ -108,42 +110,49 @@ class momentum_obj():
     def calc_momentum(self, ds, nir_cat, nir_disc_cat):
         print 'Calculating momentum...'
         
-        id_cen_star      = nir_cat[1].astype('int')
-        cold_cen         = nir_disc_cat[1:4].astype('float')
-        cen_star_offset  = nir_cat[2:5].astype('float')
-        cen_star_voffset = nir_cat[5:8].astype('float')
+        self.id_cen_star      = nir_cat[1].astype('int')
+        self.cold_cen         = nir_disc_cat[1:4].astype('float')
+        self.cen_star_offset  = nir_cat[2:5].astype('float')
+        self.cen_star_voffset = nir_cat[5:8].astype('float')
+        self.L_disk_s = nir_cat[8:11].astype('float')
+        self.L_disk   = nir_disc_cat[7:10].astype('float')
+
 
         #Determine offset
-        cen_x  = self.stars_x[id_cen_star-1]  - ds.arr(cen_star_offset[0], 'kpc')
-        cen_y  = self.stars_y[id_cen_star-1]  - ds.arr(cen_star_offset[1], 'kpc')
-        cen_z  = self.stars_z[id_cen_star-1]  - ds.arr(cen_star_offset[2], 'kpc')
-        cen_vx = self.stars_vx[id_cen_star-1] - ds.arr(cen_star_voffset[0], 'km/s')
-        cen_vy = self.stars_vy[id_cen_star-1] - ds.arr(cen_star_voffset[1], 'km/s')
-        cen_vz = self.stars_vz[id_cen_star-1] - ds.arr(cen_star_voffset[2], 'km/s')
+        self.cen_x  = self.stars_x[id_cen_star-1]  - ds.arr(self.cen_star_offset[0], 'kpc')
+        self.cen_y  = self.stars_y[id_cen_star-1]  - ds.arr(self.cen_star_offset[1], 'kpc')
+        self.cen_z  = self.stars_z[id_cen_star-1]  - ds.arr(self.cen_star_offset[2], 'kpc')
+        self.cen_vx = self.stars_vx[id_cen_star-1] - ds.arr(self.cen_star_voffset[0], 'km/s')
+        self.cen_vy = self.stars_vy[id_cen_star-1] - ds.arr(self.cen_star_voffset[1], 'km/s')
+        self.cen_vz = self.stars_vz[id_cen_star-1] - ds.arr(self.cen_star_voffset[2], 'km/s')
 
 
 
 
         #Recenter positions and velocities for stars
-        self.stars_x_cen   = self.stars_x  - cen_x
-        self.stars_y_cen   = self.stars_y  - cen_y
-        self.stars_z_cen   = self.stars_z  - cen_z
+        self.stars_x_cen   = self.stars_x  - self.cen_x
+        self.stars_y_cen   = self.stars_y  - self.cen_y
+        self.stars_z_cen   = self.stars_z  - self.cen_z
+        self.stars_pos_cen = array([self.stars_x_cen, self.stars_y_cen, self.stars_z_cen])
         self.stars_pos_mag = sqrt(self.stars_x_cen**2.  + self.stars_y_cen**2.  + self.stars_z_cen**2.)
 
-        self.stars_vx_cen  = self.stars_vx - cen_vx
-        self.stars_vy_cen  = self.stars_vy - cen_vy
-        self.stars_vz_cen  = self.stars_vz - cen_vz
+        self.stars_vx_cen  = self.stars_vx - self.cen_vx
+        self.stars_vy_cen  = self.stars_vy - self.cen_vy
+        self.stars_vz_cen  = self.stars_vz - self.cen_vz
+        self.stars_vel_cen = array([self.stars_vx_cen, self.stars_vy_cen, self.stars_vz_cen])
         self.stars_vel_mag = sqrt(self.stars_vx_cen**2. + self.stars_vy_cen**2. + self.stars_vz_cen**2.)
 
         #Recenter positions and velocities for gas
-        self.gas_x_cen   = self.gas_x  - cen_x
-        self.gas_y_cen   = self.gas_y  - cen_y
-        self.gas_z_cen   = self.gas_z  - cen_z
+        self.gas_x_cen   = self.gas_x  - self.cen_x
+        self.gas_y_cen   = self.gas_y  - self.cen_y
+        self.gas_z_cen   = self.gas_z  - self.cen_z
+        self.gas_pos_cen = array([self.gas_x_cen, self.gas_y_cen, self.gas_z_cen])
         self.gas_pos_mag = sqrt(self.gas_x_cen**2.  + self.gas_y_cen**2.  + self.gas_z_cen**2.)
 
-        self.gas_vx_cen  = self.gas_vx - cen_vx
-        self.gas_vy_cen  = self.gas_vy - cen_vy
-        self.gas_vz_cen  = self.gas_vz - cen_vz
+        self.gas_vx_cen  = self.gas_vx - self.cen_vx
+        self.gas_vy_cen  = self.gas_vy - self.cen_vy
+        self.gas_vz_cen  = self.gas_vz - self.cen_vz
+        self.gas_vel_cen = array([self.gas_vx_cen, self.gas_vy_cen, self.gas_vz_cen])
         self.gas_vel_mag = sqrt(self.gas_vx_cen**2. + self.gas_vy_cen**2. + self.gas_vz_cen**2.)
 
 
@@ -154,6 +163,7 @@ class momentum_obj():
         self.stars_jx_cen = self.stars_vz_cen * self.stars_y_cen - self.stars_z_cen * self.stars_vy_cen
         self.stars_jy_cen = self.stars_vx_cen * self.stars_z_cen - self.stars_x_cen * self.stars_vz_cen
         self.stars_jz_cen = self.stars_vy_cen * self.stars_x_cen - self.stars_y_cen * self.stars_vx_cen
+        self.stars_j_cen = array([self.stars_jx_cen, self.stars_jy_cen, self.stars_jz_cen])
         self.stars_j_mag  = sqrt(self.stars_jx_cen**2. + self.stars_jy_cen**2. + self.stars_jz_cen**2.)
 
 
@@ -161,7 +171,56 @@ class momentum_obj():
         self.gas_jx_cen = self.gas_vz_cen * self.gas_y_cen - self.gas_z_cen * self.gas_vy_cen
         self.gas_jy_cen = self.gas_vx_cen * self.gas_z_cen - self.gas_x_cen * self.gas_vz_cen
         self.gas_jz_cen = self.gas_vy_cen * self.gas_x_cen - self.gas_y_cen * self.gas_vx_cen
+        self.gas_j_cen = array([self.gas_jx_cen, self.gas_jy_cen, self.gas_jz_cen])
         self.gas_j_mag  = sqrt(self.gas_jx_cen**2. + self.gas_jy_cen**2. + self.gas_jz_cen**2.)
+
+
+    def measure_potential(self, ds, r_min = 0.1, r_max = 100, r_cen1 = 10, r_cen2 = 25, r_step1 = 0.2, r_step2 = 1, r_step3 = 5):
+        center = ds.arr([self.cen_x, self.cen_y, self.cen_z], 'kpc')
+
+        rad_steps = concatenate((arange(r_min,  r_cen1, r_step1), 
+                                 arange(r_cen1, r_cen2, r_step2),
+                                 arange(r_cen2, r_max,  r_step3)))
+        self.mass_profile = zeros((2,len(rad_steps)))
+
+        for i in arange(0,len(rad_steps)):
+            print i, rad_steps[i], len(rad_steps)
+            gc_sphere =  ds.sphere(center, ds.arr(rad_steps[i],'kpc'))
+            baryon_mass, particle_mass = gc_sphere.quantities.total_quantity(["cell_mass", "particle_mass"])
+            self.mass_profile[0,i] = rad_steps[i]
+            self.mass_profile[1,i] = baryon_mass + particle_mass
+        self.spl = UnivariateSpline(total_mass[0,:], total_mass[1,:])
+
+    def measure_circularity(self):
+        G = astropy.constants.G.to('kpc^3/Msun*s^2') # in kpc^3/Msun*s^2
+        internal_mass_gas = ds.arr(self.spl(self.gas_pos_mag),'g').in_units('Msun')
+        self.vcirc_gas = ds.arr(sqrt(G*internal_mass_gas/(self.gas_pos_mag)),'kpc/s').in_units('km/s')
+        self.jcirc_gas = self.vcirc_gas * self.gas_pos_mag
+
+        internal_mass_stars = ds.arr(self.spl(self.stars_pos_mag),'g').in_units('Msun')
+        self.vcirc_stars = ds.arr(sqrt(G*internal_mass_stars/(self.stars_pos_mag)),'kpc/s').in_units('km/s')
+        self.jcirc_stars = self.vcirc_stars * self.stars_pos_mag
+
+        self.L_mag = sqrt(self.L_disk[0]**2.+self.L_disk[1]**2.+self.L_disk[2]**2.)
+
+        costheta_gas = np.dot(self.L_disk, self.gas_j_cen)/(self.gas_j_mag*self.L_mag)
+        self.jz_gas = costheta_gas*self.gas_j_mag
+
+        costheta_stars = np.dot(self.L_disk, self.stars_j_cen)/(self.stars_j_mag*self.L_mag)
+        self.jz_stars = costheta_stars*self._stars_j_mag
+
+        self.epsilon_gas   = self.jz_gas/self.jcirc_gas
+        self.epsilon_stars = self.jz_stars/self.jcirc_stars
+
+
+
+        costheta_gas = np.dot(self.L_disk, self.gas_pos_cen)/(self.gas_pos_mag*self.L_mag)
+        self.zz_gas = costheta_gas * self.gas_pos_mag
+        self.rr_gas = sqrt(self.gas_pos_mag**2. - self.zz_gas**2.)
+        costheta_stars = np.dot(self.L_disk, self.stars_pos_cen)/(self.stars_pos_mag*self.L_mag)
+        self.zz_stars = costheta_stars * self.stars_pos_mag
+        self.rr_stars = sqrt(self.stars_pos_mag**2. - self.zz_stars**2.)
+
 
 
 
@@ -181,21 +240,21 @@ class momentum_obj():
         master_hdulist.append(prihdu)
 
         colhdr = fits.Header()
-        master_hdulist.append(fits.ImageHDU(data = np.stack((self.stars_x_cen , self.stars_y_cen , self.stars_z_cen)), header = colhdr , name = 'stars_position'))
-        master_hdulist.append(fits.ImageHDU(data = np.stack((self.gas_x_cen , self.gas_y_cen , self.gas_z_cen)), header = colhdr , name = 'gas_position'))
+        master_hdulist.append(fits.ImageHDU(data = np.stack((self.stars_x_cen , self.stars_y_cen , self.stars_z_cen)), header = colhdr , name = 'stars_xyz_position'))
+        master_hdulist.append(fits.ImageHDU(data = np.stack((self.gas_x_cen , self.gas_y_cen , self.gas_z_cen)), header = colhdr , name = 'gas_xyz_position'))
+
+        master_hdulist.append(fits.ImageHDU(data = np.stack((self.rr_stars, self.zz_stars)), header = colhdr , name = 'stars_cylindrical_position'))
+        master_hdulist.append(fits.ImageHDU(data = np.stack((self.rr_gas, self.zz_gas)), header = colhdr , name = 'gas_cylindrical_position'))
+
         master_hdulist.append(fits.ImageHDU(data = np.stack((self.stars_jx_cen, self.stars_jy_cen, self.stars_jz_cen)), header = colhdr, name = 'stars_momentum'))
         master_hdulist.append(fits.ImageHDU(data = np.stack((self.gas_jx_cen, self.gas_jy_cen, self.gas_jz_cen)), header = colhdr, name = 'gas_momentum'))
 
+        master_hdulist.append(fits.ImageHDU(data = self.epsilon_stars, header = colhdr, name = 'stars_epsilon'))
+        master_hdulist.append(fits.ImageHDU(data = self.epsilon_gas  , header = colhdr, name = 'gas_epsilon'))
 
-        '''
-        master_hdulist.append(fits.ImageHDU(data = self.cube, header = self.cube_hdr, name = 'cam%i_obs_cube'%self.camera))
-        master_hdulist.append(fits.ImageHDU(data = array([self.disp_int, self.edisp_int]), name = 'cam%i_disp_int'%self.camera))
-        master_hdulist.append(fits.ImageHDU(data = array([self.disp_obs, self.edisp_obs]), name = 'cam%i_disp_obs'%self.camera))
-        master_hdulist.append(fits.ImageHDU(data = array([self.vel_int,self.evel_int]), name = 'cam%i_vel_int'%self.camera))
-        master_hdulist.append(fits.ImageHDU(data = array([self.vel_obs,self.evel_obs]), name = 'cam%i_vel_obs'%self.camera))
-        master_hdulist.append(fits.ImageHDU(data = self.ha_obs, name = 'cam%i_ha_obs'%self.camera))
-        master_hdulist.append(fits.ImageHDU(data = self.ha_int, name = 'cam%i_ha_int'%self.camera))
-        '''
+        master_hdulist.append(fits.ImageHDU(data = self.mass_profile  , header = colhdr, name = 'mass_profile'))
+
+
 
         thdulist = fits.HDUList(master_hdulist)
         print '\tSaving to ' + self.fits_name
@@ -224,16 +283,15 @@ def measure_momentum(snapfile, out_sim_dir, nir_cat, nir_disc_cat):
     mom.load(ds)
 
 
-
     in_nir = where(nir_cat[:,0] == aname)[0]
     if len(in_nir) == 0: return
     nir_cat = nir_cat[in_nir[0]]
     nir_disc_cat = nir_disc_cat[in_nir[0]]
-    L_disk_s = nir_cat[8:11].astype('float')
-    L_disk   = nir_disc_cat[7:10].astype('float')
 
 
     mom.calc_momentum(ds, nir_cat, nir_disc_cat)
+    mom.
+
     mom.write_fits()
 
 
