@@ -52,6 +52,8 @@ class momentum_obj():
 
     def write(self):
         print self.simname
+        print self.aname
+        print self.snapfile
 
 
 
@@ -77,8 +79,6 @@ class momentum_obj():
 def measure_momentum(snapfile):
     print 'Measuring momentum for '+ snapfile
     aname = (os.path.basename(snapfile)).split('_')[-1].rstrip('.d')
-
-    snap_dir = os.path.dirname(snapfile) #os.path.join(simname+'_'+aname+'_sunrise')
     simname = snapfile.split('_')[0]
 
     mom = momentum_obj(simname, aname, snapfile)
