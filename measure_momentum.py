@@ -338,9 +338,10 @@ if __name__ == "__main__":
     new_snapfiles = np.asarray(new_snapfiles)
 
 
-    Parallel(n_jobs = -1)(delayed(measure_momentum)(new_snapfiles[i], out_sim_dir, nir_cat, nir_disc_cat) for i in arange(len(new_snapfiles)))
+    #Parallel(n_jobs = -1)(delayed(measure_momentum)(new_snapfiles[i], out_sim_dir, nir_cat, nir_disc_cat) for i in arange(len(new_snapfiles)))
 
-
+    for i in arange(len(new_snapfiles):
+        measure_momentum(new_snapfiles[i], out_sim_dir, nir_cat, nir_disc_cat)
 
 
 
