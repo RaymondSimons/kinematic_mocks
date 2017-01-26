@@ -123,9 +123,9 @@ class momentum_obj():
 
 
         #Recenter positions and velocities
-        self.stars_x_cen = self.stars_x - cen_vx
-        self.stars_y_cen = self.stars_y - cen_vy
-        self.stars_z_cen = self.stars_z - cen_vz
+        self.stars_x_cen = self.stars_x - cen_x
+        self.stars_y_cen = self.stars_y - cen_y
+        self.stars_z_cen = self.stars_z - cen_z
         self.stars_vx_cen = self.stars_vx - cen_vx
         self.stars_vy_cen = self.stars_vy - cen_vy
         self.stars_vz_cen = self.stars_vz - cen_vz
