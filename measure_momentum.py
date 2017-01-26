@@ -217,8 +217,11 @@ def measure_momentum(snapfile, out_sim_dir, nir_cat, nir_disc_cat):
     aname = (os.path.basename(snapfile)).split('_')[-1].rstrip('.d')
     simname = snapfile.split('_')[0]
     fits_name = out_sim_dir+'/'+simname+'_'+aname+'_momentum.fits'
+
+    ds = yt.load(self.snapfile, limit_level = 3)
+
     mom = momentum_obj(simname, aname, snapfile, fits_name)
-    mom.load()
+    mom.load(ds)
 
 
 
@@ -230,9 +233,6 @@ def measure_momentum(snapfile, out_sim_dir, nir_cat, nir_disc_cat):
     L_disk   = nir_disc_cat[7:10].astype('float')
 
 
-    ds = yt.load(self.snapfile, limit_level = 3)
-
-    mom.load(ds)
     mom.calc_momentum(ds, nir_cat, nir_disc_cat)
     mom.write_fits()
 
