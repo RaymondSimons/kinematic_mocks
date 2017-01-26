@@ -112,12 +112,12 @@ class momentum_obj():
         cen_star_voffset = nir_cat[5:8].astype('float')
 
         #Determine offset
-        cen_x = self.stars_x[id_cen_star-1] - cen_star_offset[0]
-        cen_y = self.stars_y[id_cen_star-1] - cen_star_offset[1]
-        cen_z = self.stars_z[id_cen_star-1] - cen_star_offset[2]
-        cen_vx = self.stars_vx[id_cen_tar-1] - cen_star_voffset[0]
-        cen_vy = self.stars_vy[id_cen_tar-1] - cen_star_voffset[1] 
-        cen_vz = self.stars_vz[id_cen_star-1] - cen_star_voffset[2]
+        cen_x = self.stars_x[id_cen_star-1]   - ds.arr(cen_star_offset[0], 'kpc')
+        cen_y = self.stars_y[id_cen_star-1]   - ds.arr(cen_star_offset[1], 'kpc')
+        cen_z = self.stars_z[id_cen_star-1]   - ds.arr(cen_star_offset[2], 'kpc')
+        cen_vx = self.stars_vx[id_cen_tar-1]  - ds.arr(cen_star_voffset[0], 'km/s')
+        cen_vy = self.stars_vy[id_cen_tar-1]  - ds.arr(cen_star_voffset[1] , 'km/s')
+        cen_vz = self.stars_vz[id_cen_star-1] - ds.arr(cen_star_voffset[2], 'km/s')
 
 
         #Recenter positions and velocities
