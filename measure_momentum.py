@@ -54,6 +54,12 @@ def measure_momentum(snapfile):
     assert os.path.lexists(snap_dir)
 
 
+    simname = os.path.basename(snapfile) #assumes directory name for simulation name
+    print "Simulation name:  ", simname
+
+
+
+
 if __name__ == "__main__":
 
     args = parse()
