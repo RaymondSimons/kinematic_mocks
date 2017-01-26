@@ -59,7 +59,7 @@ class momentum_obj():
             self.stars_vx = dd['stars', 'particle_velocity_x'].in_units('km/s')
             assert self.stars_vx.shape > 5
         except AttributeError,AssertionError:
-            print "No star particles found, skipping: ", ds._file_amr
+            print "No star particles found, skipping: ", self.ds._file_amr
             return 0
 
 
