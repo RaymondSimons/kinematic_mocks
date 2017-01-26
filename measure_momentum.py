@@ -121,7 +121,7 @@ class momentum_obj():
         master_hdulist.append(fits.ImageHDU(data = self.ha_int, name = 'cam%i_ha_int'%self.camera))
         '''
 
-        thdulist = fits.HDUList(col_list)
+        thdulist = fits.HDUList(master_hdulist)
         thdulist.writeto(out_dir+'/'+'kinematics.fits', clobber = True)        
 
 
@@ -139,11 +139,11 @@ class momentum_obj():
 
 
 
-def measure_momentum(snapfile):
+def measure_momentum(snapfile, out_sim_dir):
     print 'Measuring momentum for '+ snapfile
     aname = (os.path.basename(snapfile)).split('_')[-1].rstrip('.d')
     simname = snapfile.split('_')[0]
-    fits_name = simname+'_'+aname+'_momentum.fits'
+    fits_name = out_sim_dir+'/'+simname+'_'+aname+'_momentum.fits'
     mom = momentum_obj(simname, aname, snapfile, fits_name)
     mom.write()
     #mom.load()
@@ -209,7 +209,7 @@ if __name__ == "__main__":
     new_snapfiles = np.asarray(new_snapfiles)
 
 
-    Parallel(n_jobs = -1)(delayed(measure_momentum)(new_snapfiles[i]) for i in arange(len(new_snapfiles)))
+    Parallel(n_jobs = -1)(delayed(measure_momentum)(new_snapfiles[i], out_sim_dir) for i in arange(len(new_snapfiles)))
 
 
 
