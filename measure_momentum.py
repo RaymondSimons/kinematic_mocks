@@ -6,6 +6,9 @@ import astropy
 from astropy.io import fits
 import astropy
 from astropy.cosmology import Planck15 as cosmo
+from joblib import Parallel, delayed
+
+
 
 #This file will be used to store the profile of the momentum
 def parse():
