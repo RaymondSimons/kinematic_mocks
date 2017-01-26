@@ -30,7 +30,7 @@ if __name__ == "__main__":
     else: gal = 'VELA28'
 
     qsub_direct = '/nobackupp2/rcsimons/momentum_measurements/qsub'
-    fsh = open(qsub_direct+'/'+gal+'_submit_momentum.sh')
+    fsh = open(qsub_direct+'/'+gal+'_submit_momentum.sh', 'w+')
 
     snaps = np.asarray(glob.glob("/nobackupp2/gfsnyder/VELA_sunrise/Runs/VELA_v2/%s/*.d"%gal))
 
