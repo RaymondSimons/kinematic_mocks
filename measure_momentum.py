@@ -80,7 +80,6 @@ class momentum_obj():
         self.star_age = self.ds.arr(cosmo.age(self.ds.current_redshift).value, 'Gyr').in_units('yr') - self.star_creation_time
 
 
-
         print 'Loading gas velocity...'
         self.gas_vx = dd['gas', 'velocity_x'].in_units('km/s')
         self.gas_vy = dd['gas', 'velocity_y'].in_units('km/s')
@@ -96,10 +95,6 @@ class momentum_obj():
 
         print 'Loading gas cell mass...'
         self.gas_mass = dd['gas', 'cell_mass']
-
-        print 'Loading cell potential...'
-        self.gas_potential = dd['gas', 'potential']
-
 
 
         print 'Finished loading...'
@@ -174,7 +169,8 @@ class momentum_obj():
         self.gas_j_mag  = sqrt(self.gas_jx_cen**2. + self.gas_jy_cen**2. + self.gas_jz_cen**2.)
 
 
-    def measure_potential(self, r_min = 0.1,  r_step1 = 0.1, r_cen1 = 10, r_step2 = 1.,  r_cen2 = 30, r_step3 = 5., r_max = 100.):
+#    def measure_potential(self, r_min = 0.1,  r_step1 = 0.1, r_cen1 = 10, r_step2 = 1.,  r_cen2 = 30, r_step3 = 5., r_max = 100.):
+    def measure_potential(self, r_min = 0.1,  r_step1 = 1., r_cen1 = 10, r_step2 = 5,  r_cen2 = 30, r_step3 = 15., r_max = 100.):
         
         center = self.ds.arr([self.cen_x, self.cen_y, self.cen_z], 'kpc')
 
@@ -253,20 +249,30 @@ class momentum_obj():
         eps_max = 10
         min_z   = -10
         max_z   = 10
+        min_r   = 0
+        max_r   = 30
+        min_rad = 0
+        max_rad = 100.
         bins_n  = 500
 
         weights = self.gas_mass
 
 
-        cold_gas_zz = where((abs(self.rr_gas) < 30) & (self.gas_temp < 1.e4))
+        cold_gas_zz = where((abs(self.rr_gas) < max_r) & (self.gas_temp < 1.e4))
         cg_zz_heatmap, cg_zz_xedges, cg_zz_yedges = np.histogram2d(self.epsilon_gas[cold_gas_zz], self.rr_gas[cold_gas_zz], 
                                                                    bins=[arange(eps_min,eps_max,del_eps), linspace(min_z,max_z,bins_n)], 
                                                                    weights = weights)
 
 
-        cold_gas_rr = where((abs(self.zz_gas) < 10) & (self.gas_temp < 1.e4))
+        cold_gas_rr = where((abs(self.zz_gas) < (max_z-min_z)/2.) & (self.gas_temp < 1.e4))
         cg_rr_heatmap, cg_rr_xedges, cg_rr_yedges = np.histogram2d(self.epsilon_gas[cold_gas_rr], self.rr_gas[cold_gas_rr], 
-                                                                   bins=[arange(eps_min,eps_max,del_eps), linspace(min_z,max_z,bins_n)], 
+                                                                   bins=[arange(eps_min,eps_max,del_eps), linspace(min_r,max_r,bins_n)], 
+                                                                   weights = weights)
+
+
+        cold_gas = where(self.gas_temp < 1.e4)
+        cg_rad_heatmap, cg_rad_xedges, cg_rad_yedges = np.histogram2d(self.epsilon_gas[cold_gas], self.gas_pos_mag[cold_gas], 
+                                                                   bins=[arange(eps_min,eps_max,del_eps), linspace(min_rad,max_rad,bins_n)], 
                                                                    weights = weights)
 
 
@@ -275,6 +281,7 @@ class momentum_obj():
 
         master_hdulist.append(fits.ImageHDU(data = np.stack((cg_zz_xedges , cg_zz_yedges , cg_zz_heatmap))        , header = colhdr, name = 'gas_zz_epsilon'))
         master_hdulist.append(fits.ImageHDU(data = np.stack((cg_rr_xedges , cg_rr_yedges , cg_rr_heatmap))        , header = colhdr, name = 'gas_rr_epsilon'))
+        master_hdulist.append(fits.ImageHDU(data = np.stack((cg_rad_xedges , cg_rad_yedges , cg_rad_heatmap))     , header = colhdr, name = 'gas_rad_epsilon'))
 
 
 
