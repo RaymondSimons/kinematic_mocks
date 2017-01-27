@@ -164,8 +164,8 @@ class momentum_obj():
         self.gas_j_mag  = sqrt(self.gas_jx_cen**2. + self.gas_jy_cen**2. + self.gas_jz_cen**2.)
 
 #    def measure_potential(self, r_min = 0.1,  r_step1 = 0.1, r_cen1 = 10, r_step2 = 1.,  r_cen2 = 30, r_step3 = 5., r_max = 100.):
-    def measure_potential(self, r_min = 0.1,  r_step1 = 1., r_cen1 = 10, r_step2 = 5,  r_cen2 = 30, r_step3 = 15., r_max = 100.):
-        
+    def measure_potential(self, r_min = 0.1,  r_step1 = 5., r_cen1 = 10, r_step2 = 15.,  r_cen2 = 30, r_step3 = 50., r_max = 100.):
+        print 'Measuring the potential...'
         center = self.ds.arr([self.cen_x, self.cen_y, self.cen_z], 'kpc')
 
         rad_steps = concatenate((arange(r_min,  r_cen1, r_step1), 
@@ -384,19 +384,16 @@ if __name__ == "__main__":
         fits_name = out_sim_dir+'/'+simname+'_'+aname+'_momentum.fits'
 
         
-
-        mom = momentum_obj(simname, aname, snapfile, fits_name)
-        check = mom.load()
-
-        #if check == 1: return
-
         in_nir = where(nir_cat[:,0] == aname)[0]
         #if len(in_nir) == 0: return
         nir_cat = nir_cat[in_nir[0]]
         nir_disc_cat = nir_disc_cat[in_nir[0]]
 
-        mom.recenter(nir_cat, nir_disc_cat)
-        mom.calc_momentum()
+        #mom = momentum_obj(simname, aname, snapfile, fits_name)
+        #check = mom.load()
+        #if check == 1: return
+        #mom.recenter(nir_cat, nir_disc_cat)
+        #mom.calc_momentum()
         mom.measure_potential()
         mom.measure_circularity()
         mom.gas_momentum_heatmap()
