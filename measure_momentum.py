@@ -44,10 +44,7 @@ def parse():
 
 class momentum_obj():
     def __init__(self, simname, aname, snapfile, fits_name):
-        self.ds = yt.load(snapfile, limit_level = 3)
-        #If you set a limit_level
-        self.ds.domain_right_edge = self.ds.arr(self.ds.domain_right_edge,'code_length')
-        self.ds.domain_left_edge  = self.ds.arr(self.ds.domain_left_edge,'code_length')
+        self.ds = yt.load(snapfile)
 
         self.simname = simname
         self.aname = aname
