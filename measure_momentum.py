@@ -101,7 +101,7 @@ class momentum_obj():
 
 
     def recenter(self, nir_cat, nir_disc_cat):
-        print 'Calculating momentum...'
+        print 'Recentering...'
         
         self.id_cen_star      = nir_cat[1].astype('int')
         self.cold_cen         = nir_disc_cat[1:4].astype('float')
@@ -146,6 +146,7 @@ class momentum_obj():
 
 
     def calc_momentum(self):
+        print 'Calculating momentum...'
 
         #Calculate momentum for stars
         self.stars_jx_cen = self.stars_vz_cen * self.stars_y_cen - self.stars_z_cen * self.stars_vy_cen
@@ -181,6 +182,8 @@ class momentum_obj():
         self.spl = UnivariateSpline(self.mass_profile[0,:], self.mass_profile[1,:])
 
     def measure_circularity(self):
+        print 'Calculating circularity...'
+
         G = astropy.constants.G.to('kpc^3/Msun*s^2') # in kpc^3/Msun*s^2
         internal_mass_gas   = self.ds.arr(self.spl(self.gas_pos_mag),'g').in_units('Msun')
         self.vcirc_gas      = self.ds.arr(sqrt(G*internal_mass_gas/(self.gas_pos_mag)),'kpc/s').in_units('km/s')
@@ -211,7 +214,10 @@ class momentum_obj():
         self.rr_stars  = sqrt(self.stars_pos_mag**2. - self.zz_stars**2.)
 
     def gas_momentum_heatmap(self):
+        print 'Measuring gas momentum profiles...'
+
         cold_gas_zz = where((abs(self.rr_gas) < 30) & (self.gas_temp < 1.e4))
+       
         eps_min = -10
         eps_max = 10
         min_z   = -10
@@ -222,24 +228,26 @@ class momentum_obj():
         max_rad = 100.
         bins_n  = 500
 
-        weights = self.gas_mass
 
 
-        self.cold_gas_zz = where((abs(self.rr_gas) < max_r) & (self.gas_temp < 1.e4))
+        cold_gas_zz = where((abs(self.rr_gas) < max_r) & (self.gas_temp < 1.e4))
+        weights = self.gas_mass[cold_gas_zz]
         self.cg_zz_heatmap, self.cg_zz_xedges, self.cg_zz_yedges = np.histogram2d(self.epsilon_gas[cold_gas_zz], self.rr_gas[cold_gas_zz], 
-                                                                   bins=[arange(eps_min,eps_max,bins_n), linspace(min_z,max_z,bins_n)], 
+                                                                   bins=[linspace(eps_min,eps_max,bins_n), linspace(min_z,max_z,bins_n)], 
                                                                    weights = weights)
 
 
-        self.cold_gas_rr = where((abs(self.zz_gas) < (max_z-min_z)/2.) & (self.gas_temp < 1.e4))
+        cold_gas_rr = where((abs(self.zz_gas) < (max_z-min_z)/2.) & (self.gas_temp < 1.e4))
+        weights = self.gas_mass[cold_gas_rr]
         self.cg_rr_heatmap, self.cg_rr_xedges, self.cg_rr_yedges = np.histogram2d(self.epsilon_gas[cold_gas_rr], self.rr_gas[cold_gas_rr], 
-                                                                   bins=[arange(eps_min,eps_max,bins_n), linspace(min_r,max_r,bins_n)], 
+                                                                   bins=[linspace(eps_min,eps_max,bins_n), linspace(min_r,max_r,bins_n)], 
                                                                    weights = weights)
 
 
-        self.cold_gas = where(self.gas_temp < 1.e4)
+        cold_gas = where(self.gas_temp < 1.e4)
+        weights = self.gas_mass[cold_gas]
         self.cg_rad_heatmap, self.cg_rad_xedges, self.cg_rad_yedges = np.histogram2d(self.epsilon_gas[cold_gas], self.gas_pos_mag[cold_gas], 
-                                                                   bins=[arange(eps_min,eps_max,bins_n), linspace(min_rad,max_rad,bins_n)], 
+                                                                   bins=[linspace(eps_min,eps_max,bins_n), linspace(min_rad,max_rad,bins_n)], 
                                                                    weights = weights)
 
     def write_fits(self):
@@ -269,9 +277,16 @@ class momentum_obj():
         master_hdulist.append(fits.ImageHDU(data = self.star_age                                                       , header = colhdr, name = 'star_age'))
 
 
-        master_hdulist.append(fits.ImageHDU(data = np.stack((self.cg_zz_xedges , self.cg_zz_yedges , self.cg_zz_heatmap))        , header = colhdr, name = 'gas_zz_epsilon'))
-        master_hdulist.append(fits.ImageHDU(data = np.stack((self.cg_rr_xedges , self.cg_rr_yedges , self.cg_rr_heatmap))        , header = colhdr, name = 'gas_rr_epsilon'))
-        master_hdulist.append(fits.ImageHDU(data = np.stack((self.cg_rad_xedges , self.cg_rad_yedges , self.cg_rad_heatmap))     , header = colhdr, name = 'gas_rad_epsilon'))
+        master_hdulist.append(fits.ImageHDU(data = np.stack((self.cg_zz_xedges , self.cg_zz_yedges))        , header = colhdr, name = 'gas_zz_epsilon_edges'))
+        master_hdulist.append(fits.ImageHDU(data = self.cg_zz_heatmap                                       , header = colhdr, name = 'gas_zz_epsilon'))
+
+
+        master_hdulist.append(fits.ImageHDU(data = np.stack((self.cg_rr_xedges , self.cg_rr_yedges))        , header = colhdr, name = 'gas_rr_epsilon_edges'))
+        master_hdulist.append(fits.ImageHDU(data = self.cg_rr_heatmap                                       , header = colhdr, name = 'gas_rr_epsilon'))
+
+
+        master_hdulist.append(fits.ImageHDU(data = np.stack((self.cg_rad_xedges , self.cg_rad_yedges))     , header = colhdr, name = 'gas_rad_epsilon_edges'))
+        master_hdulist.append(fits.ImageHDU(data = np.stack((self.cg_rad_heatmap))     , header = colhdr, name = 'gas_rad_epsilon'))
 
 
 
