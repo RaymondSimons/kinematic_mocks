@@ -388,10 +388,10 @@ if __name__ == "__main__":
         mom = momentum_obj(simname, aname, snapfile, fits_name)
         check = mom.load()
 
-        if check == 1: return
+        #if check == 1: return
 
         in_nir = where(nir_cat[:,0] == aname)[0]
-        if len(in_nir) == 0: return
+        #if len(in_nir) == 0: return
         nir_cat = nir_cat[in_nir[0]]
         nir_disc_cat = nir_disc_cat[in_nir[0]]
 
