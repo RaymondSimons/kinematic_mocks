@@ -328,7 +328,7 @@ def measure_momentum(snapfile, out_sim_dir, nir_cat, nir_disc_cat):
 
     mom = momentum_obj(simname, aname, snapfile, fits_name)
     check = mom.load()
-    if check == 1: return
+    if check == 0: return
     mom.recenter(nir_cat, nir_disc_cat)
     mom.calc_momentum()
     mom.measure_potential()
