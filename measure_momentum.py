@@ -163,8 +163,8 @@ class momentum_obj():
         self.gas_j_cen  = array([self.gas_jx_cen, self.gas_jy_cen, self.gas_jz_cen])
         self.gas_j_mag  = sqrt(self.gas_jx_cen**2. + self.gas_jy_cen**2. + self.gas_jz_cen**2.)
 
-#    def measure_potential(self, r_min = 0.1,  r_step1 = 0.1, r_cen1 = 10, r_step2 = 1.,  r_cen2 = 30, r_step3 = 5., r_max = 100.):
-    def measure_potential(self, r_min = 0.1,  r_step1 = 5., r_cen1 = 10, r_step2 = 15.,  r_cen2 = 30, r_step3 = 50., r_max = 100.):
+    def measure_potential(self, r_min = 0.1,  r_step1 = 0.1, r_cen1 = 10, r_step2 = 1.,  r_cen2 = 30, r_step3 = 5., r_max = 100.):
+#    def measure_potential(self, r_min = 0.1,  r_step1 = 5., r_cen1 = 10, r_step2 = 15.,  r_cen2 = 30, r_step3 = 50., r_max = 100.):
         print 'Measuring the potential...'
         center = self.ds.arr([self.cen_x, self.cen_y, self.cen_z], 'kpc')
 
@@ -320,18 +320,15 @@ def measure_momentum(snapfile, out_sim_dir, nir_cat, nir_disc_cat):
     simname = snapfile.split('_')[0]
     fits_name = out_sim_dir+'/'+simname+'_'+aname+'_momentum.fits'
 
-    
-
-    mom = momentum_obj(simname, aname, snapfile, fits_name)
-    check = mom.load()
-
-    if check == 1: return
-
     in_nir = where(nir_cat[:,0] == aname)[0]
     if len(in_nir) == 0: return
     nir_cat = nir_cat[in_nir[0]]
     nir_disc_cat = nir_disc_cat[in_nir[0]]
+    
 
+    mom = momentum_obj(simname, aname, snapfile, fits_name)
+    check = mom.load()
+    if check == 1: return
     mom.recenter(nir_cat, nir_disc_cat)
     mom.calc_momentum()
     mom.measure_potential()
@@ -384,34 +381,12 @@ if __name__ == "__main__":
 
     new_snapfiles = np.asarray(new_snapfiles)
 
-    #Make Parallel
-    #Parallel(n_jobs = -1)(delayed(measure_momentum)(new_snapfiles[i], out_sim_dir, nir_cat, nir_disc_cat) for i in arange(len(new_snapfiles)))
+    #Make Parallel, send 3 at a time to the node (reduce memory overhead)
+    Parallel(n_jobs = 3)(delayed(measure_momentum)(new_snapfiles[i], out_sim_dir, nir_cat, nir_disc_cat) for i in arange(len(new_snapfiles)))
 
-    for i in arange(len(new_snapfiles)):
-        #measure_momentum(new_snapfiles[i], out_sim_dir, nir_cat, nir_disc_cat)
-        #    print 'Measuring momentum for '+ snapfile
+    #for i in arange(len(new_snapfiles)):
+    #    measure_momentum(new_snapfiles[i], out_sim_dir, nir_cat, nir_disc_cat)
 
-
-        snapfile = new_snapfiles[i]
-        aname = (os.path.basename(snapfile)).split('_')[-1].rstrip('.d')
-        simname = snapfile.split('_')[0]
-        fits_name = out_sim_dir+'/'+simname+'_'+aname+'_momentum.fits'
-
-        
-        in_nir = where(nir_cat[:,0] == aname)[0]
-        #if len(in_nir) == 0: return
-        nir_cat = nir_cat[in_nir[0]]
-        nir_disc_cat = nir_disc_cat[in_nir[0]]
-
-        mom = momentum_obj(simname, aname, snapfile, fits_name)
-        check = mom.load()
-        #if check == 1: return
-        mom.recenter(nir_cat, nir_disc_cat)
-        mom.calc_momentum()
-        mom.measure_potential()
-        mom.measure_circularity()
-        mom.gas_momentum_heatmap()
-        mom.write_fits()
 
 
 
