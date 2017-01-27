@@ -389,11 +389,11 @@ if __name__ == "__main__":
         nir_cat = nir_cat[in_nir[0]]
         nir_disc_cat = nir_disc_cat[in_nir[0]]
 
-        #mom = momentum_obj(simname, aname, snapfile, fits_name)
-        #check = mom.load()
+        mom = momentum_obj(simname, aname, snapfile, fits_name)
+        check = mom.load()
         #if check == 1: return
-        #mom.recenter(nir_cat, nir_disc_cat)
-        #mom.calc_momentum()
+        mom.recenter(nir_cat, nir_disc_cat)
+        mom.calc_momentum()
         mom.measure_potential()
         mom.measure_circularity()
         mom.gas_momentum_heatmap()
