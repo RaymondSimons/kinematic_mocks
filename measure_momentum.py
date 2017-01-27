@@ -260,19 +260,19 @@ class momentum_obj():
 
         cold_gas_zz = where((abs(self.rr_gas) < max_r) & (self.gas_temp < 1.e4))
         cg_zz_heatmap, cg_zz_xedges, cg_zz_yedges = np.histogram2d(self.epsilon_gas[cold_gas_zz], self.rr_gas[cold_gas_zz], 
-                                                                   bins=[arange(eps_min,eps_max,del_eps), linspace(min_z,max_z,bins_n)], 
+                                                                   bins=[arange(eps_min,eps_max,bins_n), linspace(min_z,max_z,bins_n)], 
                                                                    weights = weights)
 
 
         cold_gas_rr = where((abs(self.zz_gas) < (max_z-min_z)/2.) & (self.gas_temp < 1.e4))
         cg_rr_heatmap, cg_rr_xedges, cg_rr_yedges = np.histogram2d(self.epsilon_gas[cold_gas_rr], self.rr_gas[cold_gas_rr], 
-                                                                   bins=[arange(eps_min,eps_max,del_eps), linspace(min_r,max_r,bins_n)], 
+                                                                   bins=[arange(eps_min,eps_max,bins_n), linspace(min_r,max_r,bins_n)], 
                                                                    weights = weights)
 
 
         cold_gas = where(self.gas_temp < 1.e4)
         cg_rad_heatmap, cg_rad_xedges, cg_rad_yedges = np.histogram2d(self.epsilon_gas[cold_gas], self.gas_pos_mag[cold_gas], 
-                                                                   bins=[arange(eps_min,eps_max,del_eps), linspace(min_rad,max_rad,bins_n)], 
+                                                                   bins=[arange(eps_min,eps_max,bins_n), linspace(min_rad,max_rad,bins_n)], 
                                                                    weights = weights)
 
 
