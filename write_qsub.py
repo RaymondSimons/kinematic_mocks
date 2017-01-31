@@ -36,7 +36,7 @@ if __name__ == "__main__":
     fname = qsub_direct+'/momentum_%s_all.qsub'%gal
     f = open(fname, 'w+')
     f.write('#PBS -S /bin/bash\n')
-    f.write('#PBS -l select=1:ncpus=1:model=has\n')
+    f.write('#PBS -l select=1:ncpus=20:model=has\n')
     f.write('#PBS -l walltime=02:00:00\n')
     f.write('#PBS -q normal\n')
     f.write('#PBS -N momentum_measurements_%s_all\n'%gal)
