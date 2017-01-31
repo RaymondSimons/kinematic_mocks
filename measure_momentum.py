@@ -164,7 +164,7 @@ class momentum_obj():
         self.gas_j_mag  = sqrt(self.gas_jx_cen**2. + self.gas_jy_cen**2. + self.gas_jz_cen**2.)
 
     def measure_potential(self, r_min = 0.1,  r_step1 = 0.1, r_cen1 = 5, r_step2 = 0.3,  r_cen2 = 15, r_step3 = 0.5, r_max = 30.):
-#    def measure_potential(self, r_min = 0.1,  r_step1 = 5., r_cen1 = 10, r_step2 = 15.,  r_cen2 = 30, r_step3 = 50., r_max = 100.):
+
         print 'Measuring the potential...'
         center = self.ds.arr([self.cen_x, self.cen_y, self.cen_z], 'kpc')
 
@@ -218,8 +218,8 @@ class momentum_obj():
 
         cold_gas_zz = where((abs(self.rr_gas) < 30) & (self.gas_temp < 1.e4))
        
-        eps_min = -10
-        eps_max = 10
+        eps_min = -2.5
+        eps_max = 2.5
         min_z   = -10
         max_z   = 10
         min_r   = 0
@@ -232,6 +232,7 @@ class momentum_obj():
 
         cold_gas_zz = where((abs(self.rr_gas) < max_r) & (self.gas_temp < 1.e4))
         weights = self.gas_mass[cold_gas_zz]
+
         self.cg_zz_heatmap, self.cg_zz_xedges, self.cg_zz_yedges = np.histogram2d(self.epsilon_gas[cold_gas_zz], self.rr_gas[cold_gas_zz], 
                                                                    bins=[linspace(eps_min,eps_max,bins_n), linspace(min_z,max_z,bins_n)], 
                                                                    weights = weights)
@@ -239,9 +240,11 @@ class momentum_obj():
 
         cold_gas_rr = where((abs(self.zz_gas) < (max_z-min_z)/2.) & (self.gas_temp < 1.e4))
         weights = self.gas_mass[cold_gas_rr]
+        print min_r, max_r
         self.cg_rr_heatmap, self.cg_rr_xedges, self.cg_rr_yedges = np.histogram2d(self.epsilon_gas[cold_gas_rr], self.rr_gas[cold_gas_rr], 
                                                                    bins=[linspace(eps_min,eps_max,bins_n), linspace(min_r,max_r,bins_n)], 
                                                                    weights = weights)
+        print self.cg_rr_xedges.min()
 
 
         cold_gas = where(self.gas_temp < 1.e4)
@@ -285,7 +288,7 @@ class momentum_obj():
 
 
         master_hdulist.append(fits.ImageHDU(data = np.stack((self.cg_rad_xedges , self.cg_rad_yedges))     , header = colhdr, name = 'gas_rad_epsilon_edges'))
-        master_hdulist.append(fits.ImageHDU(data = np.stack((self.cg_rad_heatmap))     , header = colhdr, name = 'gas_rad_epsilon'))
+        master_hdulist.append(fits.ImageHDU(data = self.cg_rad_heatmap                                     , header = colhdr, name = 'gas_rad_epsilon'))
 
 
 
