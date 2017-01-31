@@ -234,7 +234,7 @@ class momentum_obj():
         cold_gas_zz = where((abs(self.rr_gas) < max_r) & (self.gas_temp < 1.e4))
         weights = self.gas_mass[cold_gas_zz]
 
-        self.cg_zz_heatmap, self.cg_zz_xedges, self.cg_zz_yedges = np.histogram2d(self.epsilon_gas[cold_gas_zz], self.rr_gas[cold_gas_zz], 
+        self.cg_zz_heatmap, self.cg_zz_xedges, self.cg_zz_yedges = np.histogram2d(self.epsilon_gas[cold_gas_zz], self.zz_gas[cold_gas_zz], 
                                                                    bins=[linspace(eps_min,eps_max,bins_n), linspace(min_z,max_z,bins_n)], 
                                                                    weights = weights)
 
