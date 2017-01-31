@@ -339,7 +339,7 @@ def measure_momentum(snapfile, out_sim_dir, nir_cat, nir_disc_cat):
     mom.gas_momentum_heatmap()
     mom.write_fits()
 
-
+    return mom
 
 
 
@@ -387,8 +387,8 @@ if __name__ == "__main__":
     #Make Parallel, send 3 at a time to the node (reduce memory overhead)
     Parallel(n_jobs = 1, backend = 'threading')(delayed(measure_momentum)(new_snapfiles[i], out_sim_dir, nir_cat, nir_disc_cat) for i in arange(len(new_snapfiles)))
 
-    #for i in arange(len(new_snapfiles)):
-    #    measure_momentum(new_snapfiles[i], out_sim_dir, nir_cat, nir_disc_cat)
+    for i in arange(len(new_snapfiles)):
+        mom = measure_momentum(new_snapfiles[i], out_sim_dir, nir_cat, nir_disc_cat)
 
 
 
