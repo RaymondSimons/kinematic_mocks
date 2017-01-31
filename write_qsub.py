@@ -30,37 +30,33 @@ if __name__ == "__main__":
     else: gal = 'VELA28'
 
     qsub_direct = '/nobackupp2/rcsimons/momentum_measurements/qsub'
-    fsh = open(qsub_direct+'/'+gal+'_submit_momentum.sh', 'w+')
+    #fsh = open(qsub_direct+'/'+gal+'_submit_momentum.sh', 'w+')
 
     snaps = np.asarray(glob.glob("/nobackupp2/gfsnyder/VELA_sunrise/Runs/VELA_v2/%s/*.d"%gal))
+    aname = sn.split('_')[-1].rstrip('.d')
+    fname = qsub_direct+'/momentum_%s_all.qsub'%gal
+    fsh.write('qsub %s\n'%fname)
+    f = open(fname, 'w+')
+    f.write('#PBS -S /bin/bash\n')
+    f.write('#PBS -l select=1:ncpus=1:model=has\n')
+    f.write('#PBS -l walltime=02:00:00\n')
+    f.write('#PBS -q normal\n')
+    f.write('#PBS -N momentum_measurements_%s_all\n'%gal)
+    f.write('#PBS -M rsimons@jhu.edu\n')
+    f.write('#PBS -m abe\n')
+    f.write('#PBS -o ./out_err/%s_all_pbs.out\n'%gal)
+    f.write('#PBS -e ./out_err/%s_all_pbs.err\n'%gal)
+    f.write('#PBS -V\n')
 
+    f.write('cd /nobackupp2/gfsnyder/VELA_sunrise/Runs/VELA_v2/%s\n'%gal)
+    f.write('python /u/rcsimons/scripts/kinematic_mocks/measure_momentum.py > /nobackupp2/rcsimons/momentum_measurements/qsub/out_err/%s_all.out 2> /nobackupp2/rcsimons/momentum_measurements/qsub/out_err/%s_all.err\n\n\n'%(gal, gal))
 
-    for sn in snaps:
-        aname = sn.split('_')[-1].rstrip('.d')
-        fname = qsub_direct+'/momentum_%s_%s.qsub'%(gal, aname)
-        fsh.write('qsub %s\n'%fname)
-        f = open(fname, 'w+')
-
-        f.write('#PBS -S /bin/bash\n')
-        f.write('#PBS -l select=1:ncpus=1:model=has\n')
-        f.write('#PBS -l walltime=02:00:00\n')
-        f.write('#PBS -q normal\n')
-        f.write('#PBS -N momentum_measurements_%s\n'%aname)
-        f.write('#PBS -M rsimons@jhu.edu\n')
-        f.write('#PBS -m abe\n')
-        f.write('#PBS -o ./out_err/%s_%s_pbs.out\n'%(gal, aname))
-        f.write('#PBS -e ./out_err/%s_%s_pbs.err\n'%(gal, aname))
-        f.write('#PBS -V\n')
-
-        f.write('cd /nobackupp2/gfsnyder/VELA_sunrise/Runs/VELA_v2/%s\n'%gal)
-        f.write('python /u/rcsimons/scripts/kinematic_mocks/measure_momentum.py %s > /nobackupp2/rcsimons/momentum_measurements/qsub/out_err/%s_%s.out 2> /nobackupp2/rcsimons/momentum_measurements/qsub/out_err/%s_%s.err\n\n\n'%(os.path.basename(sn), gal, aname, gal, aname))
-
-        f.close()
+    f.close()
 
 
 
 
-    fsh.close()
+    #fsh.close()
 
 
 
