@@ -33,9 +33,7 @@ if __name__ == "__main__":
     #fsh = open(qsub_direct+'/'+gal+'_submit_momentum.sh', 'w+')
 
     snaps = np.asarray(glob.glob("/nobackupp2/gfsnyder/VELA_sunrise/Runs/VELA_v2/%s/*.d"%gal))
-    aname = sn.split('_')[-1].rstrip('.d')
     fname = qsub_direct+'/momentum_%s_all.qsub'%gal
-    fsh.write('qsub %s\n'%fname)
     f = open(fname, 'w+')
     f.write('#PBS -S /bin/bash\n')
     f.write('#PBS -l select=1:ncpus=1:model=has\n')
@@ -56,7 +54,6 @@ if __name__ == "__main__":
 
 
 
-    #fsh.close()
 
 
 
