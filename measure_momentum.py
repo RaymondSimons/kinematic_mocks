@@ -265,8 +265,7 @@ class momentum_obj():
         colhdr = fits.Header()
 
 
-
-
+        master_hdulist.append(fits.ImageHDU(data = self.L_disk                                                         , header = colhdr, name = 'nir_net_momentum'))
         master_hdulist.append(fits.ImageHDU(data = np.stack((self.stars_x_cen , self.stars_y_cen , self.stars_z_cen))  , header = colhdr, name = 'stars_xyz_position'))
         master_hdulist.append(fits.ImageHDU(data = np.stack((self.rr_stars, self.zz_stars))                            , header = colhdr, name = 'stars_cylindrical_position'))
         master_hdulist.append(fits.ImageHDU(data = np.stack((self.stars_jx_cen, self.stars_jy_cen, self.stars_jz_cen)) , header = colhdr, name = 'stars_momentum'))
