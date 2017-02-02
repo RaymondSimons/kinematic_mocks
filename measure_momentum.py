@@ -226,7 +226,7 @@ class momentum_obj():
         max_r   = 30
         min_rad = 0
         max_rad = 100.
-        bins_n  = 300
+        bins_n  = 200
 
 
 
