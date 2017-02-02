@@ -30,28 +30,33 @@ if __name__ == "__main__":
     else: gal = 'VELA28'
 
     qsub_direct = '/nobackupp2/rcsimons/momentum_measurements/qsub'
-    #fsh = open(qsub_direct+'/'+gal+'_submit_momentum.sh', 'w+')
+    fsh = open(qsub_direct+'/'+gal+'_submit_momentum.sh', 'w+')
 
     snaps = np.asarray(glob.glob("/nobackupp2/gfsnyder/VELA_sunrise/Runs/VELA_v2/%s/*.d"%gal))
-    fname = qsub_direct+'/momentum_%s_all.qsub'%gal
-    f = open(fname, 'w+')
-    f.write('#PBS -S /bin/bash\n')
-    f.write('#PBS -l select=1:ncpus=20:model=has\n')
-    f.write('#PBS -l walltime=05:00:00\n')
-    f.write('#PBS -q normal\n')
-    f.write('#PBS -N %s_all_momentum\n'%gal)
-    f.write('#PBS -M rsimons@jhu.edu\n')
-    f.write('#PBS -m abe\n')
-    f.write('#PBS -o ./out_err/%s_all_pbs.out\n'%gal)
-    f.write('#PBS -e ./out_err/%s_all_pbs.err\n'%gal)
-    f.write('#PBS -V\n')
 
-    f.write('cd /nobackupp2/gfsnyder/VELA_sunrise/Runs/VELA_v2/%s\n'%gal)
-    f.write('python /u/rcsimons/scripts/kinematic_mocks/measure_momentum.py > /nobackupp2/rcsimons/momentum_measurements/qsub/out_err/%s_all.out 2> /nobackupp2/rcsimons/momentum_measurements/qsub/out_err/%s_all.err\n\n\n'%(gal, gal))
+    for sn in snaps:
+        dname = os.path.basename(sn)
+        aname = dname.split('_')[2].strip('.d')
+        fname = qsub_direct+'/momentum_%s_%s.qsub'%(gal, aname)
+        fsh.append('sh '+fname)
+        f = open(fname, 'w+')
+        f.write('#PBS -S /bin/bash\n')
+        f.write('#PBS -l select=1:ncpus=24:model=has\n')
+        f.write('#PBS -l walltime=01:00:00\n')
+        f.write('#PBS -q normal\n')
+        f.write('#PBS -N %s_%s_momentum\n'%(gal, aname))
+        f.write('#PBS -M rsimons@jhu.edu\n')
+        f.write('#PBS -m abe\n')
+        f.write('#PBS -o ./out_err/%s_%s_pbs.out\n'%(gal, aname))
+        f.write('#PBS -e ./out_err/%s_%s_pbs.err\n'%(gal, aname))
+        f.write('#PBS -V\n')
 
-    f.close()
+        f.write('cd /nobackupp2/gfsnyder/VELA_sunrise/Runs/VELA_v2/%s\n'%gal)
+        f.write('python /u/rcsimons/scripts/kinematic_mocks/measure_momentum.py %s> /nobackupp2/rcsimons/momentum_measurements/qsub/out_err/%s_%s.out 2> /nobackupp2/rcsimons/momentum_measurements/qsub/out_err/%s_%s.err\n\n\n'%(sn, gal, sn, gal, sn))
 
+        f.close()
 
+    fsh.close()
 
 
 
