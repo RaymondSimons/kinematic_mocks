@@ -38,7 +38,7 @@ if __name__ == "__main__":
         dname = os.path.basename(sn)
         aname = dname.split('_')[2].strip('.d')
         fname = qsub_direct+'/momentum_%s_%s.qsub'%(gal, aname)
-        fsh.append('sh '+fname)
+        fsh.write('sh '+fname+'\n')
         f = open(fname, 'w+')
         f.write('#PBS -S /bin/bash\n')
         f.write('#PBS -l select=1:ncpus=24:model=has\n')
