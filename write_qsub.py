@@ -42,7 +42,7 @@ if __name__ == "__main__":
         f = open(fname, 'w+')
         f.write('#PBS -S /bin/bash\n')
         f.write('#PBS -l select=1:ncpus=24:model=has\n')
-        f.write('#PBS -l walltime=01:00:00\n')
+        f.write('#PBS -l walltime=02:00:00\n')
         f.write('#PBS -q normal\n')
         f.write('#PBS -N %s_%s_momentum\n'%(gal, aname))
         f.write('#PBS -M rsimons@jhu.edu\n')
