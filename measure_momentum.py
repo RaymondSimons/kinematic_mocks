@@ -318,7 +318,9 @@ def measure_momentum(snapfile, out_sim_dir, nir_cat, nir_disc_cat):
     fits_name = out_sim_dir+'/'+simname+'_'+aname+'_momentum.fits'
 
     in_nir = where(nir_cat[:,0] == aname)[0]
-    if len(in_nir) == 0: return
+    if len(in_nir) == 0: 
+        print "Not found in Nir's catalog"
+        return
     nir_cat = nir_cat[in_nir[0]]
     nir_disc_cat = nir_disc_cat[in_nir[0]]
     
