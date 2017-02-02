@@ -163,7 +163,6 @@ class momentum_obj():
         self.gas_j_cen  = array([self.gas_jx_cen, self.gas_jy_cen, self.gas_jz_cen])
         self.gas_j_mag  = sqrt(self.gas_jx_cen**2. + self.gas_jy_cen**2. + self.gas_jz_cen**2.)
 
-#    def measure_potential(self, r_min = 0.1,  r_step1 = 0.1, r_cen1 = 5, r_step2 = 0.3,  r_cen2 = 15, r_step3 = 0.5, r_max = 30.):
     def measure_potential(self, r_min = 0.1,  r_step1 = 0.3, r_cen1 = 3, r_step2 = 2,  r_cen2 = 15, r_step3 = 5, r_max = 110.):
 
         print 'Measuring the potential...'
@@ -311,12 +310,6 @@ class momentum_obj():
         return master_hdulist
 
 
-
-
-
-
-
-
 def measure_momentum(snapfile, out_sim_dir, nir_cat, nir_disc_cat):
     print 'Measuring momentum for '+ snapfile
     aname = (os.path.basename(snapfile)).split('_')[-1].rstrip('.d')
@@ -385,10 +378,10 @@ if __name__ == "__main__":
     new_snapfiles = np.asarray(new_snapfiles)
 
     #Make Parallel, send 3 at a time to the node (reduce memory overhead)
-    Parallel(n_jobs = 2, backend = 'threading')(delayed(measure_momentum)(new_snapfiles[i], out_sim_dir, nir_cat, nir_disc_cat) for i in arange(len(new_snapfiles)))
+    #Parallel(n_jobs = 2, backend = 'threading')(delayed(measure_momentum)(new_snapfiles[i], out_sim_dir, nir_cat, nir_disc_cat) for i in arange(len(new_snapfiles)))
 
-    #for i in arange(len(new_snapfiles)):
-    #    mom = measure_momentum(new_snapfiles[i], out_sim_dir, nir_cat, nir_disc_cat)
+    for i in arange(len(new_snapfiles)):
+        mom = measure_momentum(new_snapfiles[i], out_sim_dir, nir_cat, nir_disc_cat)
 
 
 
