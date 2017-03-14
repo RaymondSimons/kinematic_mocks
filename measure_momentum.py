@@ -268,16 +268,17 @@ class momentum_obj():
         colhdr = fits.Header()
 
 
-        master_hdulist.append(fits.ImageHDU(data = self.L_disk                                                         , header = colhdr, name = 'nir_net_momentum'))
-        master_hdulist.append(fits.ImageHDU(data = self.L_disk_s                                                       , header = colhdr, name = 'nir_net_momentum_s'))
-        master_hdulist.append(fits.ImageHDU(data = np.stack((self.stars_x_cen , self.stars_y_cen , self.stars_z_cen))  , header = colhdr, name = 'stars_xyz_position'))
-        master_hdulist.append(fits.ImageHDU(data = np.stack((self.rr_stars, self.zz_stars))                            , header = colhdr, name = 'stars_cylindrical_position'))
-        master_hdulist.append(fits.ImageHDU(data = np.stack((self.stars_jx_cen, self.stars_jy_cen, self.stars_jz_cen)) , header = colhdr, name = 'stars_momentum'))
-        master_hdulist.append(fits.ImageHDU(data = self.epsilon_stars                                                  , header = colhdr, name = 'stars_epsilon'))
-        master_hdulist.append(fits.ImageHDU(data = self.mass_profile                                                   , header = colhdr, name = 'mass_profile'))
-        master_hdulist.append(fits.ImageHDU(data = self.star_mass                                                      , header = colhdr, name = 'star_mass'))
-        master_hdulist.append(fits.ImageHDU(data = self.star_creation_time                                             , header = colhdr, name = 'star_creation_time'))
-        master_hdulist.append(fits.ImageHDU(data = self.star_age                                                       , header = colhdr, name = 'star_age'))
+        master_hdulist.append(fits.ImageHDU(data = self.L_disk                                                              , header = colhdr, name = 'nir_net_momentum'))
+        master_hdulist.append(fits.ImageHDU(data = self.L_disk_s                                                            , header = colhdr, name = 'nir_net_momentum_s'))
+        master_hdulist.append(fits.ImageHDU(data = np.stack((self.stars_x_cen , self.stars_y_cen , self.stars_z_cen))       , header = colhdr, name = 'stars_xyz_position'))
+        master_hdulist.append(fits.ImageHDU(data = np.stack((self.stars_vx_cen , self.stars_vy_cen , self.stars_vz_cen))    , header = colhdr, name = 'stars_xyz_velocity'))
+        master_hdulist.append(fits.ImageHDU(data = np.stack((self.rr_stars, self.zz_stars))                                 , header = colhdr, name = 'stars_cylindrical_position'))
+        master_hdulist.append(fits.ImageHDU(data = np.stack((self.stars_jx_cen, self.stars_jy_cen, self.stars_jz_cen))      , header = colhdr, name = 'stars_xyz_momentum'))
+        master_hdulist.append(fits.ImageHDU(data = self.epsilon_stars                                                       , header = colhdr, name = 'stars_epsilon'))
+        master_hdulist.append(fits.ImageHDU(data = self.mass_profile                                                        , header = colhdr, name = 'mass_profile'))
+        master_hdulist.append(fits.ImageHDU(data = self.star_mass                                                           , header = colhdr, name = 'star_mass'))
+        master_hdulist.append(fits.ImageHDU(data = self.star_creation_time                                                  , header = colhdr, name = 'star_creation_time'))
+        master_hdulist.append(fits.ImageHDU(data = self.star_age                                                            , header = colhdr, name = 'star_age'))
 
 
         master_hdulist.append(fits.ImageHDU(data = np.stack((self.cg_zz_xedges , self.cg_zz_yedges))        , header = colhdr, name = 'gas_zz_epsilon_edges'))
