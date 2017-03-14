@@ -145,6 +145,7 @@ class momentum_obj():
         self.gas_vel_mag = sqrt(self.gas_vx_cen**2. + self.gas_vy_cen**2. + self.gas_vz_cen**2.)
 
 
+
     def calc_momentum(self):
         print 'Calculating momentum...'
 
@@ -253,7 +254,7 @@ class momentum_obj():
                                                                    bins=[linspace(eps_min,eps_max,bins_n), linspace(min_rad,max_rad,bins_n)], 
                                                                    weights = weights)
 
-    def write_fits(self):
+    def write_fits(self, nir_mstar_cat):
         print '\tGenerating fits for %s...'%self.aname
         master_hdulist = []
         prihdr = fits.Header()
@@ -267,7 +268,7 @@ class momentum_obj():
 
         colhdr = fits.Header()
 
-
+        master_hdulist.append(fits.ImageHDU(data = nir_mstar_cat                                                            , header = colhdr, name = 'nir_mstar_cat'))
         master_hdulist.append(fits.ImageHDU(data = self.L_disk                                                              , header = colhdr, name = 'nir_net_momentum'))
         master_hdulist.append(fits.ImageHDU(data = self.L_disk_s                                                            , header = colhdr, name = 'nir_net_momentum_s'))
         master_hdulist.append(fits.ImageHDU(data = np.stack((self.stars_x_cen , self.stars_y_cen , self.stars_z_cen))       , header = colhdr, name = 'stars_xyz_position'))
@@ -312,18 +313,20 @@ class momentum_obj():
         return master_hdulist
 
 
-def measure_momentum(snapfile, out_sim_dir, nir_cat, nir_disc_cat):
+def measure_momentum(snapfile, out_sim_dir, nir_cat, nir_disc_cat, nir_mstar_cat):
     print 'Measuring momentum for '+ snapfile
     aname = (os.path.basename(snapfile)).split('_')[-1].rstrip('.d')
     simname = snapfile.split('_')[0]
     fits_name = out_sim_dir+'/'+simname+'_'+aname+'_momentum.fits'
 
     in_nir = where(nir_cat[:,0] == aname)[0]
+
     if len(in_nir) == 0: 
         print "Not found in Nir's catalog, returning"
         return
     nir_cat = nir_cat[in_nir[0]]
     nir_disc_cat = nir_disc_cat[in_nir[0]]
+    nir_mstar_cat = nir_mstar_cat[in_nir[0]]
     
 
     mom = momentum_obj(simname, aname, snapfile, fits_name)
@@ -334,7 +337,7 @@ def measure_momentum(snapfile, out_sim_dir, nir_cat, nir_disc_cat):
     mom.measure_potential()
     mom.measure_circularity()
     mom.gas_momentum_heatmap()
-    mom.write_fits()
+    mom.write_fits(nir_mstar_cat)
 
     return mom
 
@@ -362,6 +365,7 @@ if __name__ == "__main__":
     nir_cat_name = simname[0:-2]+'_v2_'+simname[-2:]
     nir_cat = np.loadtxt('/nobackupp2/rcsimons/catalogs/nir_catalogs/GEN3/'+nir_cat_name+'/galaxy_catalogue/Nir_simplified_disc_cat.txt', skiprows = 1, dtype='str')
     nir_disc_cat = np.loadtxt('/nobackupp2/rcsimons/catalogs/nir_catalogs/GEN3/'+nir_cat_name+'/galaxy_catalogue/Nir_disc_cat.txt', skiprows = 1, dtype='str')
+    nir_mstar_cat = np.loadtxt('/nobackupp2/rcsimons/catalogs/nir_catalogs/GEN3/'+nir_cat_name+'/galaxy_catalogue/mstar.txt')
 
 
     print "Simulation name:  ", simname
@@ -385,7 +389,7 @@ if __name__ == "__main__":
     #Parallel(n_jobs = 2, backend = 'threading')(delayed(measure_momentum)(new_snapfiles[i], out_sim_dir, nir_cat, nir_disc_cat) for i in arange(len(new_snapfiles)))
 
     for i in arange(len(new_snapfiles)):
-        mom = measure_momentum(new_snapfiles[i], out_sim_dir, nir_cat, nir_disc_cat)
+        mom = measure_momentum(new_snapfiles[i], out_sim_dir, nir_cat, nir_disc_cat, nir_mstar_cat)
 
 
 
