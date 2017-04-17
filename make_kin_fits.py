@@ -90,14 +90,14 @@ class kin_map():
         for i in arange(self.zsize):
             M, N = temp_orig_shape, temp_orig_shape
             m, n = new_shape
+            temp_orig_cube_slice = zeros((temp_orig_shape, temp_orig_shape))
+            x0, y0 = pixel_extension, pixel_extension
+            x1, y1 = temp_orig_shape - pixel_extension, temp_orig_shape - pixel_extension
+            print x0, x1, y0, y1
+            temp_orig_cube_slice[x0:x1, y0:y1] = self.orig_cube[i]
             if m<M:
                 #old way: self.cube[i] = self.orig_cube[i].reshape((m,M/m,n,N/n)).mean(3).mean(1)
                 #new way:
-                temp_orig_cube_slice = zeros((temp_orig_shape, temp_orig_shape))
-                x0, y0 = pixel_extension, pixel_extension
-                x1, y1 = temp_orig_shape - pixel_extension, temp_orig_shape - pixel_extension
-                print x0, x1, y0, y1
-                temp_orig_cube_slice[x0:x1, y0:y1] = self.orig_cube[i]
                 self.cube[i] = temp_orig_cube_slice.reshape((m,M/m,n,N/n)).mean(3).mean(1)
             else:
                 #old way: self.cube[i] = np.repeat(np.repeat(self.orig_cube[i], m/M, axis=0), n/N, axis=1)
@@ -218,12 +218,12 @@ class kin_map():
         #master_hdulist.append(fits.ImageHDU(data = self.orig_cube, header = self.orig_cube_hdr, name = 'cam%i_orig_cube'%self.camera))
         master_hdulist.append(fits.ImageHDU(data = self.cube, header = self.cube_hdr, name = 'cam%i_cub_int'%self.camera))        
         master_hdulist.append(fits.ImageHDU(data = self.blrcube, header = self.cube_hdr, name = 'cam%i_cub_obs'%self.camera))
-        master_hdulist.append(fits.ImageHDU(data = array([self.disp_int, self.edisp_int]), name = 'cam%i_dis_int'%self.camera))
+        master_hdulist.append(fits.ImageHDU(data = array([self.disp_int, self.edisp_int]),header = self.orig_cube_hdr,  name = 'cam%i_dis_int'%self.camera))
         master_hdulist.append(fits.ImageHDU(data = array([self.disp_obs, self.edisp_obs]), name = 'cam%i_dis_obs'%self.camera))
-        master_hdulist.append(fits.ImageHDU(data = array([self.vel_int,self.evel_int]), name = 'cam%i_vel_int'%self.camera))
-        master_hdulist.append(fits.ImageHDU(data = array([self.vel_obs,self.evel_obs]), name = 'cam%i_vel_obs'%self.camera))
-        master_hdulist.append(fits.ImageHDU(data = self.ha_obs, name = 'cam%i_hal_obs'%self.camera))
-        master_hdulist.append(fits.ImageHDU(data = self.ha_int, name = 'cam%i_hal_int'%self.camera))
+        master_hdulist.append(fits.ImageHDU(data = array([self.vel_int,self.evel_int]),header = self.orig_cube_hdr,  name = 'cam%i_vel_int'%self.camera))
+        master_hdulist.append(fits.ImageHDU(data = array([self.vel_obs,self.evel_obs]), header = self.cube_hdr, name = 'cam%i_vel_obs'%self.camera))
+        master_hdulist.append(fits.ImageHDU(data = self.ha_obs, header = self.cube_hdr, name = 'cam%i_hal_obs'%self.camera))
+        master_hdulist.append(fits.ImageHDU(data = self.ha_int, header = self.orig_cube_hdr, name = 'cam%i_hal_int'%self.camera))
 
         return master_hdulist
 
