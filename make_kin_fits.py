@@ -83,7 +83,7 @@ class kin_map():
         self.cube_hdr['NAXIS2'] =  new_shape[1]
         self.cube_hdr['EXTNAME'] =  self.cube_hdr['EXTNAME'].replace('_ORIG', '_OBS')
 
-        pixel_extension = (temp_orig_shape - self.orig_cube.shape[1])/2.
+        pixel_extension = int((temp_orig_shape - self.orig_cube.shape[1])/2.)
 
         print pixel_extension
 
@@ -97,7 +97,7 @@ class kin_map():
                 x0, y0 = pixel_extension, pixel_extension
                 x1, y1 = temp_orig_shape - pixel_extension, temp_orig_shape - pixel_extension
                 print x0, x1, y0, y1
-                temp_orig_cube_slice[i, x0:x1, y0:y1] = self.orig_cube[i]
+                temp_orig_cube_slice[x0:x1, y0:y1] = self.orig_cube[i]
                 self.cube[i] = temp_orig_cube_slice.reshape((m,M/m,n,N/n)).mean(3).mean(1)
             else:
                 #old way: self.cube[i] = np.repeat(np.repeat(self.orig_cube[i], m/M, axis=0), n/N, axis=1)
