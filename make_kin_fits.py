@@ -208,7 +208,7 @@ class kin_map():
         return master_hdulist
 
 
-def run_kin_fits(abspath, scale, outdir):
+def run_kin_fits(abspath, scale, gal, outdir):
     mcrx_data = fits.open(abspath)
     Ha_m = 6.563e-7 #Halpha in meters
     c_kms = constants.c.value*1.e-3    #speed of light in km/s
@@ -248,7 +248,7 @@ def run_kin_fits(abspath, scale, outdir):
 
     thdulist = fits.HDUList(master_hdulist)
 
-    kmap_name = os.path.dirname(abspath)+'/kmap.fits'
+    kmap_name = outdir+'/gal_a%.3i_kmap.fits'%(gal, scale)
     print '\t\t\t Saving to ' + kmap_name
     thdulist.writeto(kmap_name, clobber = True)
 
@@ -259,7 +259,7 @@ if __name__ == '__main__':
     mcrx_files = glob.glob(path_to_mcrx+'/mcrx.fits.gz')
     scales = []
     abspaths = []
-
+    kmap_names = []
     gal = os.path.abspath('.').split('/')[-1]
 
     for n, fl in enumerate(mcrx_files):
@@ -267,17 +267,21 @@ if __name__ == '__main__':
         abspaths.append(os.path.abspath(fl))
         sc_loc = abspaths[n].find('_a')
         scales.append(float(abspaths[n][sc_loc+2:sc_loc+7]))
+        kmap_names.append('%s_a%.3f_kmap.fits'%(gal, scale))
 
-    print scales, abspaths, gal
 
+
+    print scales, kmap_names
+
+    #Where to write the kinematic map files
     outdir = '/nobackupp2/rcsimons/data/kin_maps/%s'%gal
 
 
 
     #print path_to_mcrx, abspaths
 
-    #run_kin_fits(abspaths[40], scales[40])
-    #Parallel(n_jobs = -1)(delayed(run_kin_fits)(abspaths[i], scales[i]) for i in arange(35,45))
+    #run_kin_fits(abspaths[40], scales[40], kmap_names[40], outdir)
+    #Parallel(n_jobs = -1)(delayed(run_kin_fits)(abspaths[i], scales[i], kmap_names[i], outdir) for i in arange(35,45))
 
 
 
