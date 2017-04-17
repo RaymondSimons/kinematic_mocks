@@ -35,6 +35,8 @@ if __name__ == "__main__":
             dname = os.path.basename(sn)
             aname = dname.split('_')[2].strip('.d')
             fname = qsub_direct+'/%s_%s_mockcubes.qsub'%(gal, aname)
+            mcrxname = './%s_%s_sunrise/ifu/mcrx.fits.gz'%(gal, aname)
+
             fsh.write('qsub '+fname+'\n')
             f = open(fname, 'w+')
             f.write('#PBS -S /bin/bash\n')
@@ -50,7 +52,7 @@ if __name__ == "__main__":
 
             f.write('cd /nobackupp2/gfsnyder/VELA_sunrise/Runs/VELA_v2/%s\n'%gal)
 
-            comm_1 = 'python /u/rcsimons/scripts/kinematic_mocks/make_kin_fits.py %s'%dname
+            comm_1 = 'python /u/rcsimons/scripts/kinematic_mocks/make_kin_fits.py %s'%mcrxname
             outf   = '/nobackupp2/rcsimons/momentum_measurements/qsub/out_err/%s_%s.out'%(gal, aname)
             errf   = '/nobackupp2/rcsimons/momentum_measurements/qsub/out_err/%s_%s.err'%(gal, aname)
 
