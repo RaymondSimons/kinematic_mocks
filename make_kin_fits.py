@@ -302,7 +302,8 @@ if __name__ == '__main__':
     outdir = '/nobackupp2/rcsimons/data/kin_maps/%s'%gal
 
     #run_kin_fits(abspaths[10], scales[10], kmap_names[10], gal, outdir)
-    Parallel(n_jobs = -1)(delayed(run_kin_fits)(abspaths[i], scales[i], kmap_names[i], gal, outdir) for i in arange(len(scales)))
+    #Parallel(n_jobs = -1)(delayed(run_kin_fits)(abspaths[i], scales[i], kmap_names[i], gal, outdir) for i in arange(len(scales)))
+    Parallel(n_jobs = -1)(delayed(run_kin_fits)(abspaths[i], scales[i], kmap_names[i], gal, outdir) for i in arange(10,11))
 
 
 
