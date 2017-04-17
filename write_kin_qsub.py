@@ -35,7 +35,7 @@ if __name__ == "__main__":
         f.write('#PBS -S /bin/bash\n')
         f.write('#PBS -l select=1:ncpus=24:model=has\n')
         f.write('#PBS -l walltime=02:00:00\n')
-        f.write('#PBS -q devel\n')
+        f.write('#PBS -q normal\n')
         f.write('#PBS -N %s_kmap\n'%gal)
         f.write('#PBS -M rsimons@jhu.edu\n')
         f.write('#PBS -m abe\n')
