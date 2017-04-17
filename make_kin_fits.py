@@ -198,12 +198,12 @@ class kin_map():
         colhdr = fits.Header()
         #master_hdulist.append(fits.ImageHDU(data = self.orig_cube, header = self.orig_cube_hdr, name = 'cam%i_orig_cube'%self.camera))
         master_hdulist.append(fits.ImageHDU(data = self.cube, header = self.cube_hdr, name = 'cam%i_obs_cube'%self.camera))
-        master_hdulist.append(fits.ImageHDU(data = array([self.disp_int, self.edisp_int]), name = 'cam%i_disp_int'%self.camera))
-        master_hdulist.append(fits.ImageHDU(data = array([self.disp_obs, self.edisp_obs]), name = 'cam%i_disp_obs'%self.camera))
+        master_hdulist.append(fits.ImageHDU(data = array([self.disp_int, self.edisp_int]), name = 'cam%i_dis_int'%self.camera))
+        master_hdulist.append(fits.ImageHDU(data = array([self.disp_obs, self.edisp_obs]), name = 'cam%i_dis_obs'%self.camera))
         master_hdulist.append(fits.ImageHDU(data = array([self.vel_int,self.evel_int]), name = 'cam%i_vel_int'%self.camera))
         master_hdulist.append(fits.ImageHDU(data = array([self.vel_obs,self.evel_obs]), name = 'cam%i_vel_obs'%self.camera))
-        master_hdulist.append(fits.ImageHDU(data = self.ha_obs, name = 'cam%i_ha_obs'%self.camera))
-        master_hdulist.append(fits.ImageHDU(data = self.ha_int, name = 'cam%i_ha_int'%self.camera))
+        master_hdulist.append(fits.ImageHDU(data = self.ha_obs, name = 'cam%i_hal_obs'%self.camera))
+        master_hdulist.append(fits.ImageHDU(data = self.ha_int, name = 'cam%i_hal_int'%self.camera))
 
         return master_hdulist
 
@@ -262,7 +262,7 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir):
 
     #Save the fits file
     thdulist = fits.HDUList(master_hdulist)
-    print '\t\t\t Saving to ' + outdir+'/'+kmap_name
+    print '\tSaving to ' + outdir+'/'+kmap_name
     thdulist.writeto(outdir+'/'+kmap_name, clobber = True)
 
 
@@ -286,8 +286,8 @@ if __name__ == '__main__':
     #Where to write the kinematic map files
     outdir = '/nobackupp2/rcsimons/data/kin_maps/%s'%gal
 
-    run_kin_fits(abspaths[10], scales[10], kmap_names[10], gal, outdir)
-    #Parallel(n_jobs = -1)(delayed(run_kin_fits)(abspaths[i], scales[i], kmap_names[i], gal, outdir) for i in arange(35,45))
+    #run_kin_fits(abspaths[10], scales[10], kmap_names[10], gal, outdir)
+    Parallel(n_jobs = -1)(delayed(run_kin_fits)(abspaths[i], scales[i], kmap_names[i], gal, outdir) for i in arange(4, 10))
 
 
 
