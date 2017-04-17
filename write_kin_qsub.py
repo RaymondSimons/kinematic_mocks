@@ -29,35 +29,29 @@ if __name__ == "__main__":
         qsub_direct = '/nobackupp2/rcsimons/data/kin_maps/%s/qsub'%gal
         fsh = open('/nobackupp2/rcsimons/runs_files/'+gal+'_submit_mockcubes.sh', 'w+')
 
-        snaps = np.asarray(glob.glob("/nobackupp2/gfsnyder/VELA_sunrise/Runs/VELA_v2/%s/*.d"%gal))
+        fname = qsub_direct+'/%s_mockcubes.qsub'%gal
+        fsh.write('qsub '+fname+'\n')
+        f = open(fname, 'w+')
+        f.write('#PBS -S /bin/bash\n')
+        f.write('#PBS -l select=1:ncpus=24:model=has\n')
+        f.write('#PBS -l walltime=02:00:00\n')
+        f.write('#PBS -q devel\n')
+        f.write('#PBS -N %s_mockcubes\n'%gal)
+        f.write('#PBS -M rsimons@jhu.edu\n')
+        f.write('#PBS -m abe\n')
+        f.write('#PBS -o %s/%s_pbs.out\n'%qsub_direct)
+        f.write('#PBS -e %s/%s_pbs.err\n'%qsub_direct)
+        f.write('#PBS -V\n')
 
-        for sn in snaps:
-            dname = os.path.basename(sn)
-            aname = dname.split('_')[2].strip('.d')
-            fname = qsub_direct+'/%s_%s_mockcubes.qsub'%(gal, aname)
+        f.write('cd /nobackupp2/gfsnyder/VELA_sunrise/Runs/VELA_v2/%s\n'%gal)
 
-            fsh.write('qsub '+fname+'\n')
-            f = open(fname, 'w+')
-            f.write('#PBS -S /bin/bash\n')
-            f.write('#PBS -l select=1:ncpus=24:model=has\n')
-            f.write('#PBS -l walltime=02:00:00\n')
-            f.write('#PBS -q normal\n')
-            f.write('#PBS -N %s_%s_mockcubes\n'%(gal, aname))
-            f.write('#PBS -M rsimons@jhu.edu\n')
-            f.write('#PBS -m abe\n')
-            f.write('#PBS -o %s/%s_%s_pbs.out\n'%(qsub_direct, gal, aname))
-            f.write('#PBS -e %s/%s_%s_pbs.err\n'%(qsub_direct, gal, aname))
-            f.write('#PBS -V\n')
+        comm_1 = 'python /u/rcsimons/scripts/kinematic_mocks/make_kin_fits.py'
+        outf   = '/nobackupp2/rcsimons/data/kin_maps/%s/qsub/%s_kmap.out'%gal
+        errf   = '/nobackupp2/rcsimons/data/kin_maps/%s/qsub/%s_kmap.err'%gal
 
-            f.write('cd /nobackupp2/gfsnyder/VELA_sunrise/Runs/VELA_v2/%s\n'%(gal))
+        f.write('%s > %s 2> %s \n\n\n'%(comm_1, outf, errf))
 
-            comm_1 = 'python /u/rcsimons/scripts/kinematic_mocks/make_kin_fits.py'%gal
-            outf   = '/nobackupp2/rcsimons/momentum_measurements/qsub/out_err/%s_%s.out'%(gal, aname)
-            errf   = '/nobackupp2/rcsimons/momentum_measurements/qsub/out_err/%s_%s.err'%(gal, aname)
-
-            f.write('%s > %s 2> %s \n\n\n'%(comm_1, outf, errf))
-
-            f.close()
+        f.close()
 
         fsh.close()
     else:

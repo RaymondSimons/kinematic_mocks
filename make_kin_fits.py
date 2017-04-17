@@ -197,7 +197,7 @@ class kin_map():
     def get_hdulist(self, master_hdulist):
         colhdr = fits.Header()
         #master_hdulist.append(fits.ImageHDU(data = self.orig_cube, header = self.orig_cube_hdr, name = 'cam%i_orig_cube'%self.camera))
-        master_hdulist.append(fits.ImageHDU(data = self.cube, header = self.cube_hdr, name = 'cam%i_obs_cube'%self.camera))
+        master_hdulist.append(fits.ImageHDU(data = self.cube, header = self.cube_hdr, name = 'cam%i_obs_cub'%self.camera))
         master_hdulist.append(fits.ImageHDU(data = array([self.disp_int, self.edisp_int]), name = 'cam%i_dis_int'%self.camera))
         master_hdulist.append(fits.ImageHDU(data = array([self.disp_obs, self.edisp_obs]), name = 'cam%i_dis_obs'%self.camera))
         master_hdulist.append(fits.ImageHDU(data = array([self.vel_int,self.evel_int]), name = 'cam%i_vel_int'%self.camera))
@@ -244,8 +244,6 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir):
     cols = fits.ColDefs([fits.Column(name='velocity', format = 'D',array=vel_arr, unit = 'km/s'), 
                          fits.Column(name='lambda', format = 'D', array=lam, unit = 'm')])
     colhdr = fits.Header()
-    colhdr['velocity_units'] = 'km/s'
-    colhdr['lambda_units'] = 'm'
     master_hdulist.append(fits.BinTableHDU.from_columns(cols, name = 'props', header = colhdr))
 
 
