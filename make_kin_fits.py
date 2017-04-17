@@ -71,7 +71,7 @@ class kin_map():
     def rebin(self, new_shape):
         #The original cube has 400 pixels, which is not necessarily evenly divisible by our requested size
         #Necessary size of cube
-        temp_orig_shape = new_shape[0]*ceil(self.orig_cube.shape[1]/new_shape[0])
+        temp_orig_shape = new_shape[0]*ceil(self.orig_cube.shape[1]/float(new_shape[0]))
         print temp_orig_shape, new_shape[0], self.orig_cube.shape[1]
 
         self.cube = zeros((self.zsize, new_shape[0],new_shape[1]))
@@ -86,7 +86,7 @@ class kin_map():
         pixel_extension = (temp_orig_shape - self.orig_cube.shape[1])/2.
 
         print pixel_extension
-        
+
         for i in arange(self.zsize):
             M, N = temp_orig_shape, temp_orig_shape
             m, n = new_shape
