@@ -211,26 +211,36 @@ class kin_map():
 def run_kin_fits(abspath, scale, kmap_name, gal, outdir):
     print '\tReading in mcrx files for (%s, %.3f)'%(gal, scale)
 
-    '''
-    mcrx_data = fits.open(abspath)
+    #setting constants
     Ha_m = 6.563e-7 #Halpha in meters
     c_kms = constants.c.value*1.e-3    #speed of light in km/s
 
-    lam = mcrx_data['LAMBDA'].data['lambda']
-    vel_pixel = c_kms*(lam[1]-lam[0])/lam[0]
-    vel_arr = vel_pixel * arange(len(lam))
-    loc_Ha = argmin(abs(lam-Ha_m))
-    vel_arr-=vel_arr[loc_Ha]
+    #reading in data
+    mcrx_data = fits.open(abspath)
 
+    #reading number of cameras
     ncams = mcrx_data['MCRX'].header['N_CAMERA']
 
+
+    #generate empty fits file
     master_hdulist = []
+
+    #generate primary header for fits file
     prihdr = fits.Header()
     prihdr['COMMENT'] = "Storing the kinematic maps in this FITS file."
     prihdr['ncams'] = str(ncams)
     prihdu = fits.PrimaryHDU(header=prihdr)    
     master_hdulist.append(prihdu)
 
+
+    #reading in lambda and velocity arrays
+    lam = mcrx_data['LAMBDA'].data['lambda']
+    vel_pixel = c_kms*(lam[1]-lam[0])/lam[0]
+    vel_arr = vel_pixel * arange(len(lam))
+    loc_Ha = argmin(abs(lam-Ha_m))
+    vel_arr-=vel_arr[loc_Ha]
+
+    #add the velocity and lambda arrays in the first header
     cols = fits.ColDefs([fits.Column(name='velocity', format = 'D',array=vel_arr, unit = 'km/s'), 
                          fits.Column(name='lambda', format = 'D', array=lam, unit = 'm')])
     colhdr = fits.Header()
@@ -239,8 +249,9 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir):
     master_hdulist.append(fits.BinTableHDU.from_columns(cols, name = 'props', header = colhdr))
 
 
-    for cam_n in arange(ncams):
-        print '\t\t Running on scale, camera: %i, %i'%(scale, cam_n)
+    #run kinematic fitting routine for all cameras
+    for cam_n in arange(2):
+        print '\t\t Running on (%s, %.3f, %i)'%(gal, scale, cam_n)
         camera = mcrx_data['CAMERA%i-NONSCATTER'%(cam_n)]   
         kmap = kin_map(camera.data, camera.header, vel_arr, lam,  cam_n, scale)
         kmap.generate_intrinsic_kin_map()
@@ -249,11 +260,10 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir):
         kmap.generate_observed_kin_map()
         master_hdulist = kmap.get_hdulist(master_hdulist)
 
+    #Save the fits file
     thdulist = fits.HDUList(master_hdulist)
-
     print '\t\t\t Saving to ' + outdir+'/'+kmap_name
     thdulist.writeto(outdir+'/'+kmap_name, clobber = True)
-    '''
 
 
 if __name__ == '__main__':
