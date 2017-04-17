@@ -266,7 +266,7 @@ if __name__ == '__main__':
         sc_loc = abspaths[n].find('_a')
         scales.append(float(abspaths[n][sc_loc+2:sc_loc+7]))
 
-    print scales, abspath
+    print scales, abspaths
 
 
     #print path_to_mcrx, abspaths
