@@ -66,26 +66,42 @@ class kin_map():
         self.vscale        = vel_kms
         self.lam           = lam
         self.camera        = camera
-        self.ascale        = scale/1000.
+        self.ascale        = scale
 
     def rebin(self, new_shape):
+        #The original cube has 400 pixels, which is not necessarily evenly divisible by our requested size
+        #Necessary size of cube
+        temp_orig_shape = new_shape[0]*ceil(self.orig_cube.shape[1]/new_shape[0])
+
         self.cube = zeros((self.zsize, new_shape[0],new_shape[1]))
-        self.cube_hdr['CD1_1'] *=  self.orig_cube.shape[1]/new_shape[0]
-        self.cube_hdr['CD2_2'] *=  self.orig_cube.shape[2]/new_shape[1]
+        self.cube_hdr['CD1_1'] *=  (temp_orig_shape)/new_shape[0]
+        self.cube_hdr['CD2_2'] *=  (temp_orig_shape)/new_shape[1]
         self.cube_hdr['CRPIX1'] =  new_shape[0]/2.
         self.cube_hdr['CRPIX2'] =  new_shape[1]/2.
         self.cube_hdr['NAXIS1'] =  new_shape[0]
         self.cube_hdr['NAXIS2'] =  new_shape[1]
         self.cube_hdr['EXTNAME'] =  self.cube_hdr['EXTNAME'].replace('_ORIG', '_OBS')
 
+        pixel_extension = (temp_orig_shape - self.orig_cube.shape[1])/2.
+
 
         for i in arange(self.zsize):
-            M, N = self.orig_cube.shape[1:3]
+            M, N = temp_orig_shape, temp_orig_shape
             m, n = new_shape
             if m<M:
-                self.cube[i] = self.orig_cube[i].reshape((m,M/m,n,N/n)).mean(3).mean(1)
+                #old way: self.cube[i] = self.orig_cube[i].reshape((m,M/m,n,N/n)).mean(3).mean(1)
+                #new way:
+                temp_orig_cube_slice = zeros((temp_orig_shape, temp_orig_shape))
+                x0, y0 = pixel_extension, pixel_extension
+                x1, y1 = self.orig_cube.shape[1] - pixel_extension, self.orig_cube.shape[1] - pixel_extension
+                temp_orig_cube_slice[i, x0:x1, y0:y1] = self.orig_cube[i]
+                self.cube[i] = temp_orig_cube_slice.reshape((m,M/m,n,N/n)).mean(3).mean(1)
             else:
-                self.cube[i] = np.repeat(np.repeat(self.orig_cube[i], m/M, axis=0), n/N, axis=1)
+                #old way: self.cube[i] = np.repeat(np.repeat(self.orig_cube[i], m/M, axis=0), n/N, axis=1)
+                self.cube[i] = np.repeat(np.repeat(temp_orig_cube_slice, m/M, axis=0), n/N, axis=1)
+
+
+
         self.zsize      = self.cube.shape[0]
         self.xsize      = self.cube.shape[1]
         self.ysize      = self.cube.shape[2]
@@ -197,7 +213,7 @@ class kin_map():
     def get_hdulist(self, master_hdulist):
         colhdr = fits.Header()
         #master_hdulist.append(fits.ImageHDU(data = self.orig_cube, header = self.orig_cube_hdr, name = 'cam%i_orig_cube'%self.camera))
-        master_hdulist.append(fits.ImageHDU(data = self.cube, header = self.cube_hdr, name = 'cam%i_cub_int'%self.camera))
+        master_hdulist.append(fits.ImageHDU(data = self.cube, header = self.cube_hdr, name = 'cam%i_cub_int'%self.camera))        
         master_hdulist.append(fits.ImageHDU(data = self.blrcube, header = self.cube_hdr, name = 'cam%i_cub_obs'%self.camera))
         master_hdulist.append(fits.ImageHDU(data = array([self.disp_int, self.edisp_int]), name = 'cam%i_dis_int'%self.camera))
         master_hdulist.append(fits.ImageHDU(data = array([self.disp_obs, self.edisp_obs]), name = 'cam%i_dis_obs'%self.camera))
@@ -254,7 +270,7 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir):
         camera = mcrx_data['CAMERA%i-NONSCATTER'%(cam_n)]   
         kmap = kin_map(camera.data, camera.header, vel_arr, lam,  cam_n, scale)
         kmap.generate_intrinsic_kin_map()
-        kmap.rebin([50,50])
+        kmap.rebin([60,60])
         kmap.generate_blurred_map(kernel_size = 1.3)
         kmap.generate_observed_kin_map()
         master_hdulist = kmap.get_hdulist(master_hdulist)
