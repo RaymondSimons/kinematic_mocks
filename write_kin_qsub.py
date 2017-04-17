@@ -36,18 +36,18 @@ if __name__ == "__main__":
         f.write('#PBS -l select=1:ncpus=24:model=has\n')
         f.write('#PBS -l walltime=02:00:00\n')
         f.write('#PBS -q devel\n')
-        f.write('#PBS -N %s_mockkin\n'%gal)
+        f.write('#PBS -N %s_kmap\n'%gal)
         f.write('#PBS -M rsimons@jhu.edu\n')
         f.write('#PBS -m abe\n')
-        f.write('#PBS -o %s/%s_mockkin_pbs.out\n'%(qsub_direct, gal))
-        f.write('#PBS -e %s/%s_mockkin_pbs.err\n'%(qsub_direct, gal))
+        f.write('#PBS -o %s/%s_kmap_pbs.out\n'%(qsub_direct, gal))
+        f.write('#PBS -e %s/%s_kmap_pbs.err\n'%(qsub_direct, gal))
         f.write('#PBS -V\n')
 
         f.write('cd /nobackupp2/gfsnyder/VELA_sunrise/Runs/VELA_v2/%s\n'%gal)
 
         comm_1 = 'python /u/rcsimons/scripts/kinematic_mocks/make_kin_fits.py'
-        outf   = '/nobackupp2/rcsimons/data/kin_maps/%s/qsub/%s_kmap.out'%(gal, gal)
-        errf   = '/nobackupp2/rcsimons/data/kin_maps/%s/qsub/%s_kmap.err'%(gal, gal)
+        outf   = '%s/%s_kmap.out'%(qsub_direct, gal)
+        errf   = '%s/%s_kmap.err'%(qsub_direct, gal)
 
         f.write('%s > %s 2> %s \n\n\n'%(comm_1, outf, errf))
 

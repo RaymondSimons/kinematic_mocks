@@ -143,7 +143,7 @@ class kin_map():
         
         sens_noise = sens_si_fd/psf_str/lsf_pix
         print sens_noise
-        self.cube += np.random.normal(0, sens_noise.value, self.cube.shape)
+        self.blrcube += np.random.normal(0, sens_noise.value, self.cube.shape)
 
     def generate_intrinsic_kin_map(self):
         self.vel_int    = np.zeros((self.xsize, self.ysize))*np.nan
@@ -197,7 +197,8 @@ class kin_map():
     def get_hdulist(self, master_hdulist):
         colhdr = fits.Header()
         #master_hdulist.append(fits.ImageHDU(data = self.orig_cube, header = self.orig_cube_hdr, name = 'cam%i_orig_cube'%self.camera))
-        master_hdulist.append(fits.ImageHDU(data = self.cube, header = self.cube_hdr, name = 'cam%i_obs_cub'%self.camera))
+        master_hdulist.append(fits.ImageHDU(data = self.cube, header = self.cube_hdr, name = 'cam%i_cub_int'%self.camera))
+        master_hdulist.append(fits.ImageHDU(data = self.blrcube, header = self.cube_hdr, name = 'cam%i_cub_obs'%self.camera))
         master_hdulist.append(fits.ImageHDU(data = array([self.disp_int, self.edisp_int]), name = 'cam%i_dis_int'%self.camera))
         master_hdulist.append(fits.ImageHDU(data = array([self.disp_obs, self.edisp_obs]), name = 'cam%i_dis_obs'%self.camera))
         master_hdulist.append(fits.ImageHDU(data = array([self.vel_int,self.evel_int]), name = 'cam%i_vel_int'%self.camera))
