@@ -264,7 +264,7 @@ if __name__ == '__main__':
         print fl
         abspaths.append(os.path.abspath(fl))
         sc_loc = abspaths[n].find('_a')
-        scales.append(abspaths[n][sc_loc+2:sc_loc+7])
+        scales.append(float(abspaths[n][sc_loc+2:sc_loc+7]))
 
     print scales
 
