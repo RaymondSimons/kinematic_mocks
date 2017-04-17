@@ -93,7 +93,6 @@ class kin_map():
             temp_orig_cube_slice = zeros((temp_orig_shape, temp_orig_shape))
             x0, y0 = pixel_extension, pixel_extension
             x1, y1 = temp_orig_shape - pixel_extension, temp_orig_shape - pixel_extension
-            print x0, x1, y0, y1
             temp_orig_cube_slice[x0:x1, y0:y1] = self.orig_cube[i]
             if m<M:
                 #old way: self.cube[i] = self.orig_cube[i].reshape((m,M/m,n,N/n)).mean(3).mean(1)
@@ -165,6 +164,11 @@ class kin_map():
         self.blrcube += np.random.normal(0, sens_noise.value, self.cube.shape)
 
     def generate_intrinsic_kin_map(self):
+        self.int_vel_hdr = self.orig_cube_hdr.copy()
+        self.int_vel_hdr['IMUNIT'] = 'km/s'
+        self.int_vel_hdr.remove('UNITCONV')
+
+
         self.vel_int    = np.zeros((self.xsize, self.ysize))*np.nan
         self.evel_int   = np.zeros((self.xsize, self.ysize))*np.nan
         self.disp_int   = np.zeros((self.xsize, self.ysize))*np.nan
@@ -190,6 +194,10 @@ class kin_map():
                         pass
 
     def generate_observed_kin_map(self):
+        self.obs_vel_hdr = self.cube_hdr.copy()
+        self.obs_vel_hdr['IMUNIT'] = 'km/s'
+        self.obs_vel_hdr.remove('UNITCONV')
+
         self.vel_obs    = np.zeros((self.xsize, self.ysize))*np.nan
         self.evel_obs   = np.zeros((self.xsize, self.ysize))*np.nan
         self.disp_obs   = np.zeros((self.xsize, self.ysize))*np.nan
@@ -218,18 +226,30 @@ class kin_map():
         #master_hdulist.append(fits.ImageHDU(data = self.orig_cube, header = self.orig_cube_hdr, name = 'cam%i_orig_cube'%self.camera))
         master_hdulist.append(fits.ImageHDU(data = self.cube, header = self.cube_hdr, name = 'cam%i_cub_int'%self.camera))        
         master_hdulist.append(fits.ImageHDU(data = self.blrcube, header = self.cube_hdr, name = 'cam%i_cub_obs'%self.camera))
-        master_hdulist.append(fits.ImageHDU(data = array([self.disp_int, self.edisp_int]),header = self.orig_cube_hdr,  name = 'cam%i_dis_int'%self.camera))
-        master_hdulist.append(fits.ImageHDU(data = array([self.disp_obs, self.edisp_obs]), name = 'cam%i_dis_obs'%self.camera))
-        master_hdulist.append(fits.ImageHDU(data = array([self.vel_int,self.evel_int]),header = self.orig_cube_hdr,  name = 'cam%i_vel_int'%self.camera))
-        master_hdulist.append(fits.ImageHDU(data = array([self.vel_obs,self.evel_obs]), header = self.cube_hdr, name = 'cam%i_vel_obs'%self.camera))
-        master_hdulist.append(fits.ImageHDU(data = self.ha_obs, header = self.cube_hdr, name = 'cam%i_hal_obs'%self.camera))
+
+        master_hdulist.append(fits.ImageHDU(data = array([self.disp_int, self.edisp_int]),header = self.int_vel_hdr,  name = 'cam%i_dis_int'%self.camera))
+        master_hdulist.append(fits.ImageHDU(data = array([self.disp_obs, self.edisp_obs]), header = self.obs_vel_hdr,name = 'cam%i_dis_obs'%self.camera))
+        master_hdulist.append(fits.ImageHDU(data = array([self.vel_int,self.evel_int]),header = self.int_vel_hdr,  name = 'cam%i_vel_int'%self.camera))
+        master_hdulist.append(fits.ImageHDU(data = array([self.vel_obs,self.evel_obs]), header = self.obs_vel_hdr, name = 'cam%i_vel_obs'%self.camera))
+
+        self.ha_int_hdr = self.orig_cube_hdr
+        self.ha_int_hdr.remove('IMUNIT')
+        self.ha_int_hdr.remove('UNITCONV')
+
+
+        self.ha_obs_hdr = self.cube_hdr
+        self.ha_obs_hdr.remove('IMUNIT')
+        self.ha_obs_hdr.remove('UNITCONV')
+
+
         master_hdulist.append(fits.ImageHDU(data = self.ha_int, header = self.orig_cube_hdr, name = 'cam%i_hal_int'%self.camera))
+        master_hdulist.append(fits.ImageHDU(data = self.ha_obs, header = self.cube_hdr, name = 'cam%i_hal_obs'%self.camera))
 
         return master_hdulist
 
 
 def run_kin_fits(abspath, scale, kmap_name, gal, outdir):
-    print '\tReading in mcrx files for (%s, %.3f)'%(gal, scale)
+    print '\tReading in mcrx file for (%s, %.3f)'%(gal, scale)
 
     #setting constants
     Ha_m = 6.563e-7 #Halpha in meters
