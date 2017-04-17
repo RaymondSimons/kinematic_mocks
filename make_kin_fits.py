@@ -95,7 +95,8 @@ class kin_map():
                 #new way:
                 temp_orig_cube_slice = zeros((temp_orig_shape, temp_orig_shape))
                 x0, y0 = pixel_extension, pixel_extension
-                x1, y1 = self.orig_cube.shape[1] - pixel_extension, self.orig_cube.shape[1] - pixel_extension
+                x1, y1 = temp_orig_shape - pixel_extension, temp_orig_shape - pixel_extension
+                print x0, x1, y0, y1
                 temp_orig_cube_slice[i, x0:x1, y0:y1] = self.orig_cube[i]
                 self.cube[i] = temp_orig_cube_slice.reshape((m,M/m,n,N/n)).mean(3).mean(1)
             else:
