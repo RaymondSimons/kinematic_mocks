@@ -264,6 +264,9 @@ if __name__ == '__main__':
     kmap_names = []
     gal = os.path.abspath('.').split('/')[-1]
 
+    print 'Working on %s'%gal
+
+
     for n, fl in enumerate(mcrx_files):
         abspaths.append(os.path.abspath(fl))
         sc_loc = abspaths[n].find('_a')
