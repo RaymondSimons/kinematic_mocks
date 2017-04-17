@@ -196,7 +196,7 @@ class kin_map():
 
     def get_hdulist(self, master_hdulist):
         colhdr = fits.Header()
-        master_hdulist.append(fits.ImageHDU(data = self.orig_cube, header = self.orig_cube_hdr, name = 'cam%i_orig_cube'%self.camera))
+        #master_hdulist.append(fits.ImageHDU(data = self.orig_cube, header = self.orig_cube_hdr, name = 'cam%i_orig_cube'%self.camera))
         master_hdulist.append(fits.ImageHDU(data = self.cube, header = self.cube_hdr, name = 'cam%i_obs_cube'%self.camera))
         master_hdulist.append(fits.ImageHDU(data = array([self.disp_int, self.edisp_int]), name = 'cam%i_disp_int'%self.camera))
         master_hdulist.append(fits.ImageHDU(data = array([self.disp_obs, self.edisp_obs]), name = 'cam%i_disp_obs'%self.camera))
@@ -208,7 +208,7 @@ class kin_map():
         return master_hdulist
 
 
-def run_kin_fits(abspath, scale):
+def run_kin_fits(abspath, scale, outdir):
     mcrx_data = fits.open(abspath)
     Ha_m = 6.563e-7 #Halpha in meters
     c_kms = constants.c.value*1.e-3    #speed of light in km/s
@@ -236,7 +236,7 @@ def run_kin_fits(abspath, scale):
     master_hdulist.append(fits.BinTableHDU.from_columns(cols, name = 'props', header = colhdr))
 
 
-    for cam_n in arange(1):
+    for cam_n in arange(ncams):
         print '\t\t Running on scale, camera: %i, %i'%(scale, cam_n)
         camera = mcrx_data['CAMERA%i-NONSCATTER'%(cam_n)]   
         kmap = kin_map(camera.data, camera.header, vel_arr, lam,  cam_n, scale)
@@ -260,13 +260,18 @@ if __name__ == '__main__':
     scales = []
     abspaths = []
 
+    gal = os.path.abspath('.').split('/')[-1]
+
     for n, fl in enumerate(mcrx_files):
         print fl
         abspaths.append(os.path.abspath(fl))
         sc_loc = abspaths[n].find('_a')
         scales.append(float(abspaths[n][sc_loc+2:sc_loc+7]))
 
-    print scales, abspaths
+    print scales, abspaths, gal
+
+    outdir = '/nobackupp2/rcsimons/data/kin_maps/%s'%gal
+
 
 
     #print path_to_mcrx, abspaths
