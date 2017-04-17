@@ -51,7 +51,7 @@ if __name__ == "__main__":
 
             f.write('cd /nobackupp2/gfsnyder/VELA_sunrise/Runs/VELA_v2/%s_%s_sunrise/ifu/\n'%(gal, aname))
 
-            comm_1 = 'python /u/rcsimons/scripts/kinematic_mocks/make_kin_fits.py mcrx.fits.gz'
+            comm_1 = 'python /u/rcsimons/scripts/kinematic_mocks/make_kin_fits.py'
             outf   = '/nobackupp2/rcsimons/momentum_measurements/qsub/out_err/%s_%s.out'%(gal, aname)
             errf   = '/nobackupp2/rcsimons/momentum_measurements/qsub/out_err/%s_%s.err'%(gal, aname)
 
