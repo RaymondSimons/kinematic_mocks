@@ -49,9 +49,12 @@ if __name__ == "__main__":
         f.write('#PBS -V\n')
 
         f.write('cd /nobackupp2/gfsnyder/VELA_sunrise/Runs/VELA_v2/%s\n'%gal)
-        f.write('python /u/rcsimons/scripts/kinematic_mocks/make_kin_fits.py %s> \
-                /nobackupp2/rcsimons/momentum_measurements/qsub/out_err/%s_%s.out 2> \
-                /nobackupp2/rcsimons/momentum_measurements/qsub/out_err/%s_%s.err\n\n\n'%(dname, gal, aname, gal, aname))
+
+        comm_1 = 'python /u/rcsimons/scripts/kinematic_mocks/make_kin_fits.py %s'%dname
+        outf   = '/nobackupp2/rcsimons/momentum_measurements/qsub/out_err/%s_%s.out'%(gal, aname)
+        errf   = '/nobackupp2/rcsimons/momentum_measurements/qsub/out_err/%s_%s.err'%(gal, aname)
+
+        f.write('%s > %s 2> %s \n\n\n'%(comm_1, outf, errf))
 
         f.close()
 
