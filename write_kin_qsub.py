@@ -25,7 +25,7 @@ if __name__ == "__main__":
     args = parse()
     if args['gal'] is not None: 
         gal = args['gal']
-        
+
         qsub_direct = '/nobackupp2/rcsimons/data/kin_maps/%s/qsub'%gal
         fsh = open('/nobackupp2/rcsimons/runs_files/'+gal+'_submit_mockcubes.sh', 'w+')
 
@@ -59,3 +59,5 @@ if __name__ == "__main__":
             f.close()
 
         fsh.close()
+    else:
+        print 'No galaxy name given'
