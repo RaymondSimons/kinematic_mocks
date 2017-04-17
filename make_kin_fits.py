@@ -267,7 +267,7 @@ if __name__ == '__main__':
         abspaths.append(os.path.abspath(fl))
         sc_loc = abspaths[n].find('_a')
         scales.append(float(abspaths[n][sc_loc+2:sc_loc+7]))
-        kmap_names.append('%s_a%.3f_kmap.fits'%(gal, scale))
+        kmap_names.append('%s_a%.3f_kmap.fits'%(gal, scales[n]))
 
 
 
