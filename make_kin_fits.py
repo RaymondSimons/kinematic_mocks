@@ -209,7 +209,7 @@ class kin_map():
 
 
 def run_kin_fits(abspath, scale, kmap_name, gal, outdir):
-    print 'Reading in mcrx files for %s %.3f'%(gal, scale)
+    print '\tReading in mcrx files for %s, a =  %.3f'%(gal, scale)
 
     '''
     mcrx_data = fits.open(abspath)
