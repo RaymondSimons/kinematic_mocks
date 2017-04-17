@@ -265,7 +265,6 @@ if __name__ == '__main__':
     gal = os.path.abspath('.').split('/')[-1]
 
     for n, fl in enumerate(mcrx_files):
-        print fl
         abspaths.append(os.path.abspath(fl))
         sc_loc = abspaths[n].find('_a')
         scales.append(float(abspaths[n][sc_loc+2:sc_loc+7]))
