@@ -255,8 +255,8 @@ def run_kin_fits(abspath, scale):
 
 
 if __name__ == '__main__':
-    path_to_mcrx = './*'
-    mcrx_files = glob.glob(path_to_mcrx+'/mcrx.fits')
+    path_to_mcrx = './*/ifu/'
+    mcrx_files = glob.glob(path_to_mcrx+'/mcrx.fits.gz')
     scales = []
     abspaths = []
 
