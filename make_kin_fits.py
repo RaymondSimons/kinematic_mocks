@@ -265,7 +265,7 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir):
 
 
     #run kinematic fitting routine for all cameras
-    for cam_n in arange(ncams):
+    for cam_n in arange(1):
         print '\t\t Running on (%s, %.3f, %i)'%(gal, scale, cam_n)
         camera = mcrx_data['CAMERA%i-NONSCATTER'%(cam_n)]   
         kmap = kin_map(camera.data, camera.header, vel_arr, lam,  cam_n, scale)
