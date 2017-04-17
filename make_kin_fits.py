@@ -262,7 +262,7 @@ if __name__ == '__main__':
 
     for n, fl in enumerate(mcrx_files):
         print fl
-        #abspaths.append(os.path.abspath(fl))
+        abspaths.append(os.path.abspath(fl))
         scales.append(os.path.dirname(abspaths[n]).split('/')[1].split('_').strip('a'))
 
     print scales
