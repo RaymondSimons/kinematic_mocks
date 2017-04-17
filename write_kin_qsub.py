@@ -46,8 +46,8 @@ if __name__ == "__main__":
         f.write('cd /nobackupp2/gfsnyder/VELA_sunrise/Runs/VELA_v2/%s\n'%gal)
 
         comm_1 = 'python /u/rcsimons/scripts/kinematic_mocks/make_kin_fits.py'
-        outf   = '/nobackupp2/rcsimons/data/kin_maps/%s/qsub/%s_kmap.out'%gal
-        errf   = '/nobackupp2/rcsimons/data/kin_maps/%s/qsub/%s_kmap.err'%gal
+        outf   = '/nobackupp2/rcsimons/data/kin_maps/%s/qsub/%s_kmap.out'%(gal, gal)
+        errf   = '/nobackupp2/rcsimons/data/kin_maps/%s/qsub/%s_kmap.err'%(gal, gal)
 
         f.write('%s > %s 2> %s \n\n\n'%(comm_1, outf, errf))
 
