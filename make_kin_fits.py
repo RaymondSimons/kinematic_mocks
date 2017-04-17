@@ -265,7 +265,9 @@ if __name__ == '__main__':
         scales.append(np.int(os.path.dirname(abspaths[n]).split('/')[-1]))
 
 
-    run_kin_fits(abspaths[40], scales[40])
+    print abspaths
+
+    #run_kin_fits(abspaths[40], scales[40])
     #Parallel(n_jobs = -1)(delayed(run_kin_fits)(abspaths[i], scales[i]) for i in arange(35,45))
 
 
