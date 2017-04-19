@@ -302,7 +302,9 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir, mcrx_data):
     #generate primary header for fits file
     prihdr = fits.Header()
     prihdr['COMMENT'] = "Storing the kinematic maps in this FITS file."
+    prihdr['VELA_name'] = gal
     prihdr['mcrx_path'] = abspath
+    prihdr['kmap_name'] = kmap_name
     prihdr['ncams'] = str(ncams)
 
     prihdr['z'] = (str(1./scale - 1), 'redshift (w/ %s)'%cosmo.name)
