@@ -338,7 +338,9 @@ if __name__ == '__main__':
     scales   = array(scales)
     kmap_names   = array(kmap_names)
 
-    run_kin_fits(abspaths[where(scales == 0.38)], scales[where(scales == 0.38)], kmap_names[where(scales == 0.38)], gal, outdir)
+    n_sel = where(scales == 0.38)[0]
+    print n_sel
+    run_kin_fits(abspaths[n_sel], scales[n_sel], kmap_names[n_sel], gal, outdir)
     #Parallel(n_jobs = -1)(delayed(run_kin_fits)(abspaths[i], scales[i], kmap_names[i], gal, outdir) for i in arange(len(scales)))
     
 
