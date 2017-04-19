@@ -180,9 +180,6 @@ class kin_map():
         #1 spatial fwhm * 1 spectral fwhm. We want to add noise equal to 1/5th the sensitivity (i.e., 1 sigma sensitivty) over this aperture.
         #In steradians, the PSF is:
 
-
-
-        
         sens_noise = sens_si_fd/self.psf_str/self.lsf_pix
         print '\t\t', sens_noise
         self.blrcube += np.random.normal(0, sens_noise.value, self.cube.shape)
@@ -235,13 +232,12 @@ class kin_map():
                 spec = convolve_fft(self.blrcube[:,i,j], krnl)
                 try:
                     c_a, v_a = curve_fit(gauss, self.vscale, spec, p0 = [nanmax(spec), self.vscale[nanargmax(spec)], 30, median(spec[0:15])])           
-                    #if (isfinite(sqrt(v_a[1,1]))) & (c_a[2] > 0.) & (isfinite(sqrt(v_a[2,2]))) & \
-                    #(c_a[0] > 0) & (c_a[2] > 10) & (sqrt(v_a[2,2]) < 30) & (sqrt(v_a[1,1]) < 30):
-                    self.vel_obs[i,j]   = c_a[1]
-                    self.evel_obs[i,j]  = sqrt(v_a[1,1])
-                    self.disp_obs[i,j]  = sqrt(c_a[2]**2. - self.lsf_kms**2.)
-                    self.edisp_obs[i,j] = sqrt(v_a[2,2])
-                    self.ha_obs[i,j] = c_a[0]*c_a[2]*sqrt(2*pi)                            
+                    if (isfinite(sqrt(v_a[1,1]))) & (c_a[2]**2. > self.lsf_kms**2.) & (isfinite(sqrt(v_a[2,2]))) & (c_a[0] > 0):
+                        self.vel_obs[i,j]   = c_a[1]
+                        self.evel_obs[i,j]  = sqrt(v_a[1,1])
+                        self.disp_obs[i,j]  = sqrt(c_a[2]**2. - self.lsf_kms**2.)
+                        self.edisp_obs[i,j] = sqrt(v_a[2,2])
+                        self.ha_obs[i,j] = c_a[0]*c_a[2]*sqrt(2*pi)                            
                 except:
                     pass
         #self.vel_obs[-isnan(self.vel_obs)] += np.random.normal(0,5,shape(self.vel_obs[-isnan(self.vel_obs)]))
