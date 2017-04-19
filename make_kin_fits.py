@@ -282,7 +282,7 @@ class kin_map():
         return master_hdulist
 
 
-def run_kin_fits(abspath, scale, kmap_name, gal, outdir, mcrx_data):
+def run_kin_fits(abspath, scale, kmap_name, gal, outdir):
     print '\tReading in mcrx file for (%s, %.3f)'%(gal, scale)
 
     #setting constants
@@ -290,7 +290,7 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir, mcrx_data):
     c_kms = constants.c.value*1.e-3    #speed of light in km/s
 
     #reading in data
-    #mcrx_data = fits.open(abspath) #testing
+    mcrx_data = fits.open(abspath) #testing
 
     #reading number of cameras
     ncams = mcrx_data['MCRX'].header['N_CAMERA']
@@ -395,7 +395,7 @@ if __name__ == '__main__':
     #Where to write the kinematic map files
     outdir = '/nobackupp2/rcsimons/data/kin_maps/%s'%gal
 
-    test = True
+    test = False
     if test:
         #want to select individual systems
         scales   = array(scales)
@@ -404,7 +404,8 @@ if __name__ == '__main__':
         run_kin_fits(abspaths[n_sel], scales[n_sel], kmap_names[n_sel], gal, outdir, mcrx_data)
     else:
         #run on all
-        Parallel(n_jobs = -1)(delayed(run_kin_fits)(abspaths[i], scales[i], kmap_names[i], gal, outdir) for i in arange(len(scales)))
+        #Parallel(n_jobs = -1)(delayed(run_kin_fits)(abspaths[i], scales[i], kmap_names[i], gal, outdir) for i in arange(len(scales[])))
+        Parallel(n_jobs = -1)(delayed(run_kin_fits)(abspaths[i], scales[i], kmap_names[i], gal, outdir) for i in arange(10, 12,1))
     
 
 
