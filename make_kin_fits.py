@@ -151,8 +151,14 @@ class kin_map():
         #Ths units of this factor are 1/(str*m). Let's now consider an 'aperture' equal to 
         #1 spatial fwhm * 1 spectral fwhm. We want to add noise equal to 1/5th the sensitivity (i.e., 1 sigma sensitivty) over this aperture.
         #In steradians, the PSF is:
-        psf_str = pi*((pix_scale_arc * self.kernel_size)**2.).to(u.steradian)
-        print psf_str, 'is the seeing'
+        print 'Seeing:'
+        print '\t', self.kernel_size, ' pixels sigma'
+        print '\t', self.kernel_size, ' pixels fwhm'
+        print '\t', self.kernel_size * pix_scale_arc, ' arcsec fwhm'
+        print '\t', 2.35*self.kernel_size * pix_scale_arc, ' arcsec fwhm'
+
+        psf_str = pi*((pix_scale_arc * (2.35/2.)*self.kernel_size)**2.).to(u.steradian)
+        print psf_str, 'is the seeing FWHM area in steradian'
 
 
         #The spectral lsf fwhm (in pixels) is:
@@ -330,7 +336,7 @@ if __name__ == '__main__':
 
     #run_kin_fits(abspaths[10], scales[10], kmap_names[10], gal, outdir)
     #Parallel(n_jobs = -1)(delayed(run_kin_fits)(abspaths[i], scales[i], kmap_names[i], gal, outdir) for i in arange(len(scales)))
-    Parallel(n_jobs = -1)(delayed(run_kin_fits)(abspaths[i], scales[i], kmap_names[i], gal, outdir) for i in arange(10,11))
+    Parallel(n_jobs = -1)(delayed(run_kin_fits)(abspaths[i], scales[i], kmap_names[i], gal, outdir) for i in arange(15,16))
 
 
 
