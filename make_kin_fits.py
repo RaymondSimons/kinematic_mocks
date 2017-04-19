@@ -199,23 +199,22 @@ class kin_map():
         cb_std = self.orig_cube[0:5,:,:].std()
         
         #shutting off for testing
-        '''
+
         for i in arange(self.cube.shape[1]):
             for j in arange(self.cube.shape[2]):  
-                if self.cube[:,i,j].max() > 10*cb_std: #likely have an Ha line here
+                if self.cube[:,i,j].max() > 5*cb_std: #likely have an Ha line here
                     spec = self.cube[:,i,j]
                     try:
                         c_a, v_a = curve_fit(gauss, self.vscale, spec, p0 = [nanmax(spec), self.vscale[nanargmax(spec)], 10, spec[0]])  
-                        #if (isfinite(sqrt(v_a[1,1]))) & (c_a[2] > 0.) & (isfinite(sqrt(v_a[2,2]))) & \
-                        #(c_a[0] > 0) & (c_a[2] > 5) & (sqrt(v_a[2,2]) < 30) & (sqrt(v_a[1,1]) < 30):
-                        self.vel_int[i,j]   = c_a[1]
-                        self.evel_int[i,j]  = sqrt(v_a[1,1])
-                        self.disp_int[i,j]  = c_a[2]
-                        self.edisp_int[i,j] = sqrt(v_a[2,2])
-                        self.ha_int[i,j] = c_a[0]*c_a[2]*sqrt(2*pi)                            
+                        if (isfinite(sqrt(v_a[1,1]))) & (c_a[2] > 0.) & (isfinite(sqrt(v_a[2,2]))) & \
+                        (c_a[0] > 0) & (c_a[2] > 5) & (sqrt(v_a[2,2]) < 30) & (sqrt(v_a[1,1]) < 30):
+                            self.vel_int[i,j]   = c_a[1]
+                            self.evel_int[i,j]  = sqrt(v_a[1,1])
+                            self.disp_int[i,j]  = c_a[2]
+                            self.edisp_int[i,j] = sqrt(v_a[2,2])
+                            self.ha_int[i,j] = c_a[0]*c_a[2]*sqrt(2*pi)                            
                     except:
                         pass
-        '''
     def generate_observed_kin_map(self):
         self.obs_vel_hdr = self.cube_hdr.copy()
         self.obs_vel_hdr['IMUNIT'] = 'km/s'
