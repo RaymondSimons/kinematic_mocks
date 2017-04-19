@@ -159,7 +159,7 @@ class kin_map():
             self.lsf_kms = 3.e5/R/2.35
             self.lsf_pix = self.lsf_kms/self.kms_per_pix
 
-            print '\t\t Line spread function:'
+            print '\t\t Line spread function (km/s):'
             print '\t\t\t sigma = ', self.lsf_pix, self.lsf_kms
             print '\t\t\t fwhm = ', 2.35*self.lsf_pix, 2.35 * self.lsf_kms
 
