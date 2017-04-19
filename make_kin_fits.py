@@ -57,11 +57,11 @@ class kin_map():
     def __init__(self, data, header, vel_kms, lam,  camera, scale):
         self.orig_cube     = data
         self.orig_cube_hdr = header.copy()
-        self.cube          = data.copy()
-        self.cube_hdr      = header.copy()
-        self.zsize         = data.shape[0]
-        self.xsize         = data.shape[1]
-        self.ysize         = data.shape[2]
+        #self.cube          = data.copy()
+        #self.cube_hdr      = header.copy()
+        #self.zsize         = data.shape[0]
+        #self.xsize         = data.shape[1]
+        #self.ysize         = data.shape[2]
         self.vscale        = vel_kms
         self.lam           = lam
         self.camera        = camera
@@ -74,6 +74,8 @@ class kin_map():
         print temp_orig_shape, new_shape[0], self.orig_cube.shape[1]
 
         self.cube = zeros((self.zsize, new_shape[0],new_shape[1]))
+        self.cube_hdr = self.orig_cube_hdr.copy()
+        
         self.cube_hdr['CD1_1'] *=  (temp_orig_shape)/new_shape[0]
         self.cube_hdr['CD2_2'] *=  (temp_orig_shape)/new_shape[1]
         self.cube_hdr['CRPIX1'] =  new_shape[0]/2.
@@ -271,7 +273,7 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir, mcrx_data):
     c_kms = constants.c.value*1.e-3    #speed of light in km/s
 
     #reading in data
-    #mcrx_data = fits.open(abspath)
+    #mcrx_data = fits.open(abspath) #testing
 
     #reading number of cameras
     ncams = mcrx_data['MCRX'].header['N_CAMERA']
