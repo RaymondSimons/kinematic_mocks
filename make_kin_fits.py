@@ -163,7 +163,7 @@ class kin_map():
             print '\t\t Line spread function (pixel, km/s):'
             print '\t\t\t sigma = ', self.lsf_pix, ',', self.lsf_kms
             print '\t\t\t fwhm = ', 2.35*self.lsf_pix, ',', 2.35 * self.lsf_kms
-            self.cube_hdr['LSF']=str(self.lsf_kms.value)+'    #km/s'
+            self.cube_hdr['LSF']=str(self.lsf_kms)+'    #km/s'
             self.cube_hdr['R']=str(R) + '     #spectral resolution'
 
             self.spec_kernel = Gaussian1DKernel(self.lsf_pix)
