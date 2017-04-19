@@ -125,14 +125,14 @@ class kin_map():
         #The pixel values in our cube are W/m/m^2/Sr (surface brightness). To get to units of 
         #flux density per pixel
         #check to make sure this pixel scale is in proper coordinates
-        pix_scale_kpc = self.cube_hdr['CD1_1']*u.kpc/u.pixel
-        print pix_scale_kpc #kpc per pixel
-        pix_scale_arc = pix_scale_kpc * cosmo.arcsec_per_kpc_proper(1./self.ascale-1)
-        self.cube_hdr['pix_sz']=(str(pix_scale_arc.value), str(self.pix_scale_arc.unit)+' per side')
+        self.pix_scale_kpc = self.cube_hdr['CD1_1']*u.kpc/u.pixel
+        print self.pix_scale_kpc #kpc per pixel
+        self.pix_scale_arc = pix_scale_kpc * cosmo.arcsec_per_kpc_proper(1./self.ascale-1)
+        self.cube_hdr['pix_size']=(str(self.pix_scale_arc.value), str(self.pix_scale_arc.unit)+' per side')
 
-        print pix_scale_arc #arc per pixel
-        pix_scale_str = (pix_scale_arc**2.).to(u.steradian/u.pixel**2.)
-        print pix_scale_str #steradian per square pixel
+        print self.pix_scale_arc #arc per pixel
+        self.pix_scale_str = (self.pix_scale_arc**2.).to(u.steradian/u.pixel**2.)
+        print self.pix_scale_str #steradian per square pixel
 
 
         #Generate the kernel from the seeing size in pixels
@@ -141,7 +141,7 @@ class kin_map():
         if True:
             #set kernel size in pixels
             self.kernel_size_arc = kernel_size_arc*u.arcsec
-            self.kernel_size_pix = self.kernel_size_arc/pix_scale_arc
+            self.kernel_size_pix = self.kernel_size_arc/self.pix_scale_arc
             self.psf_str = pi*(((2.35/2.)*self.kernel_size_arc)**2.).to(u.steradian)
             print '\t\tSeeing:'
             print '\t\t\t sigma = ', self.kernel_size_pix, ',', self.kernel_size_arc 
@@ -205,7 +205,7 @@ class kin_map():
         cb_std = self.orig_cube[0:5,:,:].std()
         
         #shutting off for testing
-
+        '''
         for i in arange(self.cube.shape[1]):
             for j in arange(self.cube.shape[2]):  
                 if self.cube[:,i,j].max() > 5*cb_std: #likely have an Ha line here
@@ -221,6 +221,7 @@ class kin_map():
                             self.ha_int[i,j] = c_a[0]*c_a[2]*sqrt(2*pi)                            
                     except:
                         pass
+        '''
     def generate_observed_kin_map(self):
         self.obs_vel_hdr = self.cube_hdr.copy()
         self.obs_vel_hdr['IMUNIT'] = 'km/s'
