@@ -103,7 +103,7 @@ class kin_map():
                 self.cube[i] = np.repeat(np.repeat(temp_orig_cube_slice, m/M, axis=0), n/N, axis=1)
 
         #Surface brightness dimming
-        print 'Applying the redshift surface brightness dimming'
+        print 'Applying the redshift-dependent surface brightness dimming'
         self.cube = self.cube / (self.redshift + 1.)**4.
 
         self.zsize      = self.cube.shape[0]
@@ -393,12 +393,12 @@ if __name__ == '__main__':
     #Where to write the kinematic map files
     outdir = '/nobackupp2/rcsimons/data/kin_maps/%s'%gal
 
-    test = False
+    test = True
     if test: #testing
         #want to select individual systems
         scales   = array(scales)
-        n_sel = where(scales == 0.37)[0][0]
-        #mcrx_data = fits.open(abspaths[n_sel])
+        n_sel = where(scales == 0.450)[0][0]
+        mcrx_data = fits.open(abspaths[n_sel])
         run_kin_fits(abspaths[n_sel], scales[n_sel], kmap_names[n_sel], gal, outdir, mcrx_data)
     else:
         #run on all
