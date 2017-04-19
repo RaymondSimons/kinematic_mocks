@@ -108,7 +108,7 @@ class kin_map():
         self.xsize      = self.cube.shape[1]
         self.ysize      = self.cube.shape[2]
 
-        self.cube_hdr['orig_linear_fov'] = self.cube_hdr['linear_fov']
+        self.cube_hdr['orig_linear_fov'] = (self.cube_hdr['linear_fov'], '[kpc] original sunrise linear field of view')
         self.cube_hdr['linear_fov']      = self.ysize * self.cube_hdr['CD1_1']
 
 
