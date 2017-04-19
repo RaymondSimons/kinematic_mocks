@@ -272,6 +272,8 @@ class kin_map():
         self.ha_obs_hdr = self.cube_hdr.copy()
         self.ha_obs_hdr['IMUNIT'] = (self.orig_cube_hdr['IMUNIT']+ ' km/s', 'A*sigma*sqrt(2*pi) of gauss fit')
         self.ha_obs_hdr.remove('UNITCONV')
+        self.ha_obs_hdr.remove('LSF')
+        self.ha_obs_hdr.remove('R')
 
 
         master_hdulist.append(fits.ImageHDU(data = self.ha_int, header = self.ha_int_hdr, name = 'cam%i_hal_int'%self.camera))
