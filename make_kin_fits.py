@@ -128,7 +128,7 @@ class kin_map():
 
         print 'Seeing:'
         print '\t sigma = ', self.kernel_size_pix, self.kernel_size_arc 
-        print '\t fwhm = ', 2.35*self.kernel_size_pix, 2.35 * kernel_size_arc
+        print '\t fwhm = ', 2.35*self.kernel_size_pix, 2.35 * self.kernel_size_arc
 
         #Generate the kernel from the seeing size in pixels
         self.kernel = Gaussian2DKernel(self.kernel_size_pix.value)
