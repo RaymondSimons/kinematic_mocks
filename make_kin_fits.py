@@ -142,8 +142,8 @@ class kin_map():
             self.kernel_size_pix = self.kernel_size_arc/pix_scale_arc
             self.psf_str = pi*(((2.35/2.)*self.kernel_size_arc)**2.).to(u.steradian)
             print '\t\tSeeing:'
-            print '\t\t\t sigma = ', round(self.kernel_size_pix, 2), ',', self.kernel_size_arc 
-            print '\t\t\t fwhm = ', round(2.35*self.kernel_size_pix, 2), ',', 2.35 * self.kernel_size_arc
+            print '\t\t\t sigma = ', self.kernel_size_pix, ',', self.kernel_size_arc 
+            print '\t\t\t fwhm = ', 2.35*self.kernel_size_pix, ',', 2.35 * self.kernel_size_arc
             print '\t\t\t fwhm area = ', self.psf_str #in steradians
 
 
@@ -160,8 +160,8 @@ class kin_map():
             self.lsf_pix = self.lsf_kms/self.kms_per_pix
 
             print '\t\t Line spread function (pixel, km/s):'
-            print '\t\t\t sigma = ', round(self.lsf_pix,2), ',', self.lsf_kms
-            print '\t\t\t fwhm = ', round(2.35*self.lsf_pix,2), ',', 2.35 * self.lsf_kms
+            print '\t\t\t sigma = ', self.lsf_pix, ',', self.lsf_kms
+            print '\t\t\t fwhm = ', 2.35*self.lsf_pix, ',', 2.35 * self.lsf_kms
 
             self.spec_kernel = Gaussian1DKernel(self.lsf_pix)
 
