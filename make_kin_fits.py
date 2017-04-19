@@ -208,8 +208,6 @@ class kin_map():
 
         cb_std = self.orig_cube[0:5,:,:].std()
         
-        #shutting off for testing
-        '''
         for i in arange(self.cube.shape[1]):
             for j in arange(self.cube.shape[2]):  
                 if self.cube[:,i,j].max() > 5*cb_std: #likely have an Ha line here
@@ -225,7 +223,7 @@ class kin_map():
                             self.ha_int[i,j] = c_a[0]*c_a[2]*sqrt(2*pi)                            
                     except:
                         pass
-        '''
+
     def generate_observed_kin_map(self):
         self.obs_vel_hdr = self.cube_hdr.copy()
         self.obs_vel_hdr['IMUNIT'] = ('km/s', 'unit')
@@ -290,7 +288,7 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir):
     c_kms = constants.c.value*1.e-3    #speed of light in km/s
 
     #reading in data
-    mcrx_data = fits.open(abspath) #testing
+    mcrx_data = fits.open(abspath)
 
     #reading number of cameras
     ncams = mcrx_data['MCRX'].header['N_CAMERA']
@@ -328,36 +326,30 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir):
 
 
     #run kinematic fitting routine for all cameras
-    #for cam_n in arange(ncams):
-    for cam_n in arange(10,11):
+    for cam_n in arange(ncams):
         print '\t\t Running on (%s, %.3f, %i)'%(gal, scale, cam_n)
         camera = mcrx_data['CAMERA%i'%(cam_n)]   
         camera_params =  mcrx_data['CAMERA%i-PARAMETERS'%(cam_n)].header
-
-        camera.header['z'] = (round(1./scale - 1,4), 'redshift (w/ %s)'%cosmo.name)
-        camera.header['ascale'] = (scale, 'scale factor')
-        camera.header['camera'] = (cam_n, 'camera')
-
-
-        camera.header['cameradist'] = (camera_params['cameradist'], '[kpc] Distance from origin to camera')
-        camera.header['theta'] = (camera_params['theta'], '[rad] Angular coordinate theta of camera positi')
-        camera.header['phi']   = (camera_params['phi'], '[rad] Angular coordinate phi of camera position')
-
-        camera.header['CAMPOSX'] = (camera_params['CAMPOSX'], '[kpc] X position of camera        ')
-        camera.header['CAMPOSY'] = (camera_params['CAMPOSY'], '[kpc] Y position of camera        ')
-        camera.header['CAMPOSZ'] = (camera_params['CAMPOSZ'], '[kpc] Z position of camera        ')
-        camera.header['CAMDIRX'] = (camera_params['CAMDIRX'], '[kpc] X comp of camera viewing dir')
-        camera.header['CAMDIRY'] = (camera_params['CAMDIRY'], '[kpc] Y comp of camera viewing dir')
-        camera.header['CAMDIRZ'] = (camera_params['CAMDIRZ'], '[kpc] Z comp of camera viewing dir')
-        camera.header['CAMUPX']  = (camera_params['CAMUPX'] , '[kpc] X comp of camera Y axis dir ')
-        camera.header['CAMUPY']  = (camera_params['CAMUPY'] , '[kpc] Y comp of camera Y axis dir ')
-        camera.header['CAMUPZ']  = (camera_params['CAMUPZ'] , '[kpc] Z comp of camera Y axis dir ')
-        camera.header['linear_fov'] = (camera_params['linear_fov'], '[kpc] Linear field of view in y-dir at origin') 
+        if True:
+            camera.header['z'] = (round(1./scale - 1,4), 'redshift (w/ %s)'%cosmo.name)
+            camera.header['ascale'] = (scale, 'scale factor')
+            camera.header['camera'] = (cam_n, 'camera')
 
 
+            camera.header['cameradist'] = (camera_params['cameradist'], '[kpc] Distance from origin to camera')
+            camera.header['theta'] = (camera_params['theta'], '[rad] Angular coordinate theta of camera positi')
+            camera.header['phi']   = (camera_params['phi'], '[rad] Angular coordinate phi of camera position')
 
-
-
+            camera.header['CAMPOSX'] = (camera_params['CAMPOSX'], '[kpc] X position of camera        ')
+            camera.header['CAMPOSY'] = (camera_params['CAMPOSY'], '[kpc] Y position of camera        ')
+            camera.header['CAMPOSZ'] = (camera_params['CAMPOSZ'], '[kpc] Z position of camera        ')
+            camera.header['CAMDIRX'] = (camera_params['CAMDIRX'], '[kpc] X comp of camera viewing dir')
+            camera.header['CAMDIRY'] = (camera_params['CAMDIRY'], '[kpc] Y comp of camera viewing dir')
+            camera.header['CAMDIRZ'] = (camera_params['CAMDIRZ'], '[kpc] Z comp of camera viewing dir')
+            camera.header['CAMUPX']  = (camera_params['CAMUPX'] , '[kpc] X comp of camera Y axis dir ')
+            camera.header['CAMUPY']  = (camera_params['CAMUPY'] , '[kpc] Y comp of camera Y axis dir ')
+            camera.header['CAMUPZ']  = (camera_params['CAMUPZ'] , '[kpc] Z comp of camera Y axis dir ')
+            camera.header['linear_fov'] = (camera_params['linear_fov'], '[kpc] Linear field of view in y-dir at origin') 
 
 
         kmap = kin_map(camera.data, camera.header, vel_arr, lam,  cam_n, scale)
@@ -404,7 +396,7 @@ if __name__ == '__main__':
         run_kin_fits(abspaths[n_sel], scales[n_sel], kmap_names[n_sel], gal, outdir, mcrx_data)
     else:
         #run on all
-        #Parallel(n_jobs = -1)(delayed(run_kin_fits)(abspaths[i], scales[i], kmap_names[i], gal, outdir) for i in arange(len(scales[])))
+        #Parallel(n_jobs = -1)(delayed(run_kin_fits)(abspaths[i], scales[i], kmap_names[i], gal, outdir) for i in arange(len(scales)))
         Parallel(n_jobs = -1)(delayed(run_kin_fits)(abspaths[i], scales[i], kmap_names[i], gal, outdir) for i in arange(10, 12,1))
     
 
