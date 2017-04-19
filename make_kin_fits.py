@@ -300,6 +300,10 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir, mcrx_data):
     prihdr = fits.Header()
     prihdr['COMMENT'] = "Storing the kinematic maps in this FITS file."
     prihdr['ncams'] = str(ncams)
+
+    prihdr['z'] = (str(1./scale - 1), 'redshift')
+    prihdr['ascale'] = (str(scale), 'scale factor')
+
     prihdu = fits.PrimaryHDU(header=prihdr)    
     master_hdulist.append(prihdu)
 
