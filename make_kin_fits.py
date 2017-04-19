@@ -329,6 +329,7 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir):
     #run kinematic fitting routine for all cameras
     for cam_n in arange(10,11): #testing
     #for cam_n in arange(ncams):
+        np.random.seed()
         print '\t\t Running on (%s, %.3f, %i)'%(gal, scale, cam_n)
         camera = mcrx_data['CAMERA%i'%(cam_n)]   
         camera_params =  mcrx_data['CAMERA%i-PARAMETERS'%(cam_n)].header
@@ -370,7 +371,6 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir):
 
 
 if __name__ == '__main__':
-    np.random.seed()
     path_to_mcrx = './*/ifu/'
     mcrx_files = glob.glob(path_to_mcrx+'/mcrx.fits.gz')
     scales = []
