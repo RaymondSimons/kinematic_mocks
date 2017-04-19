@@ -332,7 +332,7 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir, mcrx_data):
         camera = mcrx_data['CAMERA%i'%(cam_n)]   
         camera_params =  mcrx_data['CAMERA%i-PARAMETERS'%(cam_n)].header
 
-        camera.header['z'] = (str(1./scale - 1), 'redshift')
+        camera.header['z'] = (str(1./scale - 1), 'redshift (w/%s)'%cosmo.name)
         camera.header['ascale'] = (str(scale), 'scale factor')
         camera.header['camera'] = (str(camera), 'camera')
 
