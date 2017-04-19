@@ -334,9 +334,13 @@ if __name__ == '__main__':
     #Where to write the kinematic map files
     outdir = '/nobackupp2/rcsimons/data/kin_maps/%s'%gal
 
-    #run_kin_fits(abspaths[10], scales[10], kmap_names[10], gal, outdir)
+    abspaths = array(abspaths)
+    scales   = array(scales)
+    kmap_names   = array(kmap_names)
+
+    run_kin_fits(abspaths[where(scales == 0.38)], scales[where(scales == 0.38)], kmap_names[where(scales == 0.38)], gal, outdir)
     #Parallel(n_jobs = -1)(delayed(run_kin_fits)(abspaths[i], scales[i], kmap_names[i], gal, outdir) for i in arange(len(scales)))
-    Parallel(n_jobs = -1)(delayed(run_kin_fits)(abspaths[scales == 0.38], scales[scales == 0.38], kmap_names[scales == 0.38], gal, outdir) for i in arange(5,6))
+    
 
 
 
