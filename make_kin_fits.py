@@ -198,7 +198,7 @@ class kin_map():
 
     def generate_intrinsic_kin_map(self):
         self.int_vel_hdr = self.orig_cube_hdr.copy()
-        self.int_vel_hdr['IMUNIT'] = 'km/s'
+        self.int_vel_hdr['IMUNIT'] = ('km/s','unit')
         self.int_vel_hdr.remove('UNITCONV')
 
 
@@ -230,7 +230,7 @@ class kin_map():
         '''
     def generate_observed_kin_map(self):
         self.obs_vel_hdr = self.cube_hdr.copy()
-        self.obs_vel_hdr['IMUNIT'] = 'km/s'
+        self.obs_vel_hdr['IMUNIT'] = ('km/s', 'unit')
         self.obs_vel_hdr.remove('UNITCONV')
 
         self.vel_obs    = np.zeros((self.xsize, self.ysize))*np.nan
@@ -267,7 +267,7 @@ class kin_map():
         master_hdulist.append(fits.ImageHDU(data = array([self.vel_obs,self.evel_obs]), header = self.obs_vel_hdr, name = 'cam%i_vel_obs'%self.camera))
 
         self.ha_int_hdr = self.orig_cube_hdr
-        self.ha_int_hdr.remove('IMUNIT')
+        self.ha_int_hdr['IMUNIT'] = (self.orig_cube_hdr['IMUNIT']+ ' km/s', 'calc as A*sigma*sqrt(2*pi) of gauss fit')
         self.ha_int_hdr.remove('UNITCONV')
 
 
