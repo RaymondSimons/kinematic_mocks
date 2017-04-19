@@ -284,7 +284,7 @@ class kin_map():
         return master_hdulist
 
 
-def run_kin_fits(abspath, scale, kmap_name, gal, outdir):
+def run_kin_fits(abspath, scale, kmap_name, gal, outdir, mcrx_data):
     print '\tReading in mcrx file for (%s, %.3f)'%(gal, scale)
 
     #setting constants
@@ -292,7 +292,7 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir):
     c_kms = constants.c.value*1.e-3    #speed of light in km/s
 
     #reading in data
-    mcrx_data = fits.open(abspath)
+    #mcrx_data = fits.open(abspath)
 
     #reading number of cameras
     ncams = mcrx_data['MCRX'].header['N_CAMERA']
