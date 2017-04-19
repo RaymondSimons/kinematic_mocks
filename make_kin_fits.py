@@ -150,8 +150,17 @@ class kin_map():
             sens, R = 21.0, 3800.
             print 'Bad input band, setting sensitivty to H-band value, %s AB mag'%(sens)
 
+        #The spectral lsf fwhm (in pixels) is:
+        self.kms_per_pix = self.vscale[1]-self.vscale[0]
+        lsf_pix = (3.e5/R)/self.kms_per_pix
+        print lsf_pix
 
+        self.spec_kernel = Gaussian1DKernel(lsf_pix/2.35)
         print 'Convolving spectrally...'
+        for xx in arange(self.xsize):
+            for yy in arange(self.ysize):
+                self.blrcube[xx, yy] = convolve_fft(self.cube[:,xx, yy], self.spec_kernel)
+
 
         print 'Adding noise...'
 
@@ -168,10 +177,6 @@ class kin_map():
         print '\t', psf_str, ' seeing FWHM area' #in steradians
 
 
-        #The spectral lsf fwhm (in pixels) is:
-        self.kms_per_pix = self.vscale[1]-self.vscale[0]
-        lsf_pix = (3.e5/R)/self.kms_per_pix
-        print lsf_pix
         
         sens_noise = sens_si_fd/psf_str/lsf_pix
         print sens_noise
