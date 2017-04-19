@@ -164,7 +164,7 @@ class kin_map():
         #In steradians, the PSF is:
 
         psf_str = pi*(((2.35/2.)*self.kernel_size_arc)**2.).to(u.steradian)
-        print '\t', psf_str, 'steradian seeing FWHM area'
+        print '\t', psf_str, ' seeing FWHM area' #in steradians
 
 
         #The spectral lsf fwhm (in pixels) is:
