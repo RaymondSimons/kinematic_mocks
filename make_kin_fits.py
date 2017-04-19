@@ -24,7 +24,7 @@ import matplotlib.pyplot as plt
 from matplotlib.pyplot  import *
 import numpy as np
 from numpy import *
-
+np.random.seed()
 
 plt.ioff()
 def gauss(x, *p):
@@ -215,7 +215,7 @@ class kin_map():
                     try:
                         c_a, v_a = curve_fit(gauss, self.vscale, spec, p0 = [nanmax(spec), self.vscale[nanargmax(spec)], 10, spec[0]])  
                         if (isfinite(sqrt(v_a[1,1]))) & (c_a[2] > 0.) & (isfinite(sqrt(v_a[2,2]))) & \
-                        (c_a[0] > 0) & (c_a[2] > 0) & (sqrt(v_a[2,2]) < 100) & (sqrt(v_a[1,1]) < 100):
+                        (c_a[0] > 0) & (c_a[2] > 0) & (sqrt(v_a[2,2]) < 30) & (sqrt(v_a[1,1]) < 30):
                             self.vel_int[i,j]   = c_a[1]
                             self.evel_int[i,j]  = sqrt(v_a[1,1])
                             self.disp_int[i,j]  = c_a[2]
@@ -328,7 +328,7 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir):
 
 
     #run kinematic fitting routine for all cameras
-    for cam_n in arange(10,11):
+    for cam_n in arange(10,11): #testing
     #for cam_n in arange(ncams):
         print '\t\t Running on (%s, %.3f, %i)'%(gal, scale, cam_n)
         camera = mcrx_data['CAMERA%i'%(cam_n)]   
@@ -391,7 +391,7 @@ if __name__ == '__main__':
     outdir = '/nobackupp2/rcsimons/data/kin_maps/%s'%gal
 
     test = False
-    if test:
+    if test: #testing
         #want to select individual systems
         scales   = array(scales)
         n_sel = where(scales == 0.37)[0][0]
@@ -400,7 +400,7 @@ if __name__ == '__main__':
     else:
         #run on all
         #Parallel(n_jobs = -1)(delayed(run_kin_fits)(abspaths[i], scales[i], kmap_names[i], gal, outdir) for i in arange(len(scales)))
-        Parallel(n_jobs = -1)(delayed(run_kin_fits)(abspaths[i], scales[i], kmap_names[i], gal, outdir) for i in arange(10, 12,1))
+        Parallel(n_jobs = -1)(delayed(run_kin_fits)(abspaths[i], scales[i], kmap_names[i], gal, outdir) for i in arange(10, 12,1)) #testing
     
 
 
