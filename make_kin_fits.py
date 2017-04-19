@@ -130,8 +130,8 @@ class kin_map():
         print 'Seeing:'
         print '\t', self.kernel_size_pix, ' pixels sigma'
         print '\t', 2.35*self.kernel_size_pix, ' pixels fwhm'
-        print '\t', self.kernel_size_arc, ' arcsec fwhm'
-        print '\t', 2.35*self.kernel_size_arc, ' arcsec fwhm'
+        print '\t', self.kernel_size_arc, ' fwhm'
+        print '\t', 2.35*self.kernel_size_arc, ' fwhm'
 
 
         #Generate the kernel from the seeing size in pixels
@@ -314,7 +314,7 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir):
         kmap = kin_map(camera.data, camera.header, vel_arr, lam,  cam_n, scale)
         kmap.generate_intrinsic_kin_map()
         kmap.rebin([60,60])
-        kmap.generate_blurred_map(kernel_size = 0.6)
+        kmap.generate_blurred_map(kernel_size_arc = 0.6)
         kmap.generate_observed_kin_map()
         master_hdulist = kmap.get_hdulist(master_hdulist)
 
