@@ -156,7 +156,7 @@ class kin_map():
         self.lsf_pix = (3.e5/R)/self.kms_per_pix
         print self.lsf_pix
 
-        self.spec_kernel = Gaussian1DKernel(lsf_pix/2.35)
+        self.spec_kernel = Gaussian1DKernel(self.lsf_pix/2.35)
         print 'Convolving spectrally...'
         for xx in arange(self.xsize):
             for yy in arange(self.ysize):
