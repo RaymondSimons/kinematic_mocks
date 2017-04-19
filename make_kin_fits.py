@@ -185,13 +185,13 @@ class kin_map():
                     spec = self.cube[:,i,j]
                     try:
                         c_a, v_a = curve_fit(gauss, self.vscale, spec, p0 = [nanmax(spec), self.vscale[nanargmax(spec)], 10, spec[0]])  
-                        if (isfinite(sqrt(v_a[1,1]))) & (c_a[2] > 0.) & (isfinite(sqrt(v_a[2,2]))) & \
-                        (c_a[0] > 0) & (c_a[2] > 5) & (sqrt(v_a[2,2]) < 30) & (sqrt(v_a[1,1]) < 30):
-                            self.vel_int[i,j]   = c_a[1]
-                            self.evel_int[i,j]  = sqrt(v_a[1,1])
-                            self.disp_int[i,j]  = c_a[2]
-                            self.edisp_int[i,j] = sqrt(v_a[2,2])
-                            self.ha_int[i,j] = c_a[0]*c_a[2]*sqrt(2*pi)                            
+                        #if (isfinite(sqrt(v_a[1,1]))) & (c_a[2] > 0.) & (isfinite(sqrt(v_a[2,2]))) & \
+                        #(c_a[0] > 0) & (c_a[2] > 5) & (sqrt(v_a[2,2]) < 30) & (sqrt(v_a[1,1]) < 30):
+                        self.vel_int[i,j]   = c_a[1]
+                        self.evel_int[i,j]  = sqrt(v_a[1,1])
+                        self.disp_int[i,j]  = c_a[2]
+                        self.edisp_int[i,j] = sqrt(v_a[2,2])
+                        self.ha_int[i,j] = c_a[0]*c_a[2]*sqrt(2*pi)                            
                     except:
                         pass
         '''
@@ -220,8 +220,8 @@ class kin_map():
                     self.ha_obs[i,j] = c_a[0]*c_a[2]*sqrt(2*pi)                            
                 except:
                     pass
-        self.vel_obs[-isnan(self.vel_obs)] += np.random.normal(0,5,shape(self.vel_obs[-isnan(self.vel_obs)]))
-        self.disp_obs[-isnan(self.disp_obs)] += np.random.normal(0,5,shape(self.vel_obs[-isnan(self.vel_obs)]))
+        #self.vel_obs[-isnan(self.vel_obs)] += np.random.normal(0,5,shape(self.vel_obs[-isnan(self.vel_obs)]))
+        #self.disp_obs[-isnan(self.disp_obs)] += np.random.normal(0,5,shape(self.vel_obs[-isnan(self.vel_obs)]))
 
     def get_hdulist(self, master_hdulist):
         colhdr = fits.Header()
