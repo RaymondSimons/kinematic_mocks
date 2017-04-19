@@ -163,7 +163,7 @@ class kin_map():
         #1 spatial fwhm * 1 spectral fwhm. We want to add noise equal to 1/5th the sensitivity (i.e., 1 sigma sensitivty) over this aperture.
         #In steradians, the PSF is:
 
-        psf_str = pi*(((2.35/2.)*self.kernel_size_arc)**2.).to(u.steradian)
+        psf_str = pi*(((2.35/2.)*self.kernel_size_arc)**2.).to(u.steradian/u.pixel**2.)
         print '\t', psf_str, 'steradian seeing FWHM area'
 
 
@@ -346,7 +346,7 @@ if __name__ == '__main__':
         #want to select individual systems
         scales   = array(scales)
         n_sel = where(scales == 0.38)[0][0]
-        mcrx_data = fits.open(abspaths[n_sel])
+        #mcrx_data = fits.open(abspaths[n_sel])
         run_kin_fits(abspaths[n_sel], scales[n_sel], kmap_names[n_sel], gal, outdir, mcrx_data)
     else:
         #run on all
