@@ -177,6 +177,8 @@ class kin_map():
 
         cb_std = self.orig_cube[0:5,:,:].std()
         
+        #shutting off for testing
+        '''
         for i in arange(self.cube.shape[1]):
             for j in arange(self.cube.shape[2]):  
                 if self.cube[:,i,j].max() > 10*cb_std: #likely have an Ha line here
@@ -192,7 +194,7 @@ class kin_map():
                             self.ha_int[i,j] = c_a[0]*c_a[2]*sqrt(2*pi)                            
                     except:
                         pass
-
+        '''
     def generate_observed_kin_map(self):
         self.obs_vel_hdr = self.cube_hdr.copy()
         self.obs_vel_hdr['IMUNIT'] = 'km/s'
