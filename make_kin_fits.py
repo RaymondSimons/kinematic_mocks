@@ -128,6 +128,8 @@ class kin_map():
         pix_scale_kpc = self.cube_hdr['CD1_1']*u.kpc/u.pixel
         print pix_scale_kpc #kpc per pixel
         pix_scale_arc = pix_scale_kpc * cosmo.arcsec_per_kpc_proper(1./self.ascale-1)
+        self.cube_hdr['pix_sz']=(str(pix_scale_arc.value), str(self.pix_scale_arc.unit)+' per side')
+
         print pix_scale_arc #arc per pixel
         pix_scale_str = (pix_scale_arc**2.).to(u.steradian/u.pixel**2.)
         print pix_scale_str #steradian per square pixel
