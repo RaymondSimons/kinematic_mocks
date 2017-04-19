@@ -151,7 +151,7 @@ class kin_map():
         #Ths units of this factor are 1/(str*m). Let's now consider an 'aperture' equal to 
         #1 spatial fwhm * 1 spectral fwhm. We want to add noise equal to 1/5th the sensitivity over this aperture.
         #In steradians, the PSF is:
-        psf_str = pi*(self.kernel_size**2.*u.arcsec**2.).to(u.steradian)
+        psf_str = pi*((pix_scale_arc * self.kernel_size)**2.).to(u.steradian)
         print psf_str, 'is the seeing'
 
 
