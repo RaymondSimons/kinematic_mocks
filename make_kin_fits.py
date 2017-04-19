@@ -152,7 +152,8 @@ class kin_map():
 
         #The spectral lsf fwhm (in pixels) is:
         self.kms_per_pix = self.vscale[1]-self.vscale[0]
-        lsf_pix = (3.e5/R)/self.kms_per_pix
+        
+        self.lsf_pix = (3.e5/R)/self.kms_per_pix
         print lsf_pix
 
         self.spec_kernel = Gaussian1DKernel(lsf_pix/2.35)
@@ -234,7 +235,7 @@ class kin_map():
                     #(c_a[0] > 0) & (c_a[2] > 10) & (sqrt(v_a[2,2]) < 30) & (sqrt(v_a[1,1]) < 30):
                     self.vel_obs[i,j]   = c_a[1]
                     self.evel_obs[i,j]  = sqrt(v_a[1,1])
-                    self.disp_obs[i,j]  = c_a[2]
+                    self.disp_obs[i,j]  = sqrt(c_a[2]**2. - (self.lsf_pix*self.kms_per_pix/2.35)**2.)
                     self.edisp_obs[i,j] = sqrt(v_a[2,2])
                     self.ha_obs[i,j] = c_a[0]*c_a[2]*sqrt(2*pi)                            
                 except:
