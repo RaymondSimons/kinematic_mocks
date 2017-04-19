@@ -215,7 +215,7 @@ class kin_map():
                     try:
                         c_a, v_a = curve_fit(gauss, self.vscale, spec, p0 = [nanmax(spec), self.vscale[nanargmax(spec)], 10, spec[0]])  
                         if (isfinite(sqrt(v_a[1,1]))) & (c_a[2] > 0.) & (isfinite(sqrt(v_a[2,2]))) & \
-                        (c_a[0] > 0) & (c_a[2] > 5) & (sqrt(v_a[2,2]) < 30) & (sqrt(v_a[1,1]) < 30):
+                        (c_a[0] > 0) & (c_a[2] > 0) & (sqrt(v_a[2,2]) < 100) & (sqrt(v_a[1,1]) < 100):
                             self.vel_int[i,j]   = c_a[1]
                             self.evel_int[i,j]  = sqrt(v_a[1,1])
                             self.disp_int[i,j]  = c_a[2]
@@ -241,7 +241,7 @@ class kin_map():
                 spec = convolve_fft(self.blrcube[:,i,j], krnl)
                 try:
                     c_a, v_a = curve_fit(gauss, self.vscale, spec, p0 = [nanmax(spec), self.vscale[nanargmax(spec)], 30, median(spec[0:15])])           
-                    if (isfinite(sqrt(v_a[1,1]))) & (c_a[2]**2. > self.lsf_kms**2.) & (isfinite(sqrt(v_a[2,2]))) & (c_a[0] > 0):
+                    if (isfinite(sqrt(v_a[1,1]))) & (c_a[2]**2. > self.lsf_kms.value**2.) & (isfinite(sqrt(v_a[2,2]))) & (c_a[0] > 0):
                         self.vel_obs[i,j]   = c_a[1]
                         self.evel_obs[i,j]  = sqrt(v_a[1,1])
                         self.disp_obs[i,j]  = sqrt(c_a[2]**2. - self.lsf_kms.value**2.)
