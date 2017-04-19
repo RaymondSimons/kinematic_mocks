@@ -357,7 +357,7 @@ if __name__ == '__main__':
     if test:
         #want to select individual systems
         scales   = array(scales)
-        n_sel = where(scales == 0.38)[0][0]
+        n_sel = where(scales == 0.39)[0][0]
         mcrx_data = fits.open(abspaths[n_sel])
         run_kin_fits(abspaths[n_sel], scales[n_sel], kmap_names[n_sel], gal, outdir, mcrx_data)
     else:
