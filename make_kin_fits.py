@@ -54,7 +54,8 @@ def parse():
 
 class kin_map():
     def __init__(self, data, header, vel_kms, lam,  camera, scale):
-        self.orig_cube     = data
+        self.redshift      = 1./scale - 1
+        self.orig_cube     = data/(self.redshift+1)**4.
         self.orig_cube_hdr = header.copy()
         self.cube          = data.copy()
         self.cube_hdr      = header.copy()
