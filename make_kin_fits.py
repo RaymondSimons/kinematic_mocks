@@ -335,10 +335,10 @@ if __name__ == '__main__':
     outdir = '/nobackupp2/rcsimons/data/kin_maps/%s'%gal
 
     #abspaths = abspaths
-    #scales   = array(scales)
+    scales   = array(scales)
     #kmap_names   = kmap_names
 
-    n_sel = where(scales == 0.38)
+    n_sel = where(scales == 0.38)[0][0]
     print n_sel
     print abspaths[n_sel]
     run_kin_fits(abspaths[n_sel], scales[n_sel], kmap_names[n_sel], gal, outdir)
