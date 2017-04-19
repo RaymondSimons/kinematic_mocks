@@ -222,6 +222,7 @@ class kin_map():
                             self.edisp_int[i,j] = sqrt(v_a[2,2])
                             self.ha_int[i,j] = c_a[0]*c_a[2]*sqrt(2*pi)                            
                     except:
+                        print 'something bad happened in the kin fit, intrinsic'
                         pass
 
     def generate_observed_kin_map(self):
@@ -247,6 +248,7 @@ class kin_map():
                         self.edisp_obs[i,j] = sqrt(v_a[2,2])
                         self.ha_obs[i,j] = c_a[0]*c_a[2]*sqrt(2*pi)                            
                 except:
+                    print 'something bad happened in the kin fit, observed'
                     pass
         #self.vel_obs[-isnan(self.vel_obs)] += np.random.normal(0,5,shape(self.vel_obs[-isnan(self.vel_obs)]))
         #self.disp_obs[-isnan(self.disp_obs)] += np.random.normal(0,5,shape(self.vel_obs[-isnan(self.vel_obs)]))
@@ -326,7 +328,8 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir):
 
 
     #run kinematic fitting routine for all cameras
-    for cam_n in arange(ncams):
+    for cam_n in arange(10,11):
+    #for cam_n in arange(ncams):
         print '\t\t Running on (%s, %.3f, %i)'%(gal, scale, cam_n)
         camera = mcrx_data['CAMERA%i'%(cam_n)]   
         camera_params =  mcrx_data['CAMERA%i-PARAMETERS'%(cam_n)].header
