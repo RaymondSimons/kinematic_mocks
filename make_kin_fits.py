@@ -179,7 +179,7 @@ class kin_map():
 
 
         
-        sens_noise = sens_si_fd/psf_str/lsf_pix
+        sens_noise = sens_si_fd/psf_str/self.lsf_pix
         print sens_noise
         self.blrcube += np.random.normal(0, sens_noise.value, self.cube.shape)
 
