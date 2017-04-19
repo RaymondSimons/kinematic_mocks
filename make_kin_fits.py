@@ -24,7 +24,6 @@ import matplotlib.pyplot as plt
 from matplotlib.pyplot  import *
 import numpy as np
 from numpy import *
-np.random.seed()
 
 plt.ioff()
 def gauss(x, *p):
@@ -222,7 +221,7 @@ class kin_map():
                             self.edisp_int[i,j] = sqrt(v_a[2,2])
                             self.ha_int[i,j] = c_a[0]*c_a[2]*sqrt(2*pi)                            
                     except:
-                        print 'something bad happened in the kin fit, intrinsic'
+                        print 'Intrinsic kinematic fit broke at pixel %i %i'%(i,j)
                         pass
 
     def generate_observed_kin_map(self):
@@ -248,7 +247,7 @@ class kin_map():
                         self.edisp_obs[i,j] = sqrt(v_a[2,2])
                         self.ha_obs[i,j] = c_a[0]*c_a[2]*sqrt(2*pi)                            
                 except:
-                    print 'something bad happened in the kin fit, observed'
+                    print 'Observed kinematic fit broke at pixel %i %i'%(i,j)
                     pass
         #self.vel_obs[-isnan(self.vel_obs)] += np.random.normal(0,5,shape(self.vel_obs[-isnan(self.vel_obs)]))
         #self.disp_obs[-isnan(self.disp_obs)] += np.random.normal(0,5,shape(self.vel_obs[-isnan(self.vel_obs)]))
@@ -371,6 +370,7 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir):
 
 
 if __name__ == '__main__':
+    np.random.seed()
     path_to_mcrx = './*/ifu/'
     mcrx_files = glob.glob(path_to_mcrx+'/mcrx.fits.gz')
     scales = []
