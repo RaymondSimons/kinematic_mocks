@@ -55,7 +55,7 @@ def parse():
 class kin_map():
     def __init__(self, data, header, vel_kms, lam,  camera, scale):
         self.redshift      = 1./scale - 1
-        self.orig_cube     = data/(self.redshift+1)**4.
+        self.orig_cube     = data
         self.orig_cube_hdr = header.copy()
         self.cube          = data.copy()
         self.cube_hdr      = header.copy()
@@ -102,7 +102,9 @@ class kin_map():
                 #old way: self.cube[i] = np.repeat(np.repeat(self.orig_cube[i], m/M, axis=0), n/N, axis=1)
                 self.cube[i] = np.repeat(np.repeat(temp_orig_cube_slice, m/M, axis=0), n/N, axis=1)
 
-
+        #Surface brightness dimming
+        print 'Applying the redshift surface brightness dimming'
+        self.cube = self.cube / (self.redshift + 1.)**4.
 
         self.zsize      = self.cube.shape[0]
         self.xsize      = self.cube.shape[1]
