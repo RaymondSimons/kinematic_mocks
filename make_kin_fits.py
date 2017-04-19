@@ -121,7 +121,7 @@ class kin_map():
         #KMOS reaches a point source 5-sigma sensitvity in 8 hr of
         #of (J, H, K) = (22, 21.0, 20.5) AB magnitudes 
         #for R ~ (3380, 3800, 3750)
-        #citation: http://www2011.mpe.mpg.de/Highlights/FB2004/exp13_bender.pdf
+        #baseline sensitivity measurements from: http://www2011.mpe.mpg.de/Highlights/FB2004/exp13_bender.pdf
         if   band == 'H': sens, R = 21.0, 3800
         elif band == 'J': sens, R = 22.0, 3380
         elif band == 'K': sens, R = 20.5, 3750
@@ -149,7 +149,7 @@ class kin_map():
 
         #Currently in m, want to get in terms of hz^-1. F_v = (F_lam)*lam^2/c
         #Ths units of this factor are 1/(str*m). Let's now consider an 'aperture' equal to 
-        #1 spatial fwhm * 1 spectral fwhm. We want to add noise equal to 1/5th the sensitivity over this aperture.
+        #1 spatial fwhm * 1 spectral fwhm. We want to add noise equal to 1/5th the sensitivity (i.e., 1 sigma sensitivty) over this aperture.
         #In steradians, the PSF is:
         psf_str = pi*((pix_scale_arc * self.kernel_size)**2.).to(u.steradian)
         print psf_str, 'is the seeing'
@@ -211,13 +211,13 @@ class kin_map():
                 spec = convolve_fft(self.blrcube[:,i,j], krnl)
                 try:
                     c_a, v_a = curve_fit(gauss, self.vscale, spec, p0 = [nanmax(spec), self.vscale[nanargmax(spec)], 30, median(spec[0:15])])           
-                    if (isfinite(sqrt(v_a[1,1]))) & (c_a[2] > 0.) & (isfinite(sqrt(v_a[2,2]))) & \
-                    (c_a[0] > 0) & (c_a[2] > 10) & (sqrt(v_a[2,2]) < 30) & (sqrt(v_a[1,1]) < 30):
-                        self.vel_obs[i,j]   = c_a[1]
-                        self.evel_obs[i,j]  = sqrt(v_a[1,1])
-                        self.disp_obs[i,j]  = c_a[2]
-                        self.edisp_obs[i,j] = sqrt(v_a[2,2])
-                        self.ha_obs[i,j] = c_a[0]*c_a[2]*sqrt(2*pi)                            
+                    #if (isfinite(sqrt(v_a[1,1]))) & (c_a[2] > 0.) & (isfinite(sqrt(v_a[2,2]))) & \
+                    #(c_a[0] > 0) & (c_a[2] > 10) & (sqrt(v_a[2,2]) < 30) & (sqrt(v_a[1,1]) < 30):
+                    self.vel_obs[i,j]   = c_a[1]
+                    self.evel_obs[i,j]  = sqrt(v_a[1,1])
+                    self.disp_obs[i,j]  = c_a[2]
+                    self.edisp_obs[i,j] = sqrt(v_a[2,2])
+                    self.ha_obs[i,j] = c_a[0]*c_a[2]*sqrt(2*pi)                            
                 except:
                     pass
         self.vel_obs[-isnan(self.vel_obs)] += np.random.normal(0,5,shape(self.vel_obs[-isnan(self.vel_obs)]))
