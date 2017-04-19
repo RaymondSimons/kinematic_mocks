@@ -306,7 +306,7 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir, mcrx_data):
     prihdr['filename'] = kmap_name
     prihdr['ncams'] = ncams
 
-    prihdr['z'] = (1./scale - 1, 'redshift (w/ %s)'%cosmo.name)
+    prihdr['z'] = ('%.4f'%(1./scale - 1), 'redshift (w/ %s)'%cosmo.name)
     prihdr['ascale'] = (scale, 'scale factor')
 
     prihdu = fits.PrimaryHDU(header=prihdr)    
@@ -334,7 +334,7 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir, mcrx_data):
         camera = mcrx_data['CAMERA%i'%(cam_n)]   
         camera_params =  mcrx_data['CAMERA%i-PARAMETERS'%(cam_n)].header
 
-        camera.header['z'] = (1./scale - 1, 'redshift (w/ %s)'%cosmo.name)
+        camera.header['z'] = ('%.4f'%(1./scale - 1), 'redshift (w/ %s)'%cosmo.name)
         camera.header['ascale'] = (scale, 'scale factor')
         camera.header['camera'] = (cam_n, 'camera')
 
