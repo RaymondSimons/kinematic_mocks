@@ -146,6 +146,7 @@ class kin_map():
             print '\t\t\t fwhm = ', 2.35*self.kernel_size_pix, ',', 2.35 * self.kernel_size_arc
             print '\t\t\t fwhm area = ', self.psf_str #in steradians
 
+            self.cube_hdr['seeing']=str(self.kernel_size_arc.value) + '     #arcsec'
 
             self.kernel = Gaussian2DKernel(self.kernel_size_pix.value)
             for i in arange(self.zsize):
@@ -162,6 +163,8 @@ class kin_map():
             print '\t\t Line spread function (pixel, km/s):'
             print '\t\t\t sigma = ', self.lsf_pix, ',', self.lsf_kms
             print '\t\t\t fwhm = ', 2.35*self.lsf_pix, ',', 2.35 * self.lsf_kms
+            self.cube_hdr['LSF']=str(self.lsf_kms.value)+'    #km/s'
+            self.cube_hdr['R']=str(R) + '     #spectral resolution'
 
             self.spec_kernel = Gaussian1DKernel(self.lsf_pix)
 
@@ -170,6 +173,7 @@ class kin_map():
                     self.blrcube[:, xx, yy] = convolve_fft(self.blrcube[:,xx, yy], self.spec_kernel)
 
         print 'Adding noise...'
+        self.cube_hdr['sensitivity']=str(sens) + '     #AB mag 5 sigma 8 hr sensitivty'
 
         sens_si_fd = (sens*u.ABmag).to(u.Watt/(u.meter*u.meter)/(u.Hz))*astropy.constants.c/(self.lam[0]*u.meter)**2.
         print '\t\t', sens_si_fd
