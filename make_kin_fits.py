@@ -59,7 +59,6 @@ class kin_map():
         self.orig_cube_hdr = header.copy()
         self.cube          = data.copy()
         self.cube_hdr      = header.copy()
-        self.kernel        = nan
         self.zsize         = data.shape[0]
         self.xsize         = data.shape[1]
         self.ysize         = data.shape[2]
@@ -114,28 +113,25 @@ class kin_map():
         #The pixel values in our cube are W/m/m^2/Sr (surface brightness). To get to units of 
         #flux density per pixel
         #check to make sure this pixel scale is in proper coordinates
-        pix_scale_kpc = self.cube_hdr['CD1_1']*u.kpc
-        print pix_scale_kpc, 'per pixel'
+        pix_scale_kpc = self.cube_hdr['CD1_1']*u.kpc/u.pixel
+        print pix_scale_kpc #kpc per pixel
         pix_scale_arc = pix_scale_kpc * cosmo.arcsec_per_kpc_proper(1./self.ascale-1)
-        print pix_scale_arc, 'per pixel'
+        print pix_scale_arc #arc per pixel
         pix_scale_str = (pix_scale_arc**2.).to(u.steradian)
-        print pix_scale_str, 'per square pixel'
+        print pix_scale_str #steradian per square pixel
 
 
         #set kernel size in pixels
-        self.kernel_size_arc = kernel_size_arc
+        self.kernel_size_arc = kernel_size_arc*u.arcsec
         self.kernel_size_pix = self.kernel_size_arc/pix_scale_arc
 
 
         print 'Seeing:'
-        print '\t', self.kernel_size_pix, ' pixels sigma'
-        print '\t', 2.35*self.kernel_size_pix, ' pixels fwhm'
-        print '\t', self.kernel_size_arc, ' fwhm'
-        print '\t', 2.35*self.kernel_size_arc, ' fwhm'
-
+        print '\t sigma = ', self.kernel_size_pix, self.kernel_size_arc 
+        print '\t fwhm = ', 2.35*self.kernel_size_pix, 2.35 * kernel_size_arc
 
         #Generate the kernel from the seeing size in pixels
-        self.kernel = Gaussian2DKernel(self.kernel_size_pix)
+        self.kernel = Gaussian2DKernel(self.kernel_size_pix.value)
 
         print 'Convolving spatially...'
         for i in arange(self.zsize):
@@ -172,7 +168,8 @@ class kin_map():
 
 
         #The spectral lsf fwhm (in pixels) is:
-        lsf_pix = (3.e5/R)/(self.vscale[1]-self.vscale[0])
+        self.kms_per_pix = self.vscale[1]-self.vscale[0]
+        lsf_pix = (3.e5/R)/self.kms_per_pix
         print lsf_pix
         
         sens_noise = sens_si_fd/psf_str/lsf_pix
