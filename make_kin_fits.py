@@ -158,7 +158,6 @@ class kin_map():
             self.kms_per_pix = self.vscale[1]-self.vscale[0]
             self.lsf_kms = 3.e5/R/2.35
             self.lsf_pix = self.lsf_kms/self.kms_per_pix
-            print self.lsf_pix
 
             print '\t\t Line spread function:'
             print '\t\t\t sigma = ', self.lsf_pix, self.lsf_kms
@@ -173,7 +172,7 @@ class kin_map():
         print 'Adding noise...'
 
         sens_si_fd = (sens*u.ABmag).to(u.Watt/(u.meter*u.meter)/(u.Hz))*astropy.constants.c/(self.lam[0]*u.meter)**2.
-        print sens_si_fd
+        print '\t\t', sens_si_fd
 
 
         #Currently in m, want to get in terms of hz^-1. F_v = (F_lam)*lam^2/c
@@ -185,7 +184,7 @@ class kin_map():
 
         
         sens_noise = sens_si_fd/self.psf_str/self.lsf_pix
-        print sens_noise
+        print '\t\t', sens_noise
         self.blrcube += np.random.normal(0, sens_noise.value, self.cube.shape)
 
     def generate_intrinsic_kin_map(self):
