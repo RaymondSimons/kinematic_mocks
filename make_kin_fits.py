@@ -108,10 +108,34 @@ class kin_map():
         self.xsize      = self.cube.shape[1]
         self.ysize      = self.cube.shape[2]
 
-    def generate_blurred_map(self, kernel_size, band = 'H'):
+    def generate_blurred_map(self, kernel_size_arc = 0.6, band = 'H'):
         self.blrcube    = self.cube.copy()*nan
-        self.kernel_size = kernel_size
-        self.kernel = Gaussian2DKernel(self.kernel_size)
+
+        #The pixel values in our cube are W/m/m^2/Sr (surface brightness). To get to units of 
+        #flux density per pixel
+        #check to make sure this pixel scale is in proper coordinates
+        pix_scale_kpc = self.cube_hdr['CD1_1']*u.kpc
+        print pix_scale_kpc, 'per pixel'
+        pix_scale_arc = pix_scale_kpc * cosmo.arcsec_per_kpc_proper(1./self.ascale-1)
+        print pix_scale_arc, 'per pixel'
+        pix_scale_str = (pix_scale_arc**2.).to(u.steradian)
+        print pix_scale_str, 'per square pixel'
+
+
+        #set kernel size in pixels
+        self.kernel_size_arc = kernel_size_arc
+        self.kernel_size_pix = self.kernel_size_arc/pix_scale_arc
+
+
+        print 'Seeing:'
+        print '\t', self.kernel_size_pix, ' pixels sigma'
+        print '\t', 2.35*self.kernel_size_pix, ' pixels fwhm'
+        print '\t', self.kernel_size_arc, ' arcsec fwhm'
+        print '\t', 2.35*self.kernel_size_arc, ' arcsec fwhm'
+
+
+        #Generate the kernel from the seeing size in pixels
+        self.kernel = Gaussian2DKernel(self.kernel_size_pix)
 
         print 'Convolving spatially...'
         for i in arange(self.zsize):
@@ -137,28 +161,14 @@ class kin_map():
         sens_si_fd = (sens*u.ABmag).to(u.Watt/(u.meter*u.meter)/(u.Hz))*astropy.constants.c/(self.lam[0]*u.meter)**2.
         print sens_si_fd
 
-        #The pixel values in our cube are W/m/m^2/Sr (surface brightness). To get to units of 
-        #flux density per pixel
-        #check to make sure this pixel scale is in proper coordinates
-        pix_scale_kpc = self.cube_hdr['CD1_1']*u.kpc
-        print pix_scale_kpc, 'per pixel'
-        pix_scale_arc = pix_scale_kpc * cosmo.arcsec_per_kpc_proper(1./self.ascale-1)
-        print pix_scale_arc, 'per pixel'
-        pix_scale_str = (pix_scale_arc**2.).to(u.steradian)
-        print pix_scale_str, 'per square pixel'
 
         #Currently in m, want to get in terms of hz^-1. F_v = (F_lam)*lam^2/c
         #Ths units of this factor are 1/(str*m). Let's now consider an 'aperture' equal to 
         #1 spatial fwhm * 1 spectral fwhm. We want to add noise equal to 1/5th the sensitivity (i.e., 1 sigma sensitivty) over this aperture.
         #In steradians, the PSF is:
-        print 'Seeing:'
-        print '\t', self.kernel_size, ' pixels sigma'
-        print '\t', self.kernel_size, ' pixels fwhm'
-        print '\t', self.kernel_size * pix_scale_arc, ' arcsec fwhm'
-        print '\t', 2.35*self.kernel_size * pix_scale_arc, ' arcsec fwhm'
 
-        psf_str = pi*((pix_scale_arc * (2.35/2.)*self.kernel_size)**2.).to(u.steradian)
-        print psf_str, 'is the seeing FWHM area in steradian'
+        psf_str = pi*(((2.35/2.)*self.kernel_size_arc)**2.).to(u.steradian)
+        print '\t', psf_str, 'steradian seeing FWHM area'
 
 
         #The spectral lsf fwhm (in pixels) is:
@@ -304,7 +314,7 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir):
         kmap = kin_map(camera.data, camera.header, vel_arr, lam,  cam_n, scale)
         kmap.generate_intrinsic_kin_map()
         kmap.rebin([60,60])
-        kmap.generate_blurred_map(kernel_size = 1.3)
+        kmap.generate_blurred_map(kernel_size = 0.6)
         kmap.generate_observed_kin_map()
         master_hdulist = kmap.get_hdulist(master_hdulist)
 
@@ -334,15 +344,15 @@ if __name__ == '__main__':
     #Where to write the kinematic map files
     outdir = '/nobackupp2/rcsimons/data/kin_maps/%s'%gal
 
-    #abspaths = abspaths
-    scales   = array(scales)
-    #kmap_names   = kmap_names
-
-    n_sel = where(scales == 0.38)[0][0]
-    print n_sel
-    print abspaths[n_sel]
-    run_kin_fits(abspaths[n_sel], scales[n_sel], kmap_names[n_sel], gal, outdir)
-    #Parallel(n_jobs = -1)(delayed(run_kin_fits)(abspaths[i], scales[i], kmap_names[i], gal, outdir) for i in arange(len(scales)))
+    test = True
+    if test:
+        #want to select individual systems
+        scales   = array(scales)
+        n_sel = where(scales == 0.38)[0][0]
+        run_kin_fits(abspaths[n_sel], scales[n_sel], kmap_names[n_sel], gal, outdir)
+    else:
+        #run on all
+        Parallel(n_jobs = -1)(delayed(run_kin_fits)(abspaths[i], scales[i], kmap_names[i], gal, outdir) for i in arange(len(scales)))
     
 
 
