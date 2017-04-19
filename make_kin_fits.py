@@ -144,7 +144,7 @@ class kin_map():
             print '\t\tSeeing:'
             print '\t\t\t sigma = ', self.kernel_size_pix, self.kernel_size_arc 
             print '\t\t\t fwhm = ', 2.35*self.kernel_size_pix, 2.35 * self.kernel_size_arc
-            print '\t\t\t fwhm area = ', psf_str #in steradians
+            print '\t\t\t fwhm area = ', self.psf_str #in steradians
 
 
             self.kernel = Gaussian2DKernel(self.kernel_size_pix.value)
