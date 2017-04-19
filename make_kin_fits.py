@@ -159,6 +159,7 @@ class kin_map():
         print 'Convolving spectrally...'
         for xx in arange(self.xsize):
             for yy in arange(self.ysize):
+                print xx, yy
                 self.blrcube[xx, yy] = convolve_fft(self.cube[:,xx, yy], self.spec_kernel)
 
 
@@ -353,7 +354,7 @@ if __name__ == '__main__':
         #want to select individual systems
         scales   = array(scales)
         n_sel = where(scales == 0.40)[0][0]
-        mcrx_data = fits.open(abspaths[n_sel])
+        #mcrx_data = fits.open(abspaths[n_sel])
         run_kin_fits(abspaths[n_sel], scales[n_sel], kmap_names[n_sel], gal, outdir, mcrx_data)
     else:
         #run on all
