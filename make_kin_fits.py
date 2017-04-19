@@ -163,7 +163,7 @@ class kin_map():
         #1 spatial fwhm * 1 spectral fwhm. We want to add noise equal to 1/5th the sensitivity (i.e., 1 sigma sensitivty) over this aperture.
         #In steradians, the PSF is:
 
-        psf_str = pi*(((2.35/2.)*self.kernel_size_arc)**2.).to(u.steradian/u.pixel**2.)
+        psf_str = pi*(((2.35/2.)*self.kernel_size_arc)**2.).to(u.steradian)
         print '\t', psf_str, 'steradian seeing FWHM area'
 
 
