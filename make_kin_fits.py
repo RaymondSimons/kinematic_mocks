@@ -159,7 +159,6 @@ class kin_map():
         print 'Convolving spectrally...'
         for xx in arange(self.xsize):
             for yy in arange(self.ysize):
-                print xx, yy
                 self.blrcube[:, xx, yy] = convolve_fft(self.cube[:,xx, yy], self.spec_kernel)
 
 
