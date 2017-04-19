@@ -156,17 +156,17 @@ class kin_map():
         print 'Convolving spectrally...'
         if True:
             #The spectral lsf fwhm (in pixels) is:
-            self.kms_per_pix = self.vscale[1]-self.vscale[0]
-            self.lsf_kms = 3.e5/R/2.35
+            self.kms_per_pix = (self.vscale[1]-self.vscale[0])*u.km/u.s/u.pixel
+            self.lsf_kms = astropy.constants.c/R/2.35
             self.lsf_pix = self.lsf_kms/self.kms_per_pix
 
-            print '\t\t Line spread function (pixel, km/s):'
+            print '\t\t Line spread function:'
             print '\t\t\t sigma = ', self.lsf_pix, ',', self.lsf_kms
             print '\t\t\t fwhm = ', 2.35*self.lsf_pix, ',', 2.35 * self.lsf_kms
-            self.cube_hdr['LSF']=(str(self.lsf_kms), 'km/s')
+            self.cube_hdr['LSF']=(str(self.lsf_kms), str(self.lsf_kms.unit))
             self.cube_hdr['R']=(str(R), 'spectral resolution')
 
-            self.spec_kernel = Gaussian1DKernel(self.lsf_pix)
+            self.spec_kernel = Gaussian1DKernel(self.lsf_pix.value)
 
             for xx in arange(self.xsize):
                 for yy in arange(self.ysize):
@@ -238,7 +238,7 @@ class kin_map():
                     if (isfinite(sqrt(v_a[1,1]))) & (c_a[2]**2. > self.lsf_kms**2.) & (isfinite(sqrt(v_a[2,2]))) & (c_a[0] > 0):
                         self.vel_obs[i,j]   = c_a[1]
                         self.evel_obs[i,j]  = sqrt(v_a[1,1])
-                        self.disp_obs[i,j]  = sqrt(c_a[2]**2. - self.lsf_kms**2.)
+                        self.disp_obs[i,j]  = sqrt(c_a[2]**2. - self.lsf_kms.value**2.)
                         self.edisp_obs[i,j] = sqrt(v_a[2,2])
                         self.ha_obs[i,j] = c_a[0]*c_a[2]*sqrt(2*pi)                            
                 except:
