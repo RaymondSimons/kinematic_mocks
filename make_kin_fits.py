@@ -190,7 +190,7 @@ class kin_map():
 
         sens_noise = sens_si_fd/self.psf_str/self.lsf_pix
         print '\t\t', sens_noise
-        self.cube_hdr['noise'] = (str(sens_noise.value), '[%s] the sigma noise added to each spectral pixel'%sens_noise.unit
+        self.cube_hdr['noise'] = (str(sens_noise.value), '[%s] the sigma noise added to each spectral pixel'%sens_noise.unit)
         self.blrcube += np.random.normal(0, sens_noise.value, self.cube.shape)
 
     def generate_intrinsic_kin_map(self):
