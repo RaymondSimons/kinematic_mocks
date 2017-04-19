@@ -133,7 +133,7 @@ class kin_map():
         self.pix_scale_kpc = self.cube_hdr['CD1_1']*u.kpc/u.pixel
         print self.pix_scale_kpc #kpc per pixel
         self.pix_scale_arc = self.pix_scale_kpc * cosmo.arcsec_per_kpc_proper(1./self.ascale-1)
-        self.cube_hdr['pix_size']=(str(self.pix_scale_arc.value), '[%s] per side'%str(self.pix_scale_arc.unit))
+        self.cube_hdr['pix_size']=(self.pix_scale_arc.value, '[%s] per side'%str(self.pix_scale_arc.unit))
 
         print self.pix_scale_arc #arc per pixel
         self.pix_scale_str = (self.pix_scale_arc**2.).to(u.steradian/u.pixel**2.)
@@ -153,7 +153,7 @@ class kin_map():
             print '\t\t\t fwhm = ', 2.35*self.kernel_size_pix, ',', 2.35 * self.kernel_size_arc
             print '\t\t\t fwhm area = ', self.psf_str #in steradians
 
-            self.cube_hdr['seeing']=(str(self.kernel_size_arc.value), '[%s] fwhm'%str(self.kernel_size_arc.unit))
+            self.cube_hdr['seeing']=(self.kernel_size_arc.value, '[%s] fwhm'%str(self.kernel_size_arc.unit))
 
             self.kernel = Gaussian2DKernel(self.kernel_size_pix.value)
             for i in arange(self.zsize):
@@ -170,8 +170,8 @@ class kin_map():
             print '\t\t Line spread function:'
             print '\t\t\t sigma = ', self.lsf_pix, ',', self.lsf_kms
             print '\t\t\t fwhm = ', 2.35*self.lsf_pix, ',', 2.35 * self.lsf_kms
-            self.cube_hdr['LSF']=(str(2.35*self.lsf_kms.value), '[%s] fwhm'%str(self.lsf_kms.unit))
-            self.cube_hdr['R']=(str(R), 'spectral resolution')
+            self.cube_hdr['LSF']=(2.35*self.lsf_kms.value, '[%s] fwhm'%str(self.lsf_kms.unit))
+            self.cube_hdr['R']=(R, 'spectral resolution')
 
             self.spec_kernel = Gaussian1DKernel(self.lsf_pix.value)
 
@@ -180,7 +180,7 @@ class kin_map():
                     self.blrcube[:, xx, yy] = convolve_fft(self.blrcube[:,xx, yy], self.spec_kernel)
 
         print 'Adding noise...'
-        self.cube_hdr['sens']=(str(sens), '[AB mag] 5 sigma 8 hr sensitivty')
+        self.cube_hdr['sens']=(sens, '[AB mag] 5 sigma 8 hr sensitivty')
 
         sens_si_fd = (sens*u.ABmag).to(u.Watt/(u.meter*u.meter)/(u.Hz))*astropy.constants.c/(self.lam[0]*u.meter)**2.
         print '\t\t', sens_si_fd
@@ -193,7 +193,7 @@ class kin_map():
 
         sens_noise = sens_si_fd/self.psf_str/self.lsf_pix
         print '\t\t', sens_noise
-        self.cube_hdr['noise'] = (str(sens_noise.value), '[%s]'%sens_noise.unit)
+        self.cube_hdr['noise'] = (sens_noise.value, '[%s]'%sens_noise.unit)
         self.blrcube += np.random.normal(0, sens_noise.value, self.cube.shape)
 
     def generate_intrinsic_kin_map(self):
