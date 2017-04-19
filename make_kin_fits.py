@@ -57,6 +57,8 @@ class kin_map():
     def __init__(self, data, header, vel_kms, lam,  camera, scale):
         header['z'] = (str(1./scale - 1), 'redshift')
         header['ascale'] = (str(scale), 'scale factor')
+        header['camera'] = (str(camera), 'camera')
+
         self.orig_cube     = data
         self.orig_cube_hdr = header.copy()
         self.cube          = data.copy()
