@@ -117,7 +117,7 @@ class kin_map():
         print pix_scale_kpc #kpc per pixel
         pix_scale_arc = pix_scale_kpc * cosmo.arcsec_per_kpc_proper(1./self.ascale-1)
         print pix_scale_arc #arc per pixel
-        pix_scale_str = (pix_scale_arc**2.).to(u.steradian)
+        pix_scale_str = (pix_scale_arc**2.).to(u.steradian/u.pixel**2.)
         print pix_scale_str #steradian per square pixel
 
 
@@ -305,11 +305,12 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir, mcrx_data):
     #run kinematic fitting routine for all cameras
     #for cam_n in arange(ncams):
     for cam_n in arange(10,11):
-
         print '\t\t Running on (%s, %.3f, %i)'%(gal, scale, cam_n)
         camera = mcrx_data['CAMERA%i'%(cam_n)]   
         kmap = kin_map(camera.data, camera.header, vel_arr, lam,  cam_n, scale)
+        print 'Generating intrinsic kinematic map'
         kmap.generate_intrinsic_kin_map()
+
         kmap.rebin([60,60])
         kmap.generate_blurred_map(kernel_size_arc = 0.6)
         kmap.generate_observed_kin_map()
