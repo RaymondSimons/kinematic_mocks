@@ -272,7 +272,7 @@ class kin_map():
 
 
         self.ha_obs_hdr = self.cube_hdr
-        self.ha_obs_hdr.remove('IMUNIT')
+        self.ha_obs_hdr['IMUNIT'] = (self.orig_cube_hdr['IMUNIT']+ ' km/s', 'calc as A*sigma*sqrt(2*pi) of gauss fit')
         self.ha_obs_hdr.remove('UNITCONV')
 
 
