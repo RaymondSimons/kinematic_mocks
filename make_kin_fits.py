@@ -55,10 +55,6 @@ def parse():
 
 class kin_map():
     def __init__(self, data, header, vel_kms, lam,  camera, scale):
-        header['z'] = (str(1./scale - 1), 'redshift')
-        header['ascale'] = (str(scale), 'scale factor')
-        header['camera'] = (str(camera), 'camera')
-
         self.orig_cube     = data
         self.orig_cube_hdr = header.copy()
         self.cube          = data.copy()
@@ -111,6 +107,10 @@ class kin_map():
         self.zsize      = self.cube.shape[0]
         self.xsize      = self.cube.shape[1]
         self.ysize      = self.cube.shape[2]
+
+        self.cube_hdr['linear_fov'] = self.ysize * self.cube_hdr['CD1_1']
+
+
 
     def generate_blurred_map(self, kernel_size_arc = 0.6, band = 'H'):
         #KMOS reaches a point source 5-sigma sensitvity in 8 hr of
@@ -329,6 +329,34 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir, mcrx_data):
     for cam_n in arange(10,11):
         print '\t\t Running on (%s, %.3f, %i)'%(gal, scale, cam_n)
         camera = mcrx_data['CAMERA%i'%(cam_n)]   
+        camera_params =  mcrx_data['CAMERA%i-PARAMETERS'%(cam_n)].header
+
+        camera.header['z'] = (str(1./scale - 1), 'redshift')
+        camera.header['ascale'] = (str(scale), 'scale factor')
+        camera.header['camera'] = (str(camera), 'camera')
+
+
+        camera.header['cameradist'] = (camera_params['cameradist'], '[kpc] Distance from origin to camera')
+        camera.header['theta'] = (camera_params['theta'], '[rad] Angular coordinate theta of camera positi')
+        camera.header['phi']   = (camera_params['phi'], '[rad] Angular coordinate phi of camera position')
+
+        camera.header['CAMPOSX'] = (camera_params['CAMPOSX'], '[kpc] X position of camera        ')
+        camera.header['CAMPOSY'] = (camera_params['CAMPOSY'], '[kpc] Y position of camera        ')
+        camera.header['CAMPOSZ'] = (camera_params['CAMPOSZ'], '[kpc] Z position of camera        ')
+        camera.header['CAMDIRX'] = (camera_params['CAMDIRX'], '[kpc] X comp of camera viewing dir')
+        camera.header['CAMDIRY'] = (camera_params['CAMDIRY'], '[kpc] Y comp of camera viewing dir')
+        camera.header['CAMDIRZ'] = (camera_params['CAMDIRZ'], '[kpc] Z comp of camera viewing dir')
+        camera.header['CAMUPX']  = (camera_params['CAMUPX'] , '[kpc] X comp of camera Y axis dir ')
+        camera.header['CAMUPY']  = (camera_params['CAMUPY'] , '[kpc] Y comp of camera Y axis dir ')
+        camera.header['CAMUPZ']  = (camera_params['CAMUPZ'] , '[kpc] Z comp of camera Y axis dir ')
+        camera.header['linear_fov'] = (camera_params['linear_fov'], '[kpc] Linear field of view in y-dir at origin') 
+
+
+
+
+
+
+
         kmap = kin_map(camera.data, camera.header, vel_arr, lam,  cam_n, scale)
         print 'Generating intrinsic kinematic map'
         kmap.generate_intrinsic_kin_map()
