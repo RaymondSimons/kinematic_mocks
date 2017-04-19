@@ -109,8 +109,16 @@ class kin_map():
         self.ysize      = self.cube.shape[2]
 
         self.cube_hdr['orig_linear_fov'] = (self.cube_hdr['linear_fov'], '[kpc] original sunrise linear field of view')
-        self.cube_hdr['linear_fov']      = self.ysize * self.cube_hdr['CD1_1']
+        self.cube_hdr['linear_fov']      = (self.ysize * self.cube_hdr['CD1_1'], '[kpc] Linear field of view in y-dir after rebin')
 
+        self.pix_scale_kpc = self.cube_hdr['CD1_1']*u.kpc/u.pixel
+        print self.pix_scale_kpc #kpc per pixel
+        self.pix_scale_arc = self.pix_scale_kpc * cosmo.arcsec_per_kpc_proper(1./self.ascale-1)
+        self.cube_hdr['pix_size']=(self.pix_scale_arc.value, '[%s] per side'%str(self.pix_scale_arc.unit))
+
+        print self.pix_scale_arc #arc per pixel
+        self.pix_scale_str = (self.pix_scale_arc**2.).to(u.steradian/u.pixel**2.)
+        print self.pix_scale_str #steradian per square pixel
 
 
     def generate_blurred_map(self, kernel_size_arc = 0.6, band = 'H'):
@@ -127,17 +135,7 @@ class kin_map():
 
         self.blrcube    = self.cube.copy()*nan
 
-        #The pixel values in our cube are W/m/m^2/Sr (surface brightness). To get to units of 
-        #flux density per pixel
-        #check to make sure this pixel scale is in proper coordinates
-        self.pix_scale_kpc = self.cube_hdr['CD1_1']*u.kpc/u.pixel
-        print self.pix_scale_kpc #kpc per pixel
-        self.pix_scale_arc = self.pix_scale_kpc * cosmo.arcsec_per_kpc_proper(1./self.ascale-1)
-        self.cube_hdr['pix_size']=(self.pix_scale_arc.value, '[%s] per side'%str(self.pix_scale_arc.unit))
-
-        print self.pix_scale_arc #arc per pixel
-        self.pix_scale_str = (self.pix_scale_arc**2.).to(u.steradian/u.pixel**2.)
-        print self.pix_scale_str #steradian per square pixel
+        #The pixel values in our cube are W/m/m^2/Sr (surface brightness). 
 
 
         #Generate the kernel from the seeing size in pixels
@@ -266,13 +264,13 @@ class kin_map():
         master_hdulist.append(fits.ImageHDU(data = array([self.vel_int,self.evel_int]),header = self.int_vel_hdr,  name = 'cam%i_vel_int'%self.camera))
         master_hdulist.append(fits.ImageHDU(data = array([self.vel_obs,self.evel_obs]), header = self.obs_vel_hdr, name = 'cam%i_vel_obs'%self.camera))
 
-        self.ha_int_hdr = self.orig_cube_hdr
-        self.ha_int_hdr['IMUNIT'] = (self.orig_cube_hdr['IMUNIT']+ ' km/s', 'calc as A*sigma*sqrt(2*pi) of gauss fit')
+        self.ha_int_hdr = self.orig_cube_hdr.copy()
+        self.ha_int_hdr['IMUNIT'] = (self.orig_cube_hdr['IMUNIT']+ ' km/s', 'A*sigma*sqrt(2*pi) of gauss fit')
         self.ha_int_hdr.remove('UNITCONV')
 
 
-        self.ha_obs_hdr = self.cube_hdr
-        self.ha_obs_hdr['IMUNIT'] = (self.orig_cube_hdr['IMUNIT']+ ' km/s', 'calc as A*sigma*sqrt(2*pi) of gauss fit')
+        self.ha_obs_hdr = self.cube_hdr.copy()
+        self.ha_obs_hdr['IMUNIT'] = (self.orig_cube_hdr['IMUNIT']+ ' km/s', 'A*sigma*sqrt(2*pi) of gauss fit')
         self.ha_obs_hdr.remove('UNITCONV')
 
 
