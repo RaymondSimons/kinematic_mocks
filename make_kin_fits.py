@@ -157,7 +157,7 @@ class kin_map():
         if True:
             #The spectral lsf fwhm (in pixels) is:
             self.kms_per_pix = (self.vscale[1]-self.vscale[0])*u.km/u.s/u.pixel
-            self.lsf_kms = astropy.constants.c/R/2.35
+            self.lsf_kms = astropy.constants.c.to('km/s')/R/2.35
             self.lsf_pix = self.lsf_kms/self.kms_per_pix
 
             print '\t\t Line spread function:'
