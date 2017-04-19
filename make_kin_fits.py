@@ -336,7 +336,7 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir, mcrx_data):
 
         camera.header['z'] = (1./scale - 1, 'redshift (w/ %s)'%cosmo.name)
         camera.header['ascale'] = (scale, 'scale factor')
-        camera.header['camera'] = (camera, 'camera')
+        camera.header['camera'] = (cam_n, 'camera')
 
 
         camera.header['cameradist'] = (camera_params['cameradist'], '[kpc] Distance from origin to camera')
