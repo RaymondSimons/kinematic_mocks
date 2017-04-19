@@ -158,10 +158,10 @@ class kin_map():
 
         self.spec_kernel = Gaussian1DKernel(self.lsf_pix/2.35)
         print 'Convolving spectrally...'
+
         for xx in arange(self.xsize):
             for yy in arange(self.ysize):
-                self.blrcube[:, xx, yy] = convolve_fft(self.cube[:,xx, yy], self.spec_kernel)
-
+                self.blrcube[:, xx, yy] = convolve_fft(self.blrcube[:,xx, yy], self.spec_kernel)
 
         print 'Adding noise...'
 
