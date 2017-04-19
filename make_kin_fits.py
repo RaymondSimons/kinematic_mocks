@@ -274,8 +274,8 @@ class kin_map():
         self.ha_obs_hdr.remove('UNITCONV')
 
 
-        master_hdulist.append(fits.ImageHDU(data = self.ha_int, header = self.orig_cube_hdr, name = 'cam%i_hal_int'%self.camera))
-        master_hdulist.append(fits.ImageHDU(data = self.ha_obs, header = self.cube_hdr, name = 'cam%i_hal_obs'%self.camera))
+        master_hdulist.append(fits.ImageHDU(data = self.ha_int, header = self.ha_int_hdr, name = 'cam%i_hal_int'%self.camera))
+        master_hdulist.append(fits.ImageHDU(data = self.ha_obs, header = self.ha_obs_hdr, name = 'cam%i_hal_obs'%self.camera))
 
         return master_hdulist
 
