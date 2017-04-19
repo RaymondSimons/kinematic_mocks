@@ -109,6 +109,17 @@ class kin_map():
         self.ysize      = self.cube.shape[2]
 
     def generate_blurred_map(self, kernel_size_arc = 0.6, band = 'H'):
+        #KMOS reaches a point source 5-sigma sensitvity in 8 hr of
+        #of (J, H, K) = (22, 21.0, 20.5) AB magnitudes 
+        #for R ~ (3380, 3800, 3750)
+        #baseline sensitivity measurements from: http://www2011.mpe.mpg.de/Highlights/FB2004/exp13_bender.pdf
+        if   band == 'H': sens, R = 21.0, 3800
+        elif band == 'J': sens, R = 22.0, 3380
+        elif band == 'K': sens, R = 20.5, 3750
+        else: 
+            sens, R = 21.0, 3800.
+            print 'Bad input band, setting sensitivty to H-band value, %s AB mag'%(sens)
+
         self.blrcube    = self.cube.copy()*nan
 
         #The pixel values in our cube are W/m/m^2/Sr (surface brightness). To get to units of 
@@ -122,46 +133,42 @@ class kin_map():
         print pix_scale_str #steradian per square pixel
 
 
-        #set kernel size in pixels
-        self.kernel_size_arc = kernel_size_arc*u.arcsec
-        self.kernel_size_pix = self.kernel_size_arc/pix_scale_arc
-
-
-        print 'Seeing:'
-        print '\t sigma = ', self.kernel_size_pix, self.kernel_size_arc 
-        print '\t fwhm = ', 2.35*self.kernel_size_pix, 2.35 * self.kernel_size_arc
-
         #Generate the kernel from the seeing size in pixels
-        self.kernel = Gaussian2DKernel(self.kernel_size_pix.value)
 
         print 'Convolving spatially...'
-        for i in arange(self.zsize):
-            self.blrcube[i] = convolve_fft(self.cube[i], self.kernel)
-        #self.blrcube += np.random.normal(0, max(self.blrcube.ravel())/100., shape(self.blrcube))
+        if True:
+            #set kernel size in pixels
+            self.kernel_size_arc = kernel_size_arc*u.arcsec
+            self.kernel_size_pix = self.kernel_size_arc/pix_scale_arc
+            self.psf_str = pi*(((2.35/2.)*self.kernel_size_arc)**2.).to(u.steradian)
+            print '\t\tSeeing:'
+            print '\t\t\t sigma = ', self.kernel_size_pix, self.kernel_size_arc 
+            print '\t\t\t fwhm = ', 2.35*self.kernel_size_pix, 2.35 * self.kernel_size_arc
+            print '\t\t\t fwhm area = ', psf_str #in steradians
 
-        #KMOS reaches a point source 5-sigma sensitvity in 8 hr of
-        #of (J, H, K) = (22, 21.0, 20.5) AB magnitudes 
-        #for R ~ (3380, 3800, 3750)
-        #baseline sensitivity measurements from: http://www2011.mpe.mpg.de/Highlights/FB2004/exp13_bender.pdf
-        if   band == 'H': sens, R = 21.0, 3800
-        elif band == 'J': sens, R = 22.0, 3380
-        elif band == 'K': sens, R = 20.5, 3750
-        else: 
-            sens, R = 21.0, 3800.
-            print 'Bad input band, setting sensitivty to H-band value, %s AB mag'%(sens)
 
-        #The spectral lsf fwhm (in pixels) is:
-        self.kms_per_pix = self.vscale[1]-self.vscale[0]
-        
-        self.lsf_pix = (3.e5/R)/self.kms_per_pix
-        print self.lsf_pix
+            self.kernel = Gaussian2DKernel(self.kernel_size_pix.value)
+            for i in arange(self.zsize):
+                self.blrcube[i] = convolve_fft(self.cube[i], self.kernel)
 
-        self.spec_kernel = Gaussian1DKernel(self.lsf_pix/2.35)
+
         print 'Convolving spectrally...'
+        if True:
+            #The spectral lsf fwhm (in pixels) is:
+            self.kms_per_pix = self.vscale[1]-self.vscale[0]
+            self.lsf_kms = 3.e5/R/2.35
+            self.lsf_pix = self.lsf_kms/self.kms_per_pix
+            print self.lsf_pix
 
-        for xx in arange(self.xsize):
-            for yy in arange(self.ysize):
-                self.blrcube[:, xx, yy] = convolve_fft(self.blrcube[:,xx, yy], self.spec_kernel)
+            print '\t\t Line spread function:'
+            print '\t\t\t sigma = ', self.lsf_pix, self.lsf_kms
+            print '\t\t\t fwhm = ', 2.35*self.lsf_pix, 2.35 * self.lsf_kms
+
+            self.spec_kernel = Gaussian1DKernel(self.lsf_pix)
+
+            for xx in arange(self.xsize):
+                for yy in arange(self.ysize):
+                    self.blrcube[:, xx, yy] = convolve_fft(self.blrcube[:,xx, yy], self.spec_kernel)
 
         print 'Adding noise...'
 
@@ -174,12 +181,10 @@ class kin_map():
         #1 spatial fwhm * 1 spectral fwhm. We want to add noise equal to 1/5th the sensitivity (i.e., 1 sigma sensitivty) over this aperture.
         #In steradians, the PSF is:
 
-        psf_str = pi*(((2.35/2.)*self.kernel_size_arc)**2.).to(u.steradian)
-        print '\t', psf_str, ' seeing FWHM area' #in steradians
 
 
         
-        sens_noise = sens_si_fd/psf_str/self.lsf_pix
+        sens_noise = sens_si_fd/self.psf_str/self.lsf_pix
         print sens_noise
         self.blrcube += np.random.normal(0, sens_noise.value, self.cube.shape)
 
@@ -235,7 +240,7 @@ class kin_map():
                     #(c_a[0] > 0) & (c_a[2] > 10) & (sqrt(v_a[2,2]) < 30) & (sqrt(v_a[1,1]) < 30):
                     self.vel_obs[i,j]   = c_a[1]
                     self.evel_obs[i,j]  = sqrt(v_a[1,1])
-                    self.disp_obs[i,j]  = sqrt(c_a[2]**2. - (self.lsf_pix*self.kms_per_pix/2.35)**2.)
+                    self.disp_obs[i,j]  = sqrt(c_a[2]**2. - self.lsf_kms**2.)
                     self.edisp_obs[i,j] = sqrt(v_a[2,2])
                     self.ha_obs[i,j] = c_a[0]*c_a[2]*sqrt(2*pi)                            
                 except:
