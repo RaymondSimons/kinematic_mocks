@@ -57,11 +57,11 @@ class kin_map():
     def __init__(self, data, header, vel_kms, lam,  camera, scale):
         self.orig_cube     = data
         self.orig_cube_hdr = header.copy()
-        #self.cube          = data.copy()
-        #self.cube_hdr      = header.copy()
-        #self.zsize         = data.shape[0]
-        #self.xsize         = data.shape[1]
-        #self.ysize         = data.shape[2]
+        self.cube          = data.copy()
+        self.cube_hdr      = header.copy()
+        self.zsize         = data.shape[0]
+        self.xsize         = data.shape[1]
+        self.ysize         = data.shape[2]
         self.vscale        = vel_kms
         self.lam           = lam
         self.camera        = camera
@@ -74,7 +74,6 @@ class kin_map():
         print temp_orig_shape, new_shape[0], self.orig_cube.shape[1]
 
         self.cube = zeros((self.zsize, new_shape[0],new_shape[1]))
-        self.cube_hdr = self.orig_cube_hdr.copy()
         
         self.cube_hdr['CD1_1'] *=  (temp_orig_shape)/new_shape[0]
         self.cube_hdr['CD2_2'] *=  (temp_orig_shape)/new_shape[1]
@@ -348,7 +347,7 @@ if __name__ == '__main__':
     if test:
         #want to select individual systems
         scales   = array(scales)
-        n_sel = where(scales == 0.39)[0][0]
+        n_sel = where(scales == 0.40)[0][0]
         mcrx_data = fits.open(abspaths[n_sel])
         run_kin_fits(abspaths[n_sel], scales[n_sel], kmap_names[n_sel], gal, outdir, mcrx_data)
     else:
