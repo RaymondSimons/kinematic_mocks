@@ -67,7 +67,7 @@ class kin_map():
         self.camera        = camera
         self.ascale        = scale
 
-    def rebin(self, new_shape):
+    def rebin_and_dim(self, new_shape):
         #The original cube has 400 pixels, which is not necessarily evenly divisible by our requested size
         #Necessary size of cube
         temp_orig_shape = new_shape[0]*ceil(self.orig_cube.shape[1]/float(new_shape[0]))
@@ -362,7 +362,7 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir):
         print 'Generating intrinsic kinematic map'
         kmap.generate_intrinsic_kin_map()
 
-        kmap.rebin([60,60])
+        kmap.rebin_and_dim([60,60])
         kmap.generate_blurred_map(kernel_size_arc = 0.6)
         kmap.generate_observed_kin_map()
         master_hdulist = kmap.get_hdulist(master_hdulist)
