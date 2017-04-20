@@ -72,6 +72,12 @@ class kin_map():
         #Necessary size of cube
         print '\t\t Rebinning to ', new_shape 
         temp_orig_shape = new_shape[0]*ceil(self.orig_cube.shape[1]/float(new_shape[0]))
+        print temp_orig_shape
+        #Get to an even number
+        temp_orig_shape = math.ceil(temp_orig_shape / 2.) * 2
+        print temp_orig_shape
+
+
         #print temp_orig_shape, new_shape[0], self.orig_cube.shape[1]
 
         self.cube = zeros((self.zsize, new_shape[0],new_shape[1]))
