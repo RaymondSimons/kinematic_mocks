@@ -409,7 +409,7 @@ if __name__ == '__main__':
     #Where to write the kinematic map files
     outdir = '/nobackupp2/rcsimons/data/kin_maps/%s'%gal
 
-    test = True
+    test = False
     if test: #testing
         scales   = array(scales)
         n_sel = where(scales == 0.350)[0][0] #want to select individual systems
