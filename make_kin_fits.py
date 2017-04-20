@@ -377,7 +377,7 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir, mcrx_data, arc_per_pixe
         kmap.generate_intrinsic_kin_map()
 
 
-        npix_new = ceil((kmap.cube_hdr['linear_fov']*cosmo.arcsec_per_kpc_proper(2).value)/arc_per_pixel)
+        npix_new = ceil((kmap.cube_hdr['linear_fov']*cosmo.arcsec_per_kpc_proper(2).value)/arc_per_pixel/2.)*2.
         kmap.rebin_and_dim([npix_new, npix_new])
         kmap.generate_blurred_map(kernel_size_arc = 0.6)
         kmap.generate_observed_kin_map()
@@ -404,7 +404,7 @@ if __name__ == '__main__':
         abspaths.append(os.path.abspath(fl))
         sc_loc = abspaths[n].find('_a')
         scales.append(float(abspaths[n][sc_loc+2:sc_loc+7]))
-        kmap_names.append('%s_a%.3f_lownoise_kmap.fits'%(gal, scales[n]))
+        kmap_names.append('%s_a%.3f_kmap.fits'%(gal, scales[n]))
 
     #Where to write the kinematic map files
     outdir = '/nobackupp2/rcsimons/data/kin_maps/%s'%gal
