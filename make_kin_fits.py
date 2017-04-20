@@ -125,7 +125,7 @@ class kin_map():
         #of (J, H, K) = (22, 21.0, 20.5) AB magnitudes 
         #for R ~ (3380, 3800, 3750)
         #baseline sensitivity measurements from: http://www2011.mpe.mpg.de/Highlights/FB2004/exp13_bender.pdf
-        if   band == 'H': sens, R = 24.0, 3800 #sens, R = 21.0, 3800
+        if   band == 'H': sens, R = 28.0, 3800 #sens, R = 21.0, 3800
         elif band == 'J': sens, R = 22.0, 3380
         elif band == 'K': sens, R = 20.5, 3750
         else: 
