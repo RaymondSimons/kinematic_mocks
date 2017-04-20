@@ -70,6 +70,7 @@ class kin_map():
     def rebin_and_dim(self, new_shape):
         #The original cube has 400 pixels, which is not necessarily evenly divisible by our requested size
         #Necessary size of cube
+        print '\t\t Rebinning to ', new_shape 
         temp_orig_shape = new_shape[0]*ceil(self.orig_cube.shape[1]/float(new_shape[0]))
         #print temp_orig_shape, new_shape[0], self.orig_cube.shape[1]
 
@@ -370,7 +371,7 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir, mcrx_data, arc_per_pixe
         kmap.generate_intrinsic_kin_map()
 
 
-        npix_new = ceil((self.cube_hdr['linear_fov']*cosmo.arcsec_per_kpc_proper(2).value)/arc_per_pixel)
+        npix_new = ceil((kmap.cube_hdr['linear_fov']*cosmo.arcsec_per_kpc_proper(2).value)/arc_per_pixel)
         kmap.rebin_and_dim([npix_new, npix_new])
         kmap.generate_blurred_map(kernel_size_arc = 0.6)
         kmap.generate_observed_kin_map()
@@ -404,10 +405,10 @@ if __name__ == '__main__':
 
     test = True
     if test: #testing
-        #want to select individual systems
         scales   = array(scales)
-        n_sel = where(scales == 0.350)[0][0]
-        mcrx_data = fits.open(abspaths[n_sel])
+        n_sel = where(scales == 0.350)[0][0] #want to select individual systems
+        print 'Reading in mcrx file...'
+        #mcrx_data = fits.open(abspaths[n_sel])
         run_kin_fits(abspaths[n_sel], scales[n_sel], kmap_names[n_sel], gal, outdir, mcrx_data)
     else:
         #run on all
