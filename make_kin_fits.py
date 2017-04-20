@@ -107,6 +107,12 @@ class kin_map():
         self.xsize      = self.cube.shape[1]
         self.ysize      = self.cube.shape[2]
 
+        #Surface brightness dimming
+        #print 'Applying cosmological surface brightness dimming', already have a term of ^2 from pixel shift
+        self.cube = self.cube/(self.redshift + 1.)**2.
+        print (self.redshift + 1.)**2.
+
+
         self.cube_hdr['orig_linear_fov'] = (self.cube_hdr['linear_fov'], '[kpc] original sunrise linear field of view')
         self.cube_hdr['linear_fov']      = (self.ysize * self.cube_hdr['CD1_1'], '[kpc] Linear field of view in y-dir after rebin')
 
@@ -137,10 +143,6 @@ class kin_map():
         #The pixel values in our cube are W/m/m^2/Sr (surface brightness). 
         
 
-        #Surface brightness dimming
-        #print 'Applying cosmological surface brightness dimming', already have a term of ^2 from pixel shift
-        self.blrcube = self.blrcube/(self.redshift + 1.)**2.
-        print (self.redshift + 1.)**2.
 
         #Generate the kernel from the seeing size in pixels
 
@@ -159,7 +161,7 @@ class kin_map():
 
             self.kernel = Gaussian2DKernel(self.kernel_size_pix.value)
             for i in arange(self.zsize):
-                self.blrcube[i] = convolve_fft(self.blrcube[i], self.kernel)
+                self.blrcube[i] = convolve_fft(self.cube[i], self.kernel)
 
 
         print 'Convolving spectrally...'
