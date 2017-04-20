@@ -125,7 +125,7 @@ class kin_map():
         #of (J, H, K) = (22, 21.0, 20.5) AB magnitudes 
         #for R ~ (3380, 3800, 3750)
         #baseline sensitivity measurements from: http://www2011.mpe.mpg.de/Highlights/FB2004/exp13_bender.pdf
-        if   band == 'H': sens, R = 22.0, 3800 #sens, R = 21.0, 3800
+        if   band == 'H': sens, R = 23.0, 3800 #sens, R = 21.0, 3800
         elif band == 'J': sens, R = 22.0, 3380
         elif band == 'K': sens, R = 20.5, 3750
         else: 
@@ -159,7 +159,7 @@ class kin_map():
 
             self.kernel = Gaussian2DKernel(self.kernel_size_pix.value)
             for i in arange(self.zsize):
-                self.blrcube[i] = convolve_fft(self.cube[i], self.kernel)
+                self.blrcube[i] = convolve_fft(self.blrcube[i], self.kernel)
 
 
         print 'Convolving spectrally...'
