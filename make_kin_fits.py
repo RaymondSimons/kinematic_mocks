@@ -291,7 +291,7 @@ class kin_map():
         return master_hdulist
 
 
-def run_kin_fits(abspath, scale, kmap_name, gal, outdir):#, mcrx_data):
+def run_kin_fits(abspath, scale, kmap_name, gal, outdir, arc_per_pixel = 0.2):#, mcrx_data):
     print '\tReading in mcrx file for (%s, %.3f)'%(gal, scale)
 
     #setting constants
@@ -337,8 +337,8 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir):#, mcrx_data):
 
 
     #run kinematic fitting routine for all cameras
-    #for cam_n in arange(10,11): #testing
-    for cam_n in arange(ncams):
+    for cam_n in arange(10,11): #testing
+    #for cam_n in arange(ncams):
         np.random.seed()
         print '\t\t Running on (%s, %.3f, %i)'%(gal, scale, cam_n)
         camera = mcrx_data['CAMERA%i'%(cam_n)]   
@@ -369,7 +369,9 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir):#, mcrx_data):
         print 'Generating intrinsic kinematic map'
         kmap.generate_intrinsic_kin_map()
 
-        kmap.rebin_and_dim([60,60])
+
+        npix_new = ceil((self.cube_hdr['linear_fov']*cosmo.arcsec_per_kpc_proper(2).value)/arc_per_pixel)
+        kmap.rebin_and_dim([npix_new, npix_new])
         kmap.generate_blurred_map(kernel_size_arc = 0.6)
         kmap.generate_observed_kin_map()
         master_hdulist = kmap.get_hdulist(master_hdulist)
@@ -400,7 +402,7 @@ if __name__ == '__main__':
     #Where to write the kinematic map files
     outdir = '/nobackupp2/rcsimons/data/kin_maps/%s'%gal
 
-    test = False
+    test = True
     if test: #testing
         #want to select individual systems
         scales   = array(scales)
