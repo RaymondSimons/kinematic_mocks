@@ -109,7 +109,7 @@ class kin_map():
 
         #Surface brightness dimming
         #print 'Applying cosmological surface brightness dimming', already have a term of ^2 from pixel shift
-        self.cube = self.cube/(self.redshift + 1.)**2.
+        self.cube = self.cube/(self.redshift + 1.)**4.
         print (self.redshift + 1.)**2.
 
 
