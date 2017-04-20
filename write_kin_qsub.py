@@ -51,7 +51,7 @@ if __name__ == "__main__":
 
         f.write('%s > %s 2> %s \n'%(comm_1, outf, errf))
 
-        f.write('tar -zcvf /nobackupp2/rcsimons/data/kin_maps/%s_kmaps.tar.gz /nobackupp2/rcsimons/data/kin_maps/%s/*kmap.fits\n\n'%(gal, gal))
+        f.write('tar -zcvf /nobackupp2/rcsimons/data/kin_maps/%s_kmaps_lownoise.tar.gz /nobackupp2/rcsimons/data/kin_maps/%s/*kmap.fits\n\n'%(gal, gal))
 
         f.close()
 
