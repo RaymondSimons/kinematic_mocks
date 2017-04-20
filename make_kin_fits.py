@@ -71,7 +71,7 @@ class kin_map():
         #The original cube has 400 pixels, which is not necessarily evenly divisible by our requested size
         #Necessary size of cube
         temp_orig_shape = new_shape[0]*ceil(self.orig_cube.shape[1]/float(new_shape[0]))
-        print temp_orig_shape, new_shape[0], self.orig_cube.shape[1]
+        #print temp_orig_shape, new_shape[0], self.orig_cube.shape[1]
 
         self.cube = zeros((self.zsize, new_shape[0],new_shape[1]))
         
@@ -85,7 +85,7 @@ class kin_map():
 
         pixel_extension = int((temp_orig_shape - self.orig_cube.shape[1])/2.)
 
-        print pixel_extension
+        #print pixel_extension
 
         for i in arange(self.zsize):
             M, N = temp_orig_shape, temp_orig_shape
@@ -193,7 +193,7 @@ class kin_map():
         #1 spatial fwhm * 1 spectral fwhm. We want to add noise equal to 1/5th the sensitivity (i.e., 1 sigma sensitivty) over this aperture.
         #In steradians, the PSF is:
 
-        sens_noise = sens_si_fd/self.psf_str/self.lsf_pix
+        sens_noise = sens_si_fd/self.psf_str/self.lsf_pix/5.
         print '\t\t', sens_noise
         self.cube_hdr['noise'] = (sens_noise.value, '[%s]'%sens_noise.unit)
         self.blrcube += np.random.normal(0, sens_noise.value, self.cube.shape)
