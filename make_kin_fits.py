@@ -336,8 +336,8 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir):#, mcrx_data):
 
 
     #run kinematic fitting routine for all cameras
-    for cam_n in arange(10,11): #testing
-    #for cam_n in arange(ncams):
+    #for cam_n in arange(10,11): #testing
+    for cam_n in arange(ncams):
         np.random.seed()
         print '\t\t Running on (%s, %.3f, %i)'%(gal, scale, cam_n)
         camera = mcrx_data['CAMERA%i'%(cam_n)]   
@@ -408,8 +408,8 @@ if __name__ == '__main__':
         run_kin_fits(abspaths[n_sel], scales[n_sel], kmap_names[n_sel], gal, outdir, mcrx_data)
     else:
         #run on all
-        #Parallel(n_jobs = -1)(delayed(run_kin_fits)(abspaths[i], scales[i], kmap_names[i], gal, outdir) for i in arange(len(scales)))
-        Parallel(n_jobs = -1)(delayed(run_kin_fits)(abspaths[i], scales[i], kmap_names[i], gal, outdir) for i in arange(10, 15,1)) #testing
+        Parallel(n_jobs = -1)(delayed(run_kin_fits)(abspaths[i], scales[i], kmap_names[i], gal, outdir) for i in arange(len(scales)))
+        #Parallel(n_jobs = -1)(delayed(run_kin_fits)(abspaths[i], scales[i], kmap_names[i], gal, outdir) for i in arange(10, 15,1)) #testing
     
 
 
