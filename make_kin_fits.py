@@ -103,7 +103,7 @@ class kin_map():
                 self.cube[i] = np.repeat(np.repeat(temp_orig_cube_slice, m/M, axis=0), n/N, axis=1)
 
         #Surface brightness dimming
-        print 'Applying the redshift-dependent surface brightness dimming'
+        print 'Applying cosmological surface brightness dimming'
         self.cube = self.cube / (self.redshift + 1.)**4.
 
         self.zsize      = self.cube.shape[0]
@@ -128,7 +128,7 @@ class kin_map():
         #of (J, H, K) = (22, 21.0, 20.5) AB magnitudes 
         #for R ~ (3380, 3800, 3750)
         #baseline sensitivity measurements from: http://www2011.mpe.mpg.de/Highlights/FB2004/exp13_bender.pdf
-        if   band == 'H': sens, R = 22.0, 3800 #sens, R = 21.0, 3800
+        if   band == 'H': sens, R = 23.0, 3800 #sens, R = 21.0, 3800
         elif band == 'J': sens, R = 22.0, 3380
         elif band == 'K': sens, R = 20.5, 3750
         else: 
@@ -397,7 +397,7 @@ if __name__ == '__main__':
     if test: #testing
         #want to select individual systems
         scales   = array(scales)
-        n_sel = where(scales == 0.400)[0][0]
+        n_sel = where(scales == 0.270)[0][0]
         #mcrx_data = fits.open(abspaths[n_sel])
         run_kin_fits(abspaths[n_sel], scales[n_sel], kmap_names[n_sel], gal, outdir, mcrx_data)
     else:
