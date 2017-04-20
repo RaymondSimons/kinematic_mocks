@@ -139,7 +139,7 @@ class kin_map():
 
         #Surface brightness dimming
         #print 'Applying cosmological surface brightness dimming'
-        self.blrcube = self.blrcube/(self.redshift + 1.)**4.
+        self.blrcube = self.blrcube/(self.redshift + 1.)**2.
         print (self.redshift + 1.)**4.
 
         #Generate the kernel from the seeing size in pixels
