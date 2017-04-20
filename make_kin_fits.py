@@ -109,7 +109,9 @@ class kin_map():
 
         #Surface brightness dimming
         #print 'Applying cosmological surface brightness dimming', already have a term of ^2 from pixel shift
-        self.cube = self.cube/(self.redshift + 1.)**4.
+        self.cube = self.cube/(self.redshift + 1.)**5. #apparently it's four for slices
+        #self.cube = self.cube/(self.redshift + 1.)**4.
+
         print (self.redshift + 1.)**2.
 
 
@@ -131,7 +133,7 @@ class kin_map():
         #of (J, H, K) = (22, 21.0, 20.5) AB magnitudes 
         #for R ~ (3380, 3800, 3750)
         #baseline sensitivity measurements from: http://www2011.mpe.mpg.de/Highlights/FB2004/exp13_bender.pdf
-        if   band == 'H': sens, R = 23.0, 3800 #sens, R = 21.0, 3800
+        if   band == 'H': sens, R = 23.5, 3800 #sens, R = 21.0, 3800
         elif band == 'J': sens, R = 22.0, 3380
         elif band == 'K': sens, R = 20.5, 3750
         else: 
