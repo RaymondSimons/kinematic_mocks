@@ -71,11 +71,11 @@ class kin_map():
         #The original cube has 400 pixels, which is not necessarily evenly divisible by our requested size
         #Necessary size of cube
         print '\t\t Rebinning to ', new_shape 
-        temp_orig_shape = new_shape[0]*ceil(self.orig_cube.shape[1]/float(new_shape[0]))
+        temp_orig_shape = new_shape[0]*ceil(self.orig_cube.shape[1]/float(new_shape[0])/2.)*2.
         print temp_orig_shape
         #Get to an even number
-        temp_orig_shape = math.ceil(temp_orig_shape / 2.) * 2
-        print temp_orig_shape
+        #temp_orig_shape = math.ceil(temp_orig_shape / 2.) * 2
+        print temp_orig_shape/float(new_shape[0])
 
 
         #print temp_orig_shape, new_shape[0], self.orig_cube.shape[1]
