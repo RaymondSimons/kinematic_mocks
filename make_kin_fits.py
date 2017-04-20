@@ -125,7 +125,7 @@ class kin_map():
         #of (J, H, K) = (22, 21.0, 20.5) AB magnitudes 
         #for R ~ (3380, 3800, 3750)
         #baseline sensitivity measurements from: http://www2011.mpe.mpg.de/Highlights/FB2004/exp13_bender.pdf
-        if   band == 'H': sens, R = 23.5, 3800 #sens, R = 21.0, 3800
+        if   band == 'H': sens, R = 23., 3800 #sens, R = 21.0, 3800
         elif band == 'J': sens, R = 22.0, 3380
         elif band == 'K': sens, R = 20.5, 3750
         else: 
@@ -139,7 +139,7 @@ class kin_map():
 
         #Surface brightness dimming
         #print 'Applying cosmological surface brightness dimming'
-        self.blrcube = self.cube / (self.redshift + 1.)**4.
+        self.blrcube /= (self.redshift + 1.)**4.
 
 
         #Generate the kernel from the seeing size in pixels
@@ -395,7 +395,7 @@ if __name__ == '__main__':
     #Where to write the kinematic map files
     outdir = '/nobackupp2/rcsimons/data/kin_maps/%s'%gal
 
-    test = True
+    test = False
     if test: #testing
         #want to select individual systems
         scales   = array(scales)
@@ -405,7 +405,7 @@ if __name__ == '__main__':
     else:
         #run on all
         #Parallel(n_jobs = -1)(delayed(run_kin_fits)(abspaths[i], scales[i], kmap_names[i], gal, outdir) for i in arange(len(scales)))
-        Parallel(n_jobs = -1)(delayed(run_kin_fits)(abspaths[i], scales[i], kmap_names[i], gal, outdir) for i in arange(10, 12,1)) #testing
+        Parallel(n_jobs = -1)(delayed(run_kin_fits)(abspaths[i], scales[i], kmap_names[i], gal, outdir) for i in arange(10, 15,1)) #testing
     
 
 
