@@ -298,7 +298,7 @@ class kin_map():
         return master_hdulist
 
 
-def run_kin_fits(abspath, scale, kmap_name, gal, outdir, arc_per_pixel = 0.2):#, ):mcrx_data, 
+def run_kin_fits(abspath, scale, kmap_name, gal, outdir, mcrx_data, arc_per_pixel = 0.2):#, ):mcrx_data, 
     print '\tReading in mcrx file for (%s, %.3f)'%(gal, scale)
 
     #setting constants
