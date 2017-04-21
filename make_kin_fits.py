@@ -298,7 +298,8 @@ class kin_map():
         return master_hdulist
 
 
-def run_kin_fits(abspath, scale, kmap_name, gal, outdir, arc_per_pixel = 0.2):#, ):mcrx_data, 
+#def run_kin_fits(abspath, scale, kmap_name, gal, outdir, mcrx_data, arc_per_pixel = 0.2):# testing
+def run_kin_fits(abspath, scale, kmap_name, gal, outdir, arc_per_pixel = 0.2):
     print '\tReading in mcrx file for (%s, %.3f)'%(gal, scale)
 
     #setting constants
@@ -344,8 +345,8 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir, arc_per_pixel = 0.2):#,
 
 
     #run kinematic fitting routine for all cameras
-    for cam_n in arange(10,11): #testing
-    #for cam_n in arange(ncams):
+    #for cam_n in arange(10,11): #testing
+    for cam_n in arange(ncams):
         np.random.seed()
         print '\t\t Running on (%s, %.3f, %i)'%(gal, scale, cam_n)
         camera = mcrx_data['CAMERA%i'%(cam_n)]   
