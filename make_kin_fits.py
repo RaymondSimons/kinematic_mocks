@@ -272,13 +272,13 @@ class kin_map():
     def get_hdulist(self, master_hdulist):
         colhdr = fits.Header()
         #master_hdulist.append(fits.ImageHDU(data = self.orig_cube, header = self.orig_cube_hdr, name = 'cam%i_orig_cube'%self.camera))
-        master_hdulist.append(fits.ImageHDU(data = self.cube, header = self.cube_hdr, name = 'cam%i_cub_int'%self.camera))        
-        master_hdulist.append(fits.ImageHDU(data = self.blrcube, header = self.cube_hdr, name = 'cam%i_cub_obs'%self.camera))
+        master_hdulist.append(fits.ImageHDU(data = self.cube, header = self.cube_hdr, name = 'cam%.2i_cub_int'%self.camera))        
+        master_hdulist.append(fits.ImageHDU(data = self.blrcube, header = self.cube_hdr, name = 'cam%.2i_cub_obs'%self.camera))
 
-        master_hdulist.append(fits.ImageHDU(data = array([self.disp_int, self.edisp_int]),header = self.int_vel_hdr,  name = 'cam%i_dis_int'%self.camera))
-        master_hdulist.append(fits.ImageHDU(data = array([self.disp_obs, self.edisp_obs]), header = self.obs_vel_hdr,name = 'cam%i_dis_obs'%self.camera))
-        master_hdulist.append(fits.ImageHDU(data = array([self.vel_int,self.evel_int]),header = self.int_vel_hdr,  name = 'cam%i_vel_int'%self.camera))
-        master_hdulist.append(fits.ImageHDU(data = array([self.vel_obs,self.evel_obs]), header = self.obs_vel_hdr, name = 'cam%i_vel_obs'%self.camera))
+        master_hdulist.append(fits.ImageHDU(data = array([self.disp_int, self.edisp_int]),header = self.int_vel_hdr,  name = 'cam%.2i_dis_int'%self.camera))
+        master_hdulist.append(fits.ImageHDU(data = array([self.disp_obs, self.edisp_obs]), header = self.obs_vel_hdr,name = 'cam%.2i_dis_obs'%self.camera))
+        master_hdulist.append(fits.ImageHDU(data = array([self.vel_int,self.evel_int]),header = self.int_vel_hdr,  name = 'cam%.2i_vel_int'%self.camera))
+        master_hdulist.append(fits.ImageHDU(data = array([self.vel_obs,self.evel_obs]), header = self.obs_vel_hdr, name = 'cam%.2i_vel_obs'%self.camera))
 
         self.ha_int_hdr = self.orig_cube_hdr.copy()
         self.ha_int_hdr['IMUNIT'] = (self.orig_cube_hdr['IMUNIT']+ ' km/s', 'A*sigma*sqrt(2*pi) of gauss fit')
