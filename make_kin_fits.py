@@ -298,7 +298,7 @@ class kin_map():
         return master_hdulist
 
 
-def run_kin_fits(abspath, scale, kmap_name, gal, outdir, mcrx_data, arc_per_pixel = 0.2):#, ):mcrx_data, 
+def run_kin_fits(abspath, scale, kmap_name, gal, outdir, arc_per_pixel = 0.2):#, ):mcrx_data, 
     print '\tReading in mcrx file for (%s, %.3f)'%(gal, scale)
 
     #setting constants
@@ -409,7 +409,7 @@ if __name__ == '__main__':
     #Where to write the kinematic map files
     outdir = '/nobackupp2/rcsimons/data/kin_maps/%s'%gal
 
-    test = True
+    test = False
     if test: #testing
         scales   = array(scales)
         n_sel = where(scales == 0.340)[0][0] #want to select individual systems
