@@ -62,6 +62,10 @@ class momentum_obj():
             return 0
 
 
+        self.stars_id = dd['stars', 'particle_index']
+        self.stars_metallicity1 = dd['stars', 'particle_metallicity1']
+        self.stars_metallicity2 = dd['stars', 'particle_metallicity2']
+
 
         self.stars_vy = dd['stars', 'particle_velocity_y'].in_units('km/s')
         self.stars_vz = dd['stars', 'particle_velocity_z'].in_units('km/s')
@@ -271,6 +275,8 @@ class momentum_obj():
         master_hdulist.append(fits.ImageHDU(data = nir_mstar_cat                                                            , header = colhdr, name = 'nir_mstar_cat'))
         master_hdulist.append(fits.ImageHDU(data = self.L_disk                                                              , header = colhdr, name = 'nir_net_momentum'))
         master_hdulist.append(fits.ImageHDU(data = self.L_disk_s                                                            , header = colhdr, name = 'nir_net_momentum_s'))
+        master_hdulist.append(fits.ImageHDU(data = self.stars_id                                                            , header = colhdr, name = 'stars_id'))
+        master_hdulist.append(fits.ImageHDU(data = np.stack((self.stars_metallicity1 , self.stars_metallicity2))            , header = colhdr, name = 'stars_metallicity'))
         master_hdulist.append(fits.ImageHDU(data = np.stack((self.stars_x_cen , self.stars_y_cen , self.stars_z_cen))       , header = colhdr, name = 'stars_xyz_position'))
         master_hdulist.append(fits.ImageHDU(data = np.stack((self.stars_vx_cen , self.stars_vy_cen , self.stars_vz_cen))    , header = colhdr, name = 'stars_xyz_velocity'))
         master_hdulist.append(fits.ImageHDU(data = np.stack((self.rr_stars, self.zz_stars))                                 , header = colhdr, name = 'stars_cylindrical_position'))
