@@ -15,5 +15,12 @@ for i in arange(1,2):
             s_strt = fl.find('_sunrise.tar')-3
             s_stop = fl.find('_sunrise.tar')
             scale = fl[s_strt:s_stop]
-            f.write(scale+'\n')
+            f.write(scale + '\t')
+            with tarfile.open(fl) as tf:
+                for entry in tf:
+                    print entry.name
+            f.write('\n')
+
+
+
         f.close()
