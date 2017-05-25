@@ -5,7 +5,7 @@ from glob import glob
 
 
 for i in arange(2, 35):
-    print 'VELA%.2i%'%(i)
+    print 'VELA%.2i'%(i)
     if i!=18:
         f = open('/nobackupp2/rcsimons/catalogs/image_cats/VELA%.2i_image.cat'%(i),'w+')
         f.write('#(0) scale\n#(1) surface brightness\n#(2) instrument\n#(3) PA camera 0\n#(4) semi-minor axis camera 0\n#(5) semi-major axis camera 0\n#(6) PA camera 1\n#(7) semi-minor axis camera 1\n#(8) semi-major axis camera 1\n#(9:) etc. \n\n\n\n')
