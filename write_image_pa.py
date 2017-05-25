@@ -20,7 +20,7 @@ for i in arange(1,2):
                 for SB in ['SB25', 'SB27']:
                     for inst in ['ACS-F606W','ACS-F775W', 'ACS-F850LP', 'WFC3-F105W', 'WFC3-F125W', 'WFC3-F160W']:
                         f.write(scale + '\t'+ SB+'\t'+inst+'\t')
-                        cams = 1
+                        cams = 19
                         pa = zeros(cams)*nan
                         semiminor = zeros(cams)*nan
                         semimajor = zeros(cams)*nan
