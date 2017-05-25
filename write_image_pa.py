@@ -4,7 +4,7 @@ import glob
 from glob import glob
 
 
-for i in arange(1,35):
+for i in arange(1,2):
     print i
     if i!=18:
         f = open('/nobackupp2/rcsimons/catalogs/image_cats/VELA%.2i_image.cat'%(i),'w+')
