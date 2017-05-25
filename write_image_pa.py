@@ -12,15 +12,15 @@ for i in arange(1,2):
         print path
         fls = glob(path+'/*/images/*sunrise.tar')
         fls.sort()
-        for fl in fls:
+        for fl in fls[20:23]:
             s_strt = fl.find('_sunrise.tar')-3
             s_stop = fl.find('_sunrise.tar')
             scale = fl[s_strt:s_stop]
             with tarfile.open(fl) as tf:
-                for SB in ['SB25', 'SB27', 'SB00']:
-                    for inst in ['ACS-F606W','ACS-F775W', 'ACS-F850W', 'WFC3-F105W', 'WFC3-F125W', 'WFC3-F160W']:
+                for SB in ['SB25', 'SB27']:
+                    for inst in ['ACS-F606W','ACS-F775W', 'ACS-F850LP', 'WFC3-F105W', 'WFC3-F125W', 'WFC3-F160W']:
                         f.write(scale + '\t'+ SB+'\t'+inst+'\t')
-                        cams = 2
+                        cams = 1
                         pa = zeros(cams)*nan
                         semiminor = zeros(cams)*nan
                         semimajor = zeros(cams)*nan
@@ -33,7 +33,6 @@ for i in arange(1,2):
                                 pa[cam_n] = data['LotzMorphMeasurements'].header['ORIENT']
                                 semiminor[cam_n] = data['PhotUtilsMeasurements'].header['SMINSIG']
                                 semimajor[cam_n] = data['PhotUtilsMeasurements'].header['SMAJSIG']
-                                print fits_name
                             except:
                                 print 'No measurements found for %s %s %s'%(SB, inst, cam_n)
                             f.write('%.1f'%pa[cam_n]+'\t'+'%.3f'%semiminor[cam_n]+'\t'+'%.3f'%semimajor[cam_n]+'\t')
