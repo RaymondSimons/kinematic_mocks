@@ -23,7 +23,7 @@ for i in arange(1,2):
                         for cam_n in arange(len(pa)):
                             fits_name = 'images_VELA%.2i_a0.%s_sunrise/VELA%.2i_a0.%s_sunrise_cam%.2i_%s_%s.fits'%(i, scale, i, scale, cam_n, inst, SB)
                             print fits_name
-                            f.write('%.1f'%pa[cam_n]+'\n')
+                            f.write('%.1f'%pa[cam_n]+'\t')
                         f.write('\n')
                                 #fits_file = tf.getmember(tf)    for entry in tf:
             f.write('\n')
