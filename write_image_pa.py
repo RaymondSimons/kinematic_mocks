@@ -17,8 +17,13 @@ for i in arange(1,2):
             scale = fl[s_strt:s_stop]
             f.write(scale + '\t')
             with tarfile.open(fl) as tf:
-                for entry in tf:
-                    print entry.name
+                for SB in ['SB25', 'SB27', 'SB00']:
+                    for inst in ['ACS-F606W','ACS-F775W', 'ACS-F850W', 'WFC3-F105W', 'WFC3-F125W', 'WFC3-F160W']:
+                        for cam_n in arange(19):
+                            fits_name = 'images_VELA%.2i_a0.%s_sunrise/VELA%.2i_a0.%s_sunrise_cam%.2i_%s_%s.fits'%(i, scale, i, scale, cam_n, inst, SB)
+                            print fits_name
+                            f.write(SB+'\t'+inst+'\t'+'%.2i'%cam_n+'\t')
+                            #fits_file = tf.getmember(tf)    for entry in tf:
             f.write('\n')
 
 
