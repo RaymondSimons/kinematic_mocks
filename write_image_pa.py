@@ -12,5 +12,8 @@ for i in arange(1,2):
         fls = glob(path+'/*/images/*sunrise.tar')
         fls.sort()
         for fl in fls:
-            print fl
+            s_strt = fl.find('_sunrise.tar')-3
+            s_stop = fl.find('_sunrise.tar')
+            scale = fl[s_strt:s_stop]
+            f.write(scale+'\n')
         f.close()
