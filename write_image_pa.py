@@ -4,7 +4,8 @@ import glob
 from glob import glob
 
 
-for i in arange(1,2):
+for i in arange(1,35):
+    print i
     if i!=18:
         f = open('/nobackupp2/rcsimons/catalogs/image_cats/VELA%.2i_image.cat'%(i),'w+')
         f.write('#(0) scale\n#(1) surface brightness\n#(2) instrument\n#(3) PA camera 0\n#(4) semi-minor axis camera 0\n#(5) semi-major axis camera 0\n#(6) PA camera 1\n#(7) semi-minor axis camera 1\n#(8) semi-major axis camera 1\n#(9:) etc. \n\n\n\n')
@@ -12,7 +13,7 @@ for i in arange(1,2):
         print path
         fls = glob(path+'/*/images/*sunrise.tar')
         fls.sort()
-        for fl in fls[20:23]:
+        for fl in fls:
             s_strt = fl.find('_sunrise.tar')-3
             s_stop = fl.find('_sunrise.tar')
             scale = fl[s_strt:s_stop]
@@ -25,6 +26,7 @@ for i in arange(1,2):
                         semiminor = zeros(cams)*nan
                         semimajor = zeros(cams)*nan
                         for cam_n in arange(cams):
+                            print '\t'+str(cam_n)
                             try:
                                 fits_name = 'images_VELA%.2i_a0.%s_sunrise/VELA%.2i_a0.%s_sunrise_cam%.2i_%s_%s.fits'%(i, scale, i, scale, cam_n, inst, SB)
                                 fits_file = tf.getmember(fits_name)
@@ -34,7 +36,8 @@ for i in arange(1,2):
                                 semiminor[cam_n] = data['PhotUtilsMeasurements'].header['SMINSIG']
                                 semimajor[cam_n] = data['PhotUtilsMeasurements'].header['SMAJSIG']
                             except:
-                                print 'No measurements found for %s %s %s'%(SB, inst, cam_n)
+                                pass
+                                #print 'No measurements found for %s %s %s'%(SB, inst, cam_n)
                             f.write('%.2f'%pa[cam_n]+'\t'+'%.3f'%semiminor[cam_n]+'\t'+'%.3f'%semimajor[cam_n]+'\t')
                         f.write('\n')
                                 #fits_file = tf.getmember(tf)    for entry in tf:
