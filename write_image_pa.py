@@ -32,7 +32,7 @@ for i in arange(1,2):
                                 data = pyfits.open(file_obj)
                                 pa[cam_n] = data['LotzMorphMeasurements'].header['ORIENT']
                                 semiminor[cam_n] = data['PhotUtilsMeasurements'].header['SMINSIG']
-                                semimajor[cam_n] = data['PhotUtilsMeasurements'].header['SMAHSIG']
+                                semimajor[cam_n] = data['PhotUtilsMeasurements'].header['SMAJSIG']
                                 print fits_name
                             except:
                                 print 'No measurements found for %s %s %s'%(SB, inst, cam_n)
