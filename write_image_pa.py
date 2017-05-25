@@ -19,7 +19,9 @@ for i in arange(1,35):
             scale = fl[s_strt:s_stop]
             with tarfile.open(fl) as tf:
                 for SB in ['SB25', 'SB27']:
+                    print '\t', SB
                     for inst in ['ACS-F606W','ACS-F775W', 'ACS-F850LP', 'WFC3-F105W', 'WFC3-F125W', 'WFC3-F160W']:
+                        print '\t\t', inst
                         f.write(scale + '\t'+ SB+'\t'+inst+'\t')
                         cams = 19
                         pa = zeros(cams)*nan
