@@ -26,7 +26,6 @@ for i in arange(1,2):
                             f.write('%.1f'%pa[cam_n]+'\t')
                         f.write('\n')
                                 #fits_file = tf.getmember(tf)    for entry in tf:
-            f.write('\n')
 
 
 
