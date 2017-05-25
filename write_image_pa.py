@@ -10,6 +10,7 @@ for i in arange(1,2):
         path = '/nobackupp2/gfsnyder/VELA_sunrise/Runs/VELA_v2/VELA%.2i'%(i)
         print path
         fls = glob(path+'/*/images/*sunrise.tar')
+        fls.sort()
         for fl in fls:
             print fl
         f.close()
