@@ -27,7 +27,8 @@ for i in arange(1,2):
                         for cam_n in arange(cams):
                             fits_name = 'images_VELA%.2i_a0.%s_sunrise/VELA%.2i_a0.%s_sunrise_cam%.2i_%s_%s.fits'%(i, scale, i, scale, cam_n, inst, SB)
                             fits_file = tf.getmember(fits_name)
-                            data = pyfits.open(fits_file)
+                            file_obj = tf.extractfile(fits_file)
+                            data = pyfits.open(file_obj)
                             pa[cam_n] = data['LotzMorphMeasurements'].header['ORIENT']
                             semiminor[cam_n] = data['PhotUtilsMeasurements'].header['SMINSIG']
                             semimajor[cam_n] = data['PhotUtilsMeasurements'].header['SMAHSIG']
