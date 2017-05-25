@@ -26,7 +26,6 @@ for i in arange(1,35):
                         semiminor = zeros(cams)*nan
                         semimajor = zeros(cams)*nan
                         for cam_n in arange(cams):
-                            print '\t'+str(cam_n)
                             try:
                                 fits_name = 'images_VELA%.2i_a0.%s_sunrise/VELA%.2i_a0.%s_sunrise_cam%.2i_%s_%s.fits'%(i, scale, i, scale, cam_n, inst, SB)
                                 fits_file = tf.getmember(fits_name)
