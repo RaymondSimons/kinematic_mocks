@@ -30,12 +30,12 @@ for i in arange(1,2):
                                 fits_file = tf.getmember(fits_name)
                                 file_obj = tf.extractfile(fits_file)
                                 data = pyfits.open(file_obj)
-                                pa[cam_n] = data['LotzMorphMeasurements'].header['ORIENT']
+                                pa[cam_n] = data['LotzMorphMeasurements'].header['ORIENT']*180/pi
                                 semiminor[cam_n] = data['PhotUtilsMeasurements'].header['SMINSIG']
                                 semimajor[cam_n] = data['PhotUtilsMeasurements'].header['SMAJSIG']
                             except:
                                 print 'No measurements found for %s %s %s'%(SB, inst, cam_n)
-                            f.write('%.1f'%pa[cam_n]+'\t'+'%.3f'%semiminor[cam_n]+'\t'+'%.3f'%semimajor[cam_n]+'\t')
+                            f.write('%.2f'%pa[cam_n]+'\t'+'%.3f'%semiminor[cam_n]+'\t'+'%.3f'%semimajor[cam_n]+'\t')
                         f.write('\n')
                                 #fits_file = tf.getmember(tf)    for entry in tf:
 
