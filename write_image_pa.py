@@ -35,7 +35,7 @@ for i in arange(1,2):
                                 semimajor[cam_n] = data['PhotUtilsMeasurements'].header['SMAHSIG']
                                 print fits_name
                             except:
-                                pass
+                                print 'No measurements found for %s %s %s'%(SB, inst, cam_n)
                             f.write('%.1f'%pa[cam_n]+'\t'+'%.3f'%semiminor[cam_n]+'\t'+'%.3f'%semimajor[cam_n]+'\t')
                         f.write('\n')
                                 #fits_file = tf.getmember(tf)    for entry in tf:
