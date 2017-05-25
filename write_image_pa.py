@@ -7,8 +7,7 @@ from glob import glob
 for i in arange(1,2):
     if i!=18:
         f = open('/nobackupp2/rcsimons/catalogs/image_cats/VELA%.2i_image.cat'%(i),'w+')
-        f.write('#(0) scale\n#(1) surface brightness\n#(2) instrument\n#(3) PA camera 0\n#(4) semi-minor axis camera 0\n#(5) semi-major axis camera 0\n \
-            #(6) PA camera 1\n#(7) semi-minor axis camera 1\n#(8) semi-major axis camera 1\n#(9:)etc. \n\n\n\n')
+        f.write('#(0) scale\n#(1) surface brightness\n#(2) instrument\n#(3) PA camera 0\n#(4) semi-minor axis camera 0\n#(5) semi-major axis camera 0\n#(6) PA camera 1\n#(7) semi-minor axis camera 1\n#(8) semi-major axis camera 1\n#(9:)etc. \n\n\n\n')
         path = '/nobackupp2/gfsnyder/VELA_sunrise/Runs/VELA_v2/VELA%.2i'%(i)
         print path
         fls = glob(path+'/*/images/*sunrise.tar')
