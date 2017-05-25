@@ -21,18 +21,21 @@ for i in arange(1,2):
                     for inst in ['ACS-F606W','ACS-F775W', 'ACS-F850W', 'WFC3-F105W', 'WFC3-F125W', 'WFC3-F160W']:
                         f.write(scale + '\t'+ SB+'\t'+inst+'\t')
                         cams = 2
-                        pa = zeros(cams)
-                        semiminor = zeros(cams)
-                        semimajor = zeros(cams)
+                        pa = zeros(cams)*nan
+                        semiminor = zeros(cams)*nan
+                        semimajor = zeros(cams)*nan
                         for cam_n in arange(cams):
                             fits_name = 'images_VELA%.2i_a0.%s_sunrise/VELA%.2i_a0.%s_sunrise_cam%.2i_%s_%s.fits'%(i, scale, i, scale, cam_n, inst, SB)
                             fits_file = tf.getmember(fits_name)
                             file_obj = tf.extractfile(fits_file)
                             data = pyfits.open(file_obj)
-                            pa[cam_n] = data['LotzMorphMeasurements'].header['ORIENT']
-                            semiminor[cam_n] = data['PhotUtilsMeasurements'].header['SMINSIG']
-                            semimajor[cam_n] = data['PhotUtilsMeasurements'].header['SMAHSIG']
-                            print fits_name
+                            try:
+                                pa[cam_n] = data['LotzMorphMeasurements'].header['ORIENT']
+                                semiminor[cam_n] = data['PhotUtilsMeasurements'].header['SMINSIG']
+                                semimajor[cam_n] = data['PhotUtilsMeasurements'].header['SMAHSIG']
+                                print fits_name
+                            except:
+                                pass
                             f.write('%.1f'%pa[cam_n]+'\t'+'%.3f'%semiminor[cam_n]+'\t'+'%.3f'%semimajor[cam_n]+'\t')
                         f.write('\n')
                                 #fits_file = tf.getmember(tf)    for entry in tf:
