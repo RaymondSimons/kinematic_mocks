@@ -298,8 +298,8 @@ class kin_map():
         return master_hdulist
 
 
-#def run_kin_fits(abspath, scale, kmap_name, gal, outdir, mcrx_data, arc_per_pixel = 0.2):# testing
-def run_kin_fits(abspath, scale, kmap_name, gal, outdir, arc_per_pixel = 0.2):
+def run_kin_fits(abspath, scale, kmap_name, gal, outdir, mcrx_data, arc_per_pixel = 0.2):# testing
+#def run_kin_fits(abspath, scale, kmap_name, gal, outdir, arc_per_pixel = 0.2):
     print '\tReading in mcrx file for (%s, %.3f)'%(gal, scale)
 
     #setting constants
@@ -307,7 +307,7 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir, arc_per_pixel = 0.2):
     c_kms = constants.c.value*1.e-3    #speed of light in km/s
 
     #reading in data
-    mcrx_data = fits.open(abspath) #testing
+    #mcrx_data = fits.open(abspath) #testing
 
     #reading number of cameras
     ncams = mcrx_data['MCRX'].header['N_CAMERA']
@@ -415,7 +415,7 @@ if __name__ == '__main__':
         scales   = array(scales)
         n_sel = where(scales == 0.380)[0][0] #want to select individual systems
         print 'Reading in mcrx file...'
-        mcrx_data = fits.open(abspaths[n_sel])
+        #mcrx_data = fits.open(abspaths[n_sel])
         run_kin_fits(abspaths[n_sel], scales[n_sel], kmap_names[n_sel], gal, outdir, mcrx_data)
     else:
         #run on all
