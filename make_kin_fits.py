@@ -387,7 +387,7 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir, arc_per_pixel = 0.2):
     #Save the fits file
     thdulist = fits.HDUList(master_hdulist)
     print '\tSaving to ' + outdir+'/'+kmap_name
-    thdulist.writeto(outdir+'/'+kmap_name, clobber = True)
+    thdulist.writeto(outdir+'/new_'+kmap_name, clobber = True)
 
 
 if __name__ == '__main__':
@@ -410,10 +410,10 @@ if __name__ == '__main__':
     #Where to write the kinematic map files
     outdir = '/nobackupp2/rcsimons/data/kin_maps/%s'%gal
 
-    test = False
+    test = True
     if test: #testing
         scales   = array(scales)
-        n_sel = where(scales == 0.340)[0][0] #want to select individual systems
+        n_sel = where(scales == 0.380)[0][0] #want to select individual systems
         print 'Reading in mcrx file...'
         mcrx_data = fits.open(abspaths[n_sel])
         run_kin_fits(abspaths[n_sel], scales[n_sel], kmap_names[n_sel], gal, outdir, mcrx_data)
