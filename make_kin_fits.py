@@ -309,13 +309,13 @@ class kin_map():
 
 def run_kin_fits(abspath, scale, kmap_name, gal, outdir, mcrx_data, arc_per_pixel = 0.2):# testing
 #def run_kin_fits(abspath, scale, kmap_name, gal, outdir, arc_per_pixel = 0.2):
-    print '\tReading in mcrx file for (%s, %.3f)'%(gal, scale)
 
     #setting constants
     Ha_m = 6.563e-7 #Halpha in meters
     c_kms = constants.c.value*1.e-3    #speed of light in km/s
 
     #reading in data
+    #print '\tReading in mcrx file for (%s, %.3f)'%(gal, scale)
     #mcrx_data = fits.open(abspath) #testing
 
     #reading number of cameras
