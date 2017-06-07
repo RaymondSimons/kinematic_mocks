@@ -307,7 +307,7 @@ class kin_map():
         return master_hdulist
 
 
-def run_kin_fits(abspath, scale, kmap_name, gal, outdir, mcrx_data, arc_per_pixel = 0.1):# testing
+def run_kin_fits(abspath, scale, kmap_name, gal, outdir, mcrx_data, arc_per_pixel = 0.2):# testing
 #def run_kin_fits(abspath, scale, kmap_name, gal, outdir, arc_per_pixel = 0.2):
     print '\tReading in mcrx file for (%s, %.3f)'%(gal, scale)
 
@@ -425,7 +425,7 @@ if __name__ == '__main__':
         scales   = array(scales)
         n_sel = where(scales == 0.400)[0][0] #want to select individual systems
         print 'Reading in mcrx file...'
-        mcrx_data = fits.open(abspaths[n_sel])
+        #mcrx_data = fits.open(abspaths[n_sel])
         run_kin_fits(abspaths[n_sel], scales[n_sel], kmap_names[n_sel], gal, outdir, mcrx_data)
     else:
         #run on all
