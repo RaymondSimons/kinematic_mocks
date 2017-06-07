@@ -24,9 +24,7 @@ import matplotlib.pyplot as plt
 from matplotlib.pyplot  import *
 import numpy as np
 from numpy import *
-from scipy.signal import medfilt   
-
-
+from scipy.ndimage.filters import median_filter
 
 plt.ioff()
 def gauss(x, *p):
@@ -199,7 +197,7 @@ class kin_map():
 
         print 'Median filtering...'
         if True:
-            self.blrcube = medfilt(self.blrcube, kernel_size = (1, 2, 2))
+            self.blrcube = median_filter(self.blrcube, size = (1, 2, 2))
 
 
         print 'Adding noise...'
