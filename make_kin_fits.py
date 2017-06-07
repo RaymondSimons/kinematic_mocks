@@ -387,7 +387,7 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir, mcrx_data, arc_per_pixe
         print 'linear fov', kmap.cube_hdr['linear_fov']
         npix_new = ceil((kmap.cube_hdr['linear_fov']*cosmo.arcsec_per_kpc_proper(2).value)/arc_per_pixel/2.)*2.
         kmap.rebin_and_dim([npix_new, npix_new])
-        kmap.generate_blurred_map(kernel_size_arc = 0.05)#/2.35)
+        kmap.generate_blurred_map(kernel_size_arc = 0.6)#/2.35)
         kmap.generate_observed_kin_map()
         master_hdulist = kmap.get_hdulist(master_hdulist)
 
@@ -421,7 +421,7 @@ if __name__ == '__main__':
     test = True
     if test: #testing
         scales   = array(scales)
-        n_sel = where(scales == 0.440)[0][0] #want to select individual systems
+        n_sel = where(scales == 0.400)[0][0] #want to select individual systems
         print 'Reading in mcrx file...'
         mcrx_data = fits.open(abspaths[n_sel])
         run_kin_fits(abspaths[n_sel], scales[n_sel], kmap_names[n_sel], gal, outdir, mcrx_data)
