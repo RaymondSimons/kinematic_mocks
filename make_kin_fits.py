@@ -24,6 +24,9 @@ import matplotlib.pyplot as plt
 from matplotlib.pyplot  import *
 import numpy as np
 from numpy import *
+from scipy.signal import medfilt   
+
+
 
 plt.ioff()
 def gauss(x, *p):
@@ -193,6 +196,11 @@ class kin_map():
             for xx in arange(self.xsize):
                 for yy in arange(self.ysize):
                     self.blrcube[:, xx, yy] = convolve_fft(self.blrcube[:,xx, yy], self.spec_kernel)
+
+        print 'Median filtering...'
+        if True:
+            self.blrcube = medfilt(self.blrcube, kernel_size = (1, 2, 2))
+
 
         print 'Adding noise...'
         self.cube_hdr['sens']=(sens, '[AB mag] 5 sigma 8 hr sensitivty')
@@ -406,7 +414,8 @@ if __name__ == '__main__':
         abspaths.append(os.path.abspath(fl))
         sc_loc = abspaths[n].find('_a')
         scales.append(float(abspaths[n][sc_loc+2:sc_loc+7]))
-        kmap_names.append('jwst_%s_a%.3f_kmap.fits'%(gal, scales[n]))
+        #kmap_names.append('jwst_%s_a%.3f_kmap.fits'%(gal, scales[n]))
+        kmap_names.append('%s_a%.3f_kmap.fits'%(gal, scales[n]))
 
     #Where to write the kinematic map files
     outdir = '/nobackupp2/rcsimons/data/kin_maps/%s'%gal
