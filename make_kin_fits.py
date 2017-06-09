@@ -141,7 +141,7 @@ class kin_map():
         #of (J, H, K) = (22, 21.0, 20.5) AB magnitudes 
         #for R ~ (3380, 3800, 3750)
         #baseline sensitivity measurements from: http://www2011.mpe.mpg.de/Highlights/FB2004/exp13_bender.pdf
-        if   band == 'H': sens, R = 22.0, 3800 #sens, R = 21.0, 3800
+        if   band == 'H': sens, R = 21.0, 3800 #sens, R = 21.0, 3800
         #if   band == 'H': sens, R = 28.0, 2700 #sens, R = 21.0, 3800 #jwst
         #if   band == 'H': sens, R = 26.0, 3800 #sens, R = 21.0, 3800
         elif band == 'J': sens, R = 22.0, 3380
@@ -416,8 +416,8 @@ if __name__ == '__main__':
         sc_loc = abspaths[n].find('_a')
         scales.append(float(abspaths[n][sc_loc+2:sc_loc+7]))
         #kmap_names.append('jwst_%s_a%.3f_kmap.fits'%(gal, scales[n]))
-        kmap_names.append('%s_a%.3f_kmap_jwst.fits'%(gal, scales[n]))#jwst
-        #kmap_names.append('%s_a%.3f_kmap.fits'%(gal, scales[n]))#jwst
+        #kmap_names.append('%s_a%.3f_kmap_jwst.fits'%(gal, scales[n]))#jwst
+        kmap_names.append('%s_a%.3f_kmap.fits'%(gal, scales[n]))#jwst
 
     #Where to write the kinematic map files
     outdir = '/nobackupp2/rcsimons/data/kin_maps/%s'%gal
