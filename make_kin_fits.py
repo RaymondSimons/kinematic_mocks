@@ -355,7 +355,7 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir, mcrx_data, arc_per_pixe
     #for cam_n in arange(18,19): #testing
     for cam_n in arange(ncams):
         np.random.seed()
-        print '\t\t Running on (%s, %.3f, %i)'%(gal, scale, cam_n)
+        print '\n\n\n\t\t Running on (%s, %.3f, %i)'%(gal, scale, cam_n)
         camera = mcrx_data['CAMERA%i'%(cam_n)]   
         camera_params =  mcrx_data['CAMERA%i-PARAMETERS'%(cam_n)].header
         if True:
@@ -413,7 +413,7 @@ if __name__ == '__main__':
         sc_loc = abspaths[n].find('_a')
         scales.append(float(abspaths[n][sc_loc+2:sc_loc+7]))
         #kmap_names.append('jwst_%s_a%.3f_kmap.fits'%(gal, scales[n]))
-        kmap_names.append('%s_a%.3f_kmap.fits'%(gal, scales[n]))
+        kmap_names.append('%s_a%.3f_kmap_jwst.fits'%(gal, scales[n]))
 
     #Where to write the kinematic map files
     outdir = '/nobackupp2/rcsimons/data/kin_maps/%s'%gal
@@ -421,7 +421,7 @@ if __name__ == '__main__':
     test = True
     if test: #testing
         scales   = array(scales)
-        n_sel = where(scales == 0.440)[0][0] #want to select individual systems
+        n_sel = where(scales == 0.390)[0][0] #want to select individual systems
         print 'Reading in mcrx file...'
         mcrx_data = fits.open(abspaths[n_sel])
         run_kin_fits(abspaths[n_sel], scales[n_sel], kmap_names[n_sel], gal, outdir, mcrx_data)
