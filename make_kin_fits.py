@@ -352,7 +352,7 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir, mcrx_data, arc_per_pixe
 
 
     #run kinematic fitting routine for all cameras
-    for cam_n in arange(7,8): #testing
+    for cam_n in arange(6,7): #testing
     #for cam_n in arange(ncams):
         np.random.seed()
         print '\n\n\n\t\t Running on (%s, %.3f, %i)'%(gal, scale, cam_n)
@@ -409,7 +409,6 @@ if __name__ == '__main__':
     gal = os.path.abspath('.').split('/')[-1]
 
     print 'Working on %s'%gal
-
 
     for n, fl in enumerate(mcrx_files):
         abspaths.append(os.path.abspath(fl))
