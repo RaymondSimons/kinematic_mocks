@@ -142,7 +142,7 @@ class kin_map():
         #for R ~ (3380, 3800, 3750)
         #baseline sensitivity measurements from: http://www2011.mpe.mpg.de/Highlights/FB2004/exp13_bender.pdf
         if   band == 'H': sens, R = 24.0, 3800 #sens, R = 21.0, 3800
-        #if   band == 'H': sens, R = 28.0, 2700 #sens, R = 21.0, 3800
+        if   band == 'H': sens, R = 28.0, 2700 #sens, R = 21.0, 3800
         #if   band == 'H': sens, R = 26.0, 3800 #sens, R = 21.0, 3800
         elif band == 'J': sens, R = 22.0, 3380
         elif band == 'K': sens, R = 20.5, 3750
@@ -305,7 +305,7 @@ class kin_map():
         return master_hdulist
 
 
-def run_kin_fits(abspath, scale, kmap_name, gal, outdir, mcrx_data, arc_per_pixel = 0.2):# testing
+def run_kin_fits(abspath, scale, kmap_name, gal, outdir, mcrx_data, arc_per_pixel = 0.1):# testing
 #def run_kin_fits(abspath, scale, kmap_name, gal, outdir, arc_per_pixel = 0.2):
 
     #setting constants
@@ -387,7 +387,10 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir, mcrx_data, arc_per_pixe
         print 'linear fov', kmap.cube_hdr['linear_fov']
         npix_new = ceil((kmap.cube_hdr['linear_fov']*cosmo.arcsec_per_kpc_proper(2).value)/arc_per_pixel/2.)*2.
         kmap.rebin_and_dim([npix_new, npix_new])
-        kmap.generate_blurred_map(kernel_size_arc = 0.6)#/2.35)
+        #kmap.generate_blurred_map(kernel_size_arc = 0.6)#/2.35)
+        kmap.generate_blurred_map(kernel_size_arc = 0.05)#/2.35)
+                
+
         kmap.generate_observed_kin_map()
         master_hdulist = kmap.get_hdulist(master_hdulist)
 
