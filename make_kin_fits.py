@@ -354,7 +354,7 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir, mcrx_data, arc_per_pixe
 
 
     #run kinematic fitting routine for all cameras
-    for cam_n in array([5,7])#arange(7,8): #testing
+    for cam_n in array([5,7]):#arange(7,8): #testing
     #for cam_n in arange(ncams):
         np.random.seed()
         print '\n\n\n\t\t Running on (%s, %.3f, %i)'%(gal, scale, cam_n)
