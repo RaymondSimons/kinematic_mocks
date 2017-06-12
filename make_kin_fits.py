@@ -246,6 +246,7 @@ class kin_map():
                             self.ha_int[i,j] = c_a[0]*c_a[2]*sqrt(2*pi)                            
                     except:
                         print 'Intrinsic kinematic fit broke at pixel %i %i'%(i,j)
+                        print '\t', sqrt(v_a[1,1]), sqrt(v_a[2,2])
                         pass
 
     def generate_observed_kin_map(self):
