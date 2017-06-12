@@ -354,7 +354,7 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir, mcrx_data, arc_per_pixe
 
 
     #run kinematic fitting routine for all cameras
-    for cam_n in array([5,7]):#arange(7,8): #testing
+    for cam_n in array([5]):#arange(7,8): #testing
     #for cam_n in arange(ncams):
         np.random.seed()
         print '\n\n\n\t\t Running on (%s, %.3f, %i)'%(gal, scale, cam_n)
@@ -390,7 +390,7 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir, mcrx_data, arc_per_pixe
         npix_new = ceil((kmap.cube_hdr['linear_fov']*cosmo.arcsec_per_kpc_proper(2).value)/arc_per_pixel/2.)*2.
         kmap.rebin_and_dim([npix_new, npix_new])
         #kmap.generate_blurred_map(kernel_size_arc = 0.6)#/2.35) #jwst
-        kmap.generate_blurred_map(kernel_size_arc = 0.045)#/2.35)#/2.35)
+        kmap.generate_blurred_map(kernel_size_arc = 0.05/2.35)#/2.35)
             
 
         kmap.generate_observed_kin_map()
