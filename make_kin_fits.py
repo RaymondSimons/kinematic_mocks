@@ -142,7 +142,7 @@ class kin_map():
         #for R ~ (3380, 3800, 3750)
         #baseline sensitivity measurements from: http://www2011.mpe.mpg.de/Highlights/FB2004/exp13_bender.pdf
         #if   band == 'H': sens, R = 21.5, 3800 #sens, R = 21.0, 3800
-        if   band == 'H': sens, R = 33.0, 2700 #sens, R = 21.0, 3800 #jwst
+        if   band == 'H': sens, R = 35.0, 2700 #sens, R = 21.0, 3800 #jwst
         #if   band == 'H': sens, R = 26.0, 3800 #sens, R = 21.0, 3800
         elif band == 'J': sens, R = 22.0, 3380
         elif band == 'K': sens, R = 20.5, 3750
@@ -265,7 +265,7 @@ class kin_map():
                 spec = convolve_fft(self.blrcube[:,i,j], krnl)
                 try:
                     c_a, v_a = curve_fit(gauss, self.vscale, spec, p0 = [nanmax(spec), self.vscale[nanargmax(spec)], 30, median(spec[0:15])])           
-                    if (isfinite(sqrt(v_a[1,1]))) & (c_a[2]**2. > 0.5*self.lsf_kms.value**2.) & (isfinite(sqrt(v_a[2,2]))) & (c_a[0] > 0):
+                    if (isfinite(sqrt(v_a[1,1]))) & (c_a[2]**2. > self.lsf_kms.value**2.) & (isfinite(sqrt(v_a[2,2]))) & (c_a[0] > 0):
                         self.vel_obs[i,j]   = c_a[1]
                         self.evel_obs[i,j]  = sqrt(v_a[1,1])
                         self.disp_obs[i,j]  = sqrt(c_a[2]**2. - self.lsf_kms.value**2.)
@@ -273,7 +273,7 @@ class kin_map():
                         self.ha_obs[i,j] = c_a[0]*c_a[2]*sqrt(2*pi)                            
                     else:
                         print 'passed on pixel %i %i'%(i,j)
-                        print '\t', sqrt(v_a[1,1]), c_a[2], sqrt(v_a[2,2])
+                        #print '\t', sqrt(v_a[1,1]), c_a[2], sqrt(v_a[2,2])
                 except:
                     print 'Observed kinematic fit broke at pixel %i %i'%(i,j)
 
