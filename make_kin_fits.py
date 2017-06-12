@@ -271,8 +271,12 @@ class kin_map():
                         self.disp_obs[i,j]  = sqrt(c_a[2]**2. - self.lsf_kms.value**2.)
                         self.edisp_obs[i,j] = sqrt(v_a[2,2])
                         self.ha_obs[i,j] = c_a[0]*c_a[2]*sqrt(2*pi)                            
+                    else:
+                        print 'passed on pixel %i %i'%(i,j)
+                        print sqrt(v_a[1,1]), c_a[2], sqrt(v_a[2,2])
                 except:
                     print 'Observed kinematic fit broke at pixel %i %i'%(i,j)
+
                     pass
         #self.vel_obs[-isnan(self.vel_obs)] += np.random.normal(0,5,shape(self.vel_obs[-isnan(self.vel_obs)]))
         #self.disp_obs[-isnan(self.disp_obs)] += np.random.normal(0,5,shape(self.vel_obs[-isnan(self.vel_obs)]))
