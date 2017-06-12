@@ -142,7 +142,7 @@ class kin_map():
         #for R ~ (3380, 3800, 3750)
         #baseline sensitivity measurements from: http://www2011.mpe.mpg.de/Highlights/FB2004/exp13_bender.pdf
         #if   band == 'H': sens, R = 21.5, 3800 #sens, R = 21.0, 3800
-        if   band == 'H': sens, R = 28.0, 2700 #sens, R = 21.0, 3800 #jwst
+        if   band == 'H': sens, R = 30.0, 2700 #sens, R = 21.0, 3800 #jwst
         #if   band == 'H': sens, R = 26.0, 3800 #sens, R = 21.0, 3800
         elif band == 'J': sens, R = 22.0, 3380
         elif band == 'K': sens, R = 20.5, 3750
@@ -400,6 +400,9 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir, mcrx_data, arc_per_pixe
     thdulist.writeto(outdir+'/'+kmap_name, clobber = True)
 
 
+
+
+
 if __name__ == '__main__':
     path_to_mcrx = './*/ifu/'
     mcrx_files = glob.glob(path_to_mcrx+'/mcrx.fits.gz')
@@ -409,7 +412,6 @@ if __name__ == '__main__':
     gal = os.path.abspath('.').split('/')[-1]
 
     print 'Working on %s'%gal
-
     for n, fl in enumerate(mcrx_files):
         abspaths.append(os.path.abspath(fl))
         sc_loc = abspaths[n].find('_a')
