@@ -390,7 +390,7 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir, mcrx_data, arc_per_pixe
         npix_new = ceil((kmap.cube_hdr['linear_fov']*cosmo.arcsec_per_kpc_proper(2).value)/arc_per_pixel/2.)*2.
         kmap.rebin_and_dim([npix_new, npix_new])
         #kmap.generate_blurred_map(kernel_size_arc = 0.6)#/2.35) #jwst
-        kmap.generate_blurred_map(kernel_size_arc = 0.045)#/2.35)
+        kmap.generate_blurred_map(kernel_size_arc = 0.05/2.35)
             
 
         kmap.generate_observed_kin_map()
