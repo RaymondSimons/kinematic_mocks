@@ -141,8 +141,8 @@ class kin_map():
         #of (J, H, K) = (22, 21.0, 20.5) AB magnitudes 
         #for R ~ (3380, 3800, 3750)
         #baseline sensitivity measurements from: http://www2011.mpe.mpg.de/Highlights/FB2004/exp13_bender.pdf
-        #if   band == 'H': sens, R = 21.5, 3800 #sens, R = 21.0, 3800
-        if   band == 'H': sens, R = 34.0, 2700 #sens, R = 21.0, 3800 #jwst
+        if   band == 'H': sens, R = 21.5, 3800 #sens, R = 21.0, 3800
+        #if   band == 'H': sens, R = 34.0, 2700 #sens, R = 21.0, 3800 #jwst
         #if   band == 'H': sens, R = 26.0, 3800 #sens, R = 21.0, 3800
         elif band == 'J': sens, R = 22.0, 3380
         elif band == 'K': sens, R = 20.5, 3750
@@ -307,7 +307,7 @@ class kin_map():
         return master_hdulist
 
 
-def run_kin_fits(abspath, scale, kmap_name, gal, outdir, mcrx_data, arc_per_pixel = 0.1):# testing #jwst
+def run_kin_fits(abspath, scale, kmap_name, gal, outdir, mcrx_data, arc_per_pixel = 0.2):# testing #jwst
 #def run_kin_fits(abspath, scale, kmap_name, gal, outdir, arc_per_pixel = 0.2):
 
     #setting constants
@@ -389,8 +389,8 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir, mcrx_data, arc_per_pixe
         print 'linear fov', kmap.cube_hdr['linear_fov']
         npix_new = ceil((kmap.cube_hdr['linear_fov']*cosmo.arcsec_per_kpc_proper(2).value)/arc_per_pixel/2.)*2.
         kmap.rebin_and_dim([npix_new, npix_new])
-        #kmap.generate_blurred_map(kernel_size_arc = 0.6)#/2.35) #jwst
-        kmap.generate_blurred_map(kernel_size_arc = 0.05/2.35)
+        kmap.generate_blurred_map(kernel_size_arc = 0.6/2.35) #jwst
+        #kmap.generate_blurred_map(kernel_size_arc = 0.05/2.35)
             
 
         kmap.generate_observed_kin_map()
@@ -419,8 +419,8 @@ if __name__ == '__main__':
         sc_loc = abspaths[n].find('_a')
         scales.append(float(abspaths[n][sc_loc+2:sc_loc+7]))
         #kmap_names.append('jwst_%s_a%.3f_kmap.fits'%(gal, scales[n]))
-        kmap_names.append('%s_a%.3f_kmap_jwst.fits'%(gal, scales[n]))#jwst
-        #kmap_names.append('%s_a%.3f_kmap.fits'%(gal, scales[n]))#jwst
+        #kmap_names.append('%s_a%.3f_kmap_jwst.fits'%(gal, scales[n]))#jwst
+        kmap_names.append('%s_a%.3f_kmap.fits'%(gal, scales[n]))#jwst
 
     #Where to write the kinematic map files
     outdir = '/nobackupp2/rcsimons/data/kin_maps/%s'%gal
