@@ -48,7 +48,7 @@ if __name__ == "__main__":
         f.write('#PBS -V\n')
 
         f.write('cd /nobackupp2/gfsnyder/VELA_sunrise/Runs/VELA_v2/%s\n'%gal)
-        f.write('python /u/rcsimons/scripts/kinematic_mocks/determine_censtar_v.py %s> /nobackupp2/rcsimons/momentum_measurements/qsub/out_err/%s_%s_recenter.out 2> /nobackupp2/rcsimons/momentum_measurements/qsub/out_err/%s_%s_recenter.err\n\n\n'%(dname, gal, aname, gal, aname))
+        f.write('python /u/rcsimons/scripts/kinematic_mocks/determine_censtar_v.py> /nobackupp2/rcsimons/momentum_measurements/qsub/out_err/%s_recenter.out 2> /nobackupp2/rcsimons/momentum_measurements/qsub/out_err/%s_recenter.err\n\n\n'%(gal, gal))
 
         f.close()
 
