@@ -72,7 +72,7 @@ def determine_center(snapfile, nir_cat):
     cen_vy = stars_vy[id_cen_star-1] - ds.arr(cen_star_voffset[1], 'km/s')
     cen_vz = stars_vz[id_cen_star-1] - ds.arr(cen_star_voffset[2], 'km/s')
 
-    return cen_x, cen_y, cen_z, cen_vx, cen_vy, cen_vz, cen_star_offset[0], cen_star_offset[1], cen_star_offset[2], cen_star_voffset[0], cen_star_voffset[1], cen_star_voffset[2] 
+    return cen_x.value, cen_y.value, cen_z.value, cen_vx.value, cen_vy.value, cen_vz.value, cen_star_offset[0], cen_star_offset[1], cen_star_offset[2], cen_star_voffset[0], cen_star_voffset[1], cen_star_voffset[2] 
 
 
 
