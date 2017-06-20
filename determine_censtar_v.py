@@ -123,12 +123,12 @@ if __name__ == "__main__":
     st = ['cen_x', 'cen_y', 'cen_z', 'cen_vx,' 'ven_vy', 'cen_vz', 'cen_star_offset_x', 'cen_star_offset_y', 'cen_star_offset_z', 'cen_star_voffset_x', 'cen_star_voffset_y', 'cen_star_voffset_z']
 
     for i in arange(len(new_snapfiles)):
-            print new_snapfiles
-            '''
-            return cen_x, cen_y, cen_z, cen_vx, ven_vy, cen_vz, cen_star_offset_x, cen_star_offset_y, cen_star_offset_z, cen_star_voffset_x, cen_star_voffset_y, cen_star_voffset_z  = determine_center(new_snapfiles[i], nir_cat)
+        print new_snapfiles[i]
+        '''
+        return cen_x, cen_y, cen_z, cen_vx, ven_vy, cen_vz, cen_star_offset_x, cen_star_offset_y, cen_star_offset_z, cen_star_voffset_x, cen_star_voffset_y, cen_star_voffset_z  = determine_center(new_snapfiles[i], nir_cat)
 
-            out_cat.write('%10s\t%10s\t\t\t\t'%(cen_x, cen_y, cen_z, cen_vx, ven_vy, cen_vz, cen_star_offset_x, cen_star_offset_y, cen_star_offset_z, cen_star_voffset_x, cen_star_voffset_y, cen_star_voffset_z))
-            '''
+        out_cat.write('%10s\t%10s\t\t\t\t'%(cen_x, cen_y, cen_z, cen_vx, ven_vy, cen_vz, cen_star_offset_x, cen_star_offset_y, cen_star_offset_z, cen_star_voffset_x, cen_star_voffset_y, cen_star_voffset_z))
+        '''
 
 
    #out_cat.close()
