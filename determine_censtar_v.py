@@ -34,10 +34,7 @@ def parse():
 
 def determine_center(snapfile, nir_cat):
     ds = yt.load(snapfile)
-    simname = simname
-    aname = aname
     snapfile = snapfile
-    fits_name = fits_name
 
     dd = ds.all_data()
     print 'Loading star velocities...'
