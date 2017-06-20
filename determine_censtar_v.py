@@ -115,16 +115,16 @@ if __name__ == "__main__":
     st = ['cen_x', 'cen_y', 'cen_z', 'cen_vx,' 'ven_vy', 'cen_vz', 'cen_star_offset_x', 'cen_star_offset_y', 'cen_star_offset_z', 'cen_star_voffset_x', 'cen_star_voffset_y', 'cen_star_voffset_z']
     out_cat = open('/nobackupp2/rcsimons/catalogs/recenter_%s.cat'%simname, 'w+')
     for l, s in enumerate(st):
-        out_cat.write('(%i)%s'%(l, s))
+        out_cat.write('(%i)%s\n'%(l, s))
 
     out_cat.write('\n\n\n\n')
     for i in arange(len(new_snapfiles)):
         print new_snapfiles[i]
-        if float(anames[i]) > 0.2:
+        if (float(anames[i]) > 0.4) & (float(anames[i]) < 0.45):
             in_nir = where(nir_cat[:,0] == aname)[0]
             nir_cat_new = nir_cat[in_nir][0]
             cen_x, cen_y, cen_z, cen_vx, cen_vy, cen_vz, cen_star_offset_x, cen_star_offset_y, cen_star_offset_z, cen_star_voffset_x, cen_star_voffset_y, cen_star_voffset_z  = determine_center(new_snapfiles[i], nir_cat_new)
-            out_cat.write('%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\n'%(anames[i], cen_x, cen_y, cen_z, cen_vx, cen_vy, cen_vz, cen_star_offset_x, cen_star_offset_y, cen_star_offset_z, cen_star_voffset_x, cen_star_voffset_y, cen_star_voffset_z))
+            out_cat.write('%.3f\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\n'%(anames[i], cen_x, cen_y, cen_z, cen_vx, cen_vy, cen_vz, cen_star_offset_x, cen_star_offset_y, cen_star_offset_z, cen_star_voffset_x, cen_star_voffset_y, cen_star_voffset_z))
 
 
 
