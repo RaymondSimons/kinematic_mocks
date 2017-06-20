@@ -117,7 +117,7 @@ if __name__ == "__main__":
     new_snapfiles = np.asarray(new_snapfiles)
 
     st = ['cen_x', 'cen_y', 'cen_z', 'cen_vx,' 'ven_vy', 'cen_vz', 'cen_star_offset_x', 'cen_star_offset_y', 'cen_star_offset_z', 'cen_star_voffset_x', 'cen_star_voffset_y', 'cen_star_voffset_z']
-    out_cat = f.open('/nobackupp2/rcsimons/catalogs/recenter%s'simname, 'w+')
+    out_cat = f.open('/nobackupp2/rcsimons/catalogs/recenter%s'%simname, 'w+')
     for l, s in enumerate(st):
         out_cat.write('(%i)%s'%(l, s))
 
