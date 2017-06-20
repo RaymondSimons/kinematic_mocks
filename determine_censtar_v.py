@@ -59,11 +59,10 @@ def determine_center(snapfile, nir_cat):
     print 'Recentering...'
     
     id_cen_star      = nir_cat[1].astype('int')
-    cold_cen         = nir_disc_cat[1:4].astype('float')
     cen_star_offset  = nir_cat[2:5].astype('float')
     cen_star_voffset = nir_cat[5:8].astype('float')
     L_disk_s = nir_cat[8:11].astype('float')
-    L_disk   = nir_disc_cat[7:10].astype('float')
+
 
     #Determine offset
     cen_x  = stars_x[id_cen_star-1]  - ds.arr(cen_star_offset[0], 'kpc')
