@@ -141,7 +141,7 @@ class kin_map():
         #of (J, H, K) = (22, 21.0, 20.5) AB magnitudes 
         #for R ~ (3380, 3800, 3750)
         #baseline sensitivity measurements from: http://www2011.mpe.mpg.de/Highlights/FB2004/exp13_bender.pdf
-        if   band == 'H': sens, R = 21.7, 3800 #sens, R = 21.0, 3800
+        if   band == 'H': sens, R = 22., 3800 #sens, R = 21.0, 3800
         #if   band == 'H': sens, R = 34.0, 2700 #sens, R = 21.0, 3800 #jwst
         #if   band == 'H': sens, R = 26.0, 3800 #sens, R = 21.0, 3800
         elif band == 'J': sens, R = 22.0, 3380
@@ -354,8 +354,8 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir, mcrx_data, arc_per_pixe
 
 
     #run kinematic fitting routine for all cameras
-    for cam_n in array([7, 18]):#arange(7,8): #testing
-    #for cam_n in arange(ncams):
+    #for cam_n in array([7, 18]):#arange(7,8): #testing
+    for cam_n in arange(ncams):
         np.random.seed()
         print '\n\n\n\t\t Running on (%s, %.3f, %i)'%(gal, scale, cam_n)
         camera = mcrx_data['CAMERA%i'%(cam_n)]   
@@ -389,7 +389,7 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir, mcrx_data, arc_per_pixe
         print 'linear fov', kmap.cube_hdr['linear_fov']
         npix_new = ceil((kmap.cube_hdr['linear_fov']*cosmo.arcsec_per_kpc_proper(2).value)/arc_per_pixel/2.)*2.
         kmap.rebin_and_dim([npix_new, npix_new])
-        kmap.generate_blurred_map(kernel_size_arc = 0.80/2.35) #jwst
+        kmap.generate_blurred_map(kernel_size_arc = 0.70/2.35) #jwst
         #kmap.generate_blurred_map(kernel_size_arc = 0.05/2.35)
             
 
