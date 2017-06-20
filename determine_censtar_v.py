@@ -122,7 +122,7 @@ if __name__ == "__main__":
         print new_snapfiles[i]
         if float(anames[i]) > 0.2:
 
-            in_nir = where(float(nir_cat[:,0].strip('a')) == 'a'+anames[i])
+            in_nir = where(nir_cat[:,0] == 'a'+anames[i])
             nir_cat_new = nir_cat[in_nir]
             cen_x, cen_y, cen_z, cen_vx, cen_vy, cen_vz, cen_star_offset_x, cen_star_offset_y, cen_star_offset_z, cen_star_voffset_x, cen_star_voffset_y, cen_star_voffset_z  = determine_center(new_snapfiles[i], nir_cat_new)
             out_cat.write('%5s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\n'%(anames[i], cen_x, cen_y, cen_z, cen_vx, cen_vy, cen_vz, cen_star_offset_x, cen_star_offset_y, cen_star_offset_z, cen_star_voffset_x, cen_star_voffset_y, cen_star_voffset_z))
