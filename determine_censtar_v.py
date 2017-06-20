@@ -32,7 +32,7 @@ def parse():
 
 
 
-def determine_center(snapfile, nir_cat):
+def determine_center(snapfile, nir_cat, aname, simname):
     ds = yt.load(snapfile)
     dd = ds.all_data()
     print 'Loading star velocities...'
@@ -54,6 +54,31 @@ def determine_center(snapfile, nir_cat):
     stars_x = dd['stars', 'particle_position_x'].in_units('kpc')
     stars_y = dd['stars', 'particle_position_y'].in_units('kpc')
     stars_z = dd['stars', 'particle_position_z'].in_units('kpc')
+
+
+
+    master_hdulist = []
+    prihdr = fits.Header()
+    prihdr['COMMENT'] = "Storing the recenter measurements in this file."
+    prihdr['simname'] = simname
+    prihdr['scale'] = aname
+    prihdr['snapfile'] = snapfile
+
+    prihdu = fits.PrimaryHDU(header=prihdr)    
+    master_hdulist.append(prihdu)
+
+    colhdr = fits.Header()
+
+    master_hdulist.append(fits.ImageHDU(data = np.stack((stars_x , stars_y , stars_z))       , header = colhdr, name = 'stars_xyz_position_box'))
+    master_hdulist.append(fits.ImageHDU(data = np.stack((stars_vx, stars_vy, stars_vz))    , header = colhdr, name = 'stars_xyz_velocity_box'))
+
+    fits_name = '/nobackupp2/rcsimons/recenter/%s_%s.fits'%(simname, str(int(float(aname)*1000)))
+    print '\tSaving to ' + fits_name
+    thdulist = fits.HDUList(master_hdulist)
+    thdulist.writeto(fits_name, clobber = True)
+
+
+
 
 
     print 'Recentering...'
@@ -122,9 +147,8 @@ if __name__ == "__main__":
         print new_snapfiles[i]
         if float(anames[i]) > 0.2:
             in_nir = where(nir_cat[:,0] == 'a'+anames[i])
-            print in_nir
             nir_cat_new = nir_cat[in_nir][0]
-            cen_x, cen_y, cen_z, cen_vx, cen_vy, cen_vz, cen_star_offset_x, cen_star_offset_y, cen_star_offset_z, cen_star_voffset_x, cen_star_voffset_y, cen_star_voffset_z  = determine_center(new_snapfiles[i], nir_cat_new)
+            cen_x, cen_y, cen_z, cen_vx, cen_vy, cen_vz, cen_star_offset_x, cen_star_offset_y, cen_star_offset_z, cen_star_voffset_x, cen_star_voffset_y, cen_star_voffset_z  = determine_center(new_snapfiles[i], nir_cat_new, anames[i], simname)
             out_cat.write('%5s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\n'%(anames[i], cen_x, cen_y, cen_z, cen_vx, cen_vy, cen_vz, cen_star_offset_x, cen_star_offset_y, cen_star_offset_z, cen_star_voffset_x, cen_star_voffset_y, cen_star_voffset_z))
 
 
