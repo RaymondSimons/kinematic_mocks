@@ -34,8 +34,6 @@ def parse():
 
 def determine_center(snapfile, nir_cat):
     ds = yt.load(snapfile)
-    snapfile = snapfile
-
     dd = ds.all_data()
     print 'Loading star velocities...'
 
@@ -105,10 +103,12 @@ if __name__ == "__main__":
 
 
     new_snapfiles = []
+    anames = []
     for sn in snaps:
         aname = sn.split('_')[-1].rstrip('.d')
         snap_dir = os.path.join(simname+'_'+aname+'_sunrise')
         newf = os.path.join(snap_dir,sn)
+        anames.append(aname.strip('a'))
         new_snapfiles.append(newf)
 
     new_snapfiles = np.asarray(new_snapfiles)
@@ -121,8 +121,9 @@ if __name__ == "__main__":
     out_cat.write('\n\n\n\n')
     for i in arange(len(new_snapfiles)):
         print new_snapfiles[i]
-        cen_x, cen_y, cen_z, cen_vx, ven_vy, cen_vz, cen_star_offset_x, cen_star_offset_y, cen_star_offset_z, cen_star_voffset_x, cen_star_voffset_y, cen_star_voffset_z  = determine_center(new_snapfiles[i], nir_cat)
-        out_cat.write('%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\n'%(cen_x, cen_y, cen_z, cen_vx, ven_vy, cen_vz, cen_star_offset_x, cen_star_offset_y, cen_star_offset_z, cen_star_voffset_x, cen_star_voffset_y, cen_star_voffset_z))
+        if float(anames[i]) > 0.2:
+            cen_x, cen_y, cen_z, cen_vx, ven_vy, cen_vz, cen_star_offset_x, cen_star_offset_y, cen_star_offset_z, cen_star_voffset_x, cen_star_voffset_y, cen_star_voffset_z  = determine_center(new_snapfiles[i], nir_cat)
+            out_cat.write('%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\t%10s\n'%(cen_x, cen_y, cen_z, cen_vx, ven_vy, cen_vz, cen_star_offset_x, cen_star_offset_y, cen_star_offset_z, cen_star_voffset_x, cen_star_voffset_y, cen_star_voffset_z))
 
 
 
