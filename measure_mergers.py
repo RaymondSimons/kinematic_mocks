@@ -616,12 +616,10 @@ if __name__ == "__main__":
     m_cat.write('\n\n\n\n')
 
     for s, scale in enumerate(scales):
-        fls = glob('/nobackupp2/rcsimons/mergers/catalogs/individual/%s_%i.cat'%(gal,scale))
         cat_s = np.loadtxt('/nobackupp2/rcsimons/mergers/catalogs/individual/%s_%i.cat'%(gal,scale), dtype = 'str', delimiter = 'notarealword')
         
         if size(cat_s) > 0: m_cat.write('%s\n'%cat_s)
-
-
+        else: os.system('rm /nobackupp2/rcsimons/mergers/catalogs/individual/%s_%i.cat'%(gal,scale))
 
     m_cat.close()
 
