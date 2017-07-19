@@ -580,28 +580,28 @@ if __name__ == "__main__":
                 'central mean x-velocity (km/s)-- simulation coordinates',
                 'central mean y-velocity (km/s)-- simulation coordinates',
                 'central mean z-velocity (km/s)-- simulation coordinates',
-                'merger 1 stellar mass (1.e10 Msun)',
-                'merger 1 mean radial location (kpc)-- galaxy coordinates',
-                'merger 1 std radial location  (kpc)-- galaxy coordinates',
-                'merger 1 mean jz/jcirc-- galaxy coordinates',
-                'merger 1 std jz/jcirc-- galaxy coordinates',
-                'merger 1 mean x-position (kpc)-- simulation coordinates',
-                'merger 1 mean y-position (kpc)-- simulation coordinates',
-                'merger 1 mean z-position (kpc)-- simulation coordinates',
-                'merger 1 mean x-velocity (km/s)-- simulation coordinates',
-                'merger 1 mean y-velocity (km/s)-- simulation coordinates',
-                'merger 1 mean z-velocity (km/s)-- simulation coordinates',
-                'merger 1 stellar mass (1.e10 Msun)',
-                'merger 2 mean radial location (kpc)-- galaxy coordinates',
-                'merger 2 std radial location  (kpc)-- galaxy coordinates',
-                'merger 2 mean jz/jcirc-- galaxy coordinates',
-                'merger 2 std jz/jcirc-- galaxy coordinates',
-                'merger 2 mean x-position (kpc)-- simulation coordinates',
-                'merger 2 mean y-position (kpc)-- simulation coordinates',
-                'merger 2 mean z-position (kpc)-- simulation coordinates',
-                'merger 2 mean x-velocity (km/s)-- simulation coordinates',
-                'merger 2 mean y-velocity (km/s)-- simulation coordinates',
-                'merger 2 mean z-velocity (km/s)-- simulation coordinates',
+                'satellite 1 stellar mass (1.e10 Msun)',
+                'satellite 1 mean radial location (kpc)-- galaxy coordinates',
+                'satellite 1 std radial location  (kpc)-- galaxy coordinates',
+                'satellite 1 mean jz/jcirc-- galaxy coordinates',
+                'satellite 1 std jz/jcirc-- galaxy coordinates',
+                'satellite 1 mean x-position (kpc)-- simulation coordinates',
+                'satellite 1 mean y-position (kpc)-- simulation coordinates',
+                'satellite 1 mean z-position (kpc)-- simulation coordinates',
+                'satellite 1 mean x-velocity (km/s)-- simulation coordinates',
+                'satellite 1 mean y-velocity (km/s)-- simulation coordinates',
+                'satellite 1 mean z-velocity (km/s)-- simulation coordinates',
+                'satellite 1 stellar mass (1.e10 Msun)',
+                'satellite 2 mean radial location (kpc)-- galaxy coordinates',
+                'satellite 2 std radial location  (kpc)-- galaxy coordinates',
+                'satellite 2 mean jz/jcirc-- galaxy coordinates',
+                'satellite 2 std jz/jcirc-- galaxy coordinates',
+                'satellite 2 mean x-position (kpc)-- simulation coordinates',
+                'satellite 2 mean y-position (kpc)-- simulation coordinates',
+                'satellite 2 mean z-position (kpc)-- simulation coordinates',
+                'satellite 2 mean x-velocity (km/s)-- simulation coordinates',
+                'satellite 2 mean y-velocity (km/s)-- simulation coordinates',
+                'satellite 2 mean z-velocity (km/s)-- simulation coordinates',
                 'etc.']
 
     for i in arange(len(cat_hdrs)):
@@ -613,7 +613,7 @@ if __name__ == "__main__":
 
     for s, scale in enumerate(scales):
         cat_s = np.loadtxt('/nobackupp2/rcsimons/mergers/catalogs/individual/%s_%i.cat'%(gal,scale), dtype = 'str', delimiter = 'notarealword')
-        m_cat.write('%s\n'%cat_s[0])
+        m_cat.write('%s\n'%cat_s)
 
 
 
