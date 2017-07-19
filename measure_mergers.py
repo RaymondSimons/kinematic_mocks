@@ -11,6 +11,8 @@ from mpl_toolkits.axes_grid.anchored_artists import AnchoredText
 from joblib import Parallel, delayed
 from astropy.io import fits
 from numpy import *
+import matplotlib.pyplot as plt
+
 
 plt.ioff()
 
@@ -559,11 +561,61 @@ if __name__ == "__main__":
 
     Parallel(n_jobs = 1, backend = 'threading')(delayed(run_measure_merger)(gal, scale) for scale in scales)
 
+    m_cat =  open('/nobackupp2/rcsimons/mergers/catalogs/%s.cat'%gal, 'w+')
+    cat_hdrs = ['scale',
+                'mean jz/jcirc of young stars in central galaxy-- galaxy coordinates',
+                'std jz/jcirc of young stars in central galaxy-- galaxy coordinates',
+                'mean radial location of young stars in central galaxy (kpc)-- galaxy coordinates',
+                'std radial location of young stars in central galaxy (kpc)-- galaxy coordinates',
+                'central stellar mass (1.e10 Msun)',
+                'central mean radial location (kpc)-- galaxy coordinates',
+                'central std radial location  (kpc)-- galaxy coordinates',
+                'central mean jz/jcirc-- galaxy coordinates',
+                'central std jz/jcirc-- galaxy coordinates',
+                'central mean x-position (kpc)-- simulation coordinates',
+                'central mean y-position (kpc)-- simulation coordinates',
+                'central mean z-position (kpc)-- simulation coordinates',
+                'central mean x-velocity (km/s)-- simulation coordinates',
+                'central mean y-velocity (km/s)-- simulation coordinates',
+                'central mean z-velocity (km/s)-- simulation coordinates',
+                'merger 1 stellar mass (1.e10 Msun)',
+                'merger 1 mean radial location (kpc)-- galaxy coordinates',
+                'merger 1 std radial location  (kpc)-- galaxy coordinates',
+                'merger 1 mean jz/jcirc-- galaxy coordinates',
+                'merger 1 std jz/jcirc-- galaxy coordinates',
+                'merger 1 mean x-position (kpc)-- simulation coordinates',
+                'merger 1 mean y-position (kpc)-- simulation coordinates',
+                'merger 1 mean z-position (kpc)-- simulation coordinates',
+                'merger 1 mean x-velocity (km/s)-- simulation coordinates',
+                'merger 1 mean y-velocity (km/s)-- simulation coordinates',
+                'merger 1 mean z-velocity (km/s)-- simulation coordinates',
+                'merger 1 stellar mass (1.e10 Msun)',
+                'merger 2 mean radial location (kpc)-- galaxy coordinates',
+                'merger 2 std radial location  (kpc)-- galaxy coordinates',
+                'merger 2 mean jz/jcirc-- galaxy coordinates',
+                'merger 2 std jz/jcirc-- galaxy coordinates',
+                'merger 2 mean x-position (kpc)-- simulation coordinates',
+                'merger 2 mean y-position (kpc)-- simulation coordinates',
+                'merger 2 mean z-position (kpc)-- simulation coordinates',
+                'merger 2 mean x-velocity (km/s)-- simulation coordinates',
+                'merger 2 mean y-velocity (km/s)-- simulation coordinates',
+                'merger 2 mean z-velocity (km/s)-- simulation coordinates',
+                'etc.']
+
+    for i in arange(len(cat_hdrs)):
+        if i < len(cat_hdrs):
+            m_cat.write('#(%i) %s\n'%(i, cat_hdrs[i]))
+        else:
+            m_cat.write('#(%i:...) %s\n\n\n\n'%(i, cat_hdrs[i]))
+    m_cat.write('\n\n\n\n')
+
+    for s, scale in enumerate(scales):
+        cat_s = np.loadtxt('', dtype = 'str', delimiter = 'notarealword')
+        m_cat.write('%s\n'%cat_s[0])
 
 
 
-
-
+    m_cat.close()
 
 
 
