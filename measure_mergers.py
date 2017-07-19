@@ -13,7 +13,7 @@ from astropy.io import fits
 from numpy import *
 import matplotlib.pyplot as plt
 import os, sys, argparse
-
+import random
 
 plt.ioff()
 
@@ -251,7 +251,7 @@ def run_measure_merger(gal, scale, make_cat = True, do_plot = True):
 
 
             young_mn = nan
-            seed(1)
+            random.seed(1)
             mom_fl = glob('/nobackupp2/rcsimons/momentum_measurements/%s/*%s*momentum.fits'%(gal, scale))
             rec_fl = glob('/nobackupp2/rcsimons/recenter/%s_%s.fits'%(gal, scale))
 
