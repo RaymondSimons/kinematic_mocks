@@ -123,7 +123,7 @@ def weighted_avg_and_std(values, weights):
     return (average, math.sqrt(variance))
 
 
-def find_thresh(mn, mx, npix):
+def find_thresh(mn, mx, npix, heatmap):
     nlabels = 0.
     segm_labels_prev = 0
     mr_prev2 = -99
@@ -327,7 +327,7 @@ def run_measure_merger(gal, scale, make_cat = True, do_plot = False):
                 #find_thresh
                 mn = 4
                 mx = 8
-                thresh, temp_heatmap = find_thresh(mn, mx, npix)
+                thresh, temp_heatmap = find_thresh(mn, mx, npix, heatmap)
 
 
 
@@ -342,7 +342,7 @@ def run_measure_merger(gal, scale, make_cat = True, do_plot = False):
                 if sum(srt_masses)/nansum(heatmap.data) < 0.6:
                     mn = 4
                     mx = 6.5
-                    thresh, temp_heatmap = find_thresh(mn, mx, npix)
+                    thresh, temp_heatmap = find_thresh(mn, mx, npix, heatmap)
                     segm = detect_sources(log10(temp_heatmap), threshold = thresh, npixels = npix)     
                     m = segm.array
                     masked_m = np.ma.masked_where(m == 0, m)
