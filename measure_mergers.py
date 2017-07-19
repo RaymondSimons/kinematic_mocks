@@ -223,7 +223,7 @@ def parse():
 #scales = arange(390, 550, 300)
 
 
-def run_measure_merger(gal, scale, make_cat = True, do_plot = True):    
+def run_measure_merger(gal, scale, make_cat = True, do_plot = False):    
     eps_min = -2
     eps_max = 2
     rr_min = 0.
