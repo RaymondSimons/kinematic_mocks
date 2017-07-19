@@ -230,7 +230,7 @@ def run_measure_merger(gal, scale, make_cat = True, do_plot = True):
     zz_max = 10
     bins_n = 200
 
-    rec_cat = np.loadtxt('/nobackupp2/rcsimons/catalogs/recenter/recenter_%s.cat'%gal, skiprows = 12)
+    rec_cat = np.loadtxt('/nobackupp2/rcsimons/catalogs/recenter_%s.cat'%gal, skiprows = 12)
     if make_cat: 
         m_cat = open('/nobackupp2/rcsimons/mergers/catalogs/individual/%s_%i.cat'%(gal,scale), 'w+')
 
