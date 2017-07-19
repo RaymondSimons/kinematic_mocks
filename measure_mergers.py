@@ -554,7 +554,7 @@ if __name__ == "__main__":
     args = parse()
     import yt
 
-    if args['gal'] is not None: gal = [args['gal']]
+    if args['gal'] is not None: gal = args['gal']
     else: print 'no galaxy entered'        
     print "Generating Sunrise Input for: ", gal
     scales = arange(200, 550, 10)
