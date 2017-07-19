@@ -560,8 +560,8 @@ if __name__ == "__main__":
     if args['gal'] is not None: gal = args['gal']
     else: print 'no galaxy entered'        
     print "Generating Sunrise Input for: ", gal
-    #scales = arange(200, 550, 10)
-    scales = arange(350, 550, 50)
+    scales = arange(200, 550, 10)
+    #scales = arange(350, 550, 50)
 
     Parallel(n_jobs = -1, backend = 'threading')(delayed(run_measure_merger)(gal, scale) for scale in scales)
 
