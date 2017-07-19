@@ -397,7 +397,8 @@ def run_measure_merger(gal, scale, make_cat = True, do_plot = False):
                                     merger_tag[id_list] = lll 
                                     rand_arr = np.random.randint(0, len(id_list), size = min(len(id_list), 1))
                                     id_list = id_list[rand_arr]
-                                    ax5.plot(r_stars[id_list], epsilon_stars[id_list], 'k.')
+                                    if do_plot:
+                                        ax5.plot(r_stars[id_list], epsilon_stars[id_list], 'k.')
 
                 fits_name = '/nobackupp2/rcsimons/mergers/fits/'+gal+'_a0.'+str(scale)+'_starsmergers.fits'
                 master_hdulist = write_fits(fits_name, mom_data, merger_tag, x_stars_box , y_stars_box , z_stars_box, vx_stars_box , vy_stars_box , vz_stars_box)
@@ -413,13 +414,6 @@ def run_measure_merger(gal, scale, make_cat = True, do_plot = False):
 
 
 
-                ax5.set_xlim(rr_min,  rr_max)
-                ax5.set_ylim(eps_min, eps_max)
-                ax5.minorticks_on()
-                ax5.tick_params(axis="both", which='major', color='black', labelcolor='black',size=5, width=1.5)
-                ax5.tick_params(axis="both", which='minor', color='black', labelcolor='black',size=3, width=1.5)
-                ax5.set_xticks([0,35, 70])
-                ax5.set_yticks([-2, -1, 0, 1, 2])
 
 
 
@@ -427,6 +421,13 @@ def run_measure_merger(gal, scale, make_cat = True, do_plot = False):
 
 
                 if do_plot:
+                    ax5.set_xlim(rr_min,  rr_max)
+                    ax5.set_ylim(eps_min, eps_max)
+                    ax5.minorticks_on()
+                    ax5.tick_params(axis="both", which='major', color='black', labelcolor='black',size=5, width=1.5)
+                    ax5.tick_params(axis="both", which='minor', color='black', labelcolor='black',size=3, width=1.5)
+                    ax5.set_xticks([0,35, 70])
+                    ax5.set_yticks([-2, -1, 0, 1, 2])
                     #ax2.imshow(masked_contours, cmap = 'Set1', origin = 'lower', vmin = 0., vmax = 8)
                     ax3.annotate(r"%2s%5s%2s%.1f"%('M$_{sum}$','/M$_{tot}$','=',sum(srt_masses)/nansum(heatmap.data)), (107, 55), color = 'black', fontweight = 'bold')
 
