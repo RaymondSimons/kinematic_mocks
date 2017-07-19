@@ -526,7 +526,9 @@ def run_measure_merger(gal, scale, make_cat = True, do_plot = False):
                 plt.close('all')
             if make_cat: 
                 #write young
+                ngals = len(where(-isnan(masses_arr))[0])
                 m_cat.write('%.3i\t\t'%scale)
+                m_cat.write('%i\t\t'%ngals)
                 m_cat.write('%.2f\t'%young_jz_mn)
                 m_cat.write('%.2f\t'%young_jz_std)
                 m_cat.write('%.2f\t'%young_rdi_mn)
@@ -558,13 +560,14 @@ if __name__ == "__main__":
     if args['gal'] is not None: gal = args['gal']
     else: print 'no galaxy entered'        
     print "Generating Sunrise Input for: ", gal
-    scales = arange(200, 550, 10)
+    #scales = arange(200, 550, 10)
     scales = arange(350, 550, 50)
 
     Parallel(n_jobs = -1, backend = 'threading')(delayed(run_measure_merger)(gal, scale) for scale in scales)
 
     m_cat =  open('/nobackupp2/rcsimons/mergers/catalogs/%s.cat'%gal, 'w+')
     cat_hdrs = ['scale',
+                'number of central/satellites',
                 'mean jz/jcirc of young stars in central galaxy-- galaxy coordinates',
                 'std jz/jcirc of young stars in central galaxy-- galaxy coordinates',
                 'mean radial location of young stars in central galaxy (kpc)-- galaxy coordinates',
