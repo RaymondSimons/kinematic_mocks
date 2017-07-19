@@ -14,7 +14,8 @@ from numpy import *
 import matplotlib.pyplot as plt
 import os, sys, argparse
 import random
-from plt import *
+import matplotlib.pyplot import *
+
 
 plt.ioff()
 
