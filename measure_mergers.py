@@ -14,6 +14,7 @@ from numpy import *
 import matplotlib.pyplot as plt
 import os, sys, argparse
 import random
+from plt import *
 
 plt.ioff()
 
@@ -288,7 +289,7 @@ def run_measure_merger(gal, scale, make_cat = True, do_plot = True):
 
                 if do_plot:
                     plt.close('all')
-                    fig  = figure(1, figsize = (25, 5))
+                    fig  = plt.figure(1, figsize = (25, 5))
                     clf()
 
 
