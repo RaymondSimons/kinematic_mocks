@@ -118,8 +118,8 @@ def weighted_avg_and_std(values, weights):
     """
     values = values[-isnan(weights)]
     weights = weights[-isnan(weights)]
-    average = numpy.average(values, weights=weights)
-    variance = numpy.average((values-average)**2, weights=weights)  # Fast and numerically precise
+    average = np.average(values, weights=weights)
+    variance = np.average((values-average)**2, weights=weights)  # Fast and numerically precise
     return (average, math.sqrt(variance))
 
 
