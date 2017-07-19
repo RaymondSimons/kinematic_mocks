@@ -561,6 +561,7 @@ if __name__ == "__main__":
     else: print 'no galaxy entered'        
     print "Generating Sunrise Input for: ", gal
     scales = arange(200, 550, 10)
+    scales = arange(450, 550, 10)
     #scales = arange(350, 550, 50)
 
     Parallel(n_jobs = -1, backend = 'threading')(delayed(run_measure_merger)(gal, scale) for scale in scales)
@@ -616,7 +617,8 @@ if __name__ == "__main__":
 
     for s, scale in enumerate(scales):
         cat_s = np.loadtxt('/nobackupp2/rcsimons/mergers/catalogs/individual/%s_%i.cat'%(gal,scale), dtype = 'str', delimiter = 'notarealword')
-        m_cat.write('%s\n'%cat_s)
+        if len(cat_s) > 0:
+            m_cat.write('%s\n'%cat_s)
 
 
 
