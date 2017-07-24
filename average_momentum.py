@@ -99,7 +99,7 @@ if __name__ == "__main__":
     gals = ['VELA%.2i'%(i+1) for i in np.arange(1)]
 
 
-    Parallel(n_jobs = -1, backend = 'threading')(delayed(run_momentum_figure)(gal, aname) for gal in gals)
+    Parallel(n_jobs = -1, backend = 'threading')(delayed(measure_average_momentum)(gal) for gal in gals)
 
 
 
