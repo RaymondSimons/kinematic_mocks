@@ -107,8 +107,8 @@ def measure_average_momentum(gal):
 
     sorted_zs = argsort(zs)
 
-    mean_jz = mean_jz[:,sorted_jz,:]
-    zs = zs[sorted_jz]
+    mean_jz = mean_jz[:,sorted_zs,:]
+    zs = zs[sorted_zs]
 
 
 
