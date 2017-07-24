@@ -36,7 +36,7 @@ if __name__ == "__main__":
 
     for gal in gals:
         print gal
-        fname = qsub_direct+'/mergers_%s.qsub'%gal
+        fname = qsub_direct+'/momentum_figures_%s.qsub'%gal
         fsh.write('qsub '+fname+'\n')
         f = open(fname, 'w+')
         f.write('#PBS -S /bin/bash\n')
