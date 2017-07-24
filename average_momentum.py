@@ -75,6 +75,8 @@ def write_fits(filename, nir_mstar_cat):
 
 def measure_average_momentum(gal):
     print gal
+    fits_filename = '/nobackupp2/rcsimons/average_momentum/%s'%gal
+
     '''
     sn_files = glob.glob('../momentum_measurements/%s/*momentum.fits'%(gal))
     anames = array([sn.split('_')[2] for sn in sn_files])
@@ -92,7 +94,6 @@ if __name__ == "__main__":
 
     #args = parse()
     #if args['gal'] is not None: gal = args['gal']
-    filename = '/nobackupp2/rcsimons/average_momentum/%s'%gal
 
     rad_min = 0
     rad_max = 50.
