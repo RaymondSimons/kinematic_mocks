@@ -38,7 +38,7 @@ def weighted_avg_and_std(values, weights):
 
 
 
-def write_fits(fits_filename, gal, zs mean_jz, smoothed_mn):
+def write_fits(fits_filename, gal, zs, mean_jz, smoothed_mn):
     print '\tGenerating fits for %s...'%fits_filename
     master_hdulist = []
     prihdr = fits.Header()
