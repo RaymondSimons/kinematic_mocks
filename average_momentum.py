@@ -115,9 +115,9 @@ def measure_average_momentum(gal):
     for i in arange(len(smoothed_mn)):
         print i, mean_jz.shape
         good = where(-isnan(mean_jz[i,:,0]))
-        smoothed_mn[i,:,0] = savgol_filter(mean_jz[i,good,0], window_length=wl, polyorder=po)
-        smoothed_mn[i,:,1] = savgol_filter(mean_jz[i,good,0]+mean_jz[i,good,1], window_length=wl, polyorder=po)
-        smoothed_mn[i,:,2] = savgol_filter(mean_jz[i,good,0]-mean_jz[i,good,1], window_length=wl, polyorder=po)
+        smoothed_mn[i,good,0] = savgol_filter(mean_jz[i,good,0], window_length=wl, polyorder=po)
+        smoothed_mn[i,good,1] = savgol_filter(mean_jz[i,good,0]+mean_jz[i,good,1], window_length=wl, polyorder=po)
+        smoothed_mn[i,good,2] = savgol_filter(mean_jz[i,good,0]-mean_jz[i,good,1], window_length=wl, polyorder=po)
 
     write_fits(fits_filename, gal, zs, mean_jz, smoothed_mn)
     return
