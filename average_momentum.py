@@ -38,8 +38,8 @@ def weighted_avg_and_std(values, weights):
 
 
 
-def write_fits(fits_filename, gal, mean_jz, smoothed_mn):
-    print '\tGenerating fits for %s...'%filename
+def write_fits(fits_filename, gal, zs mean_jz, smoothed_mn):
+    print '\tGenerating fits for %s...'%fits_filename
     master_hdulist = []
     prihdr = fits.Header()
     prihdr['COMMENT'] = "Storing average momentum measurements in this FITS file."
@@ -50,6 +50,7 @@ def write_fits(fits_filename, gal, mean_jz, smoothed_mn):
 
     colhdr = fits.Header()
 
+    master_hdulist.append(fits.ImageHDU(data = zs, header = colhdr, name = 'redshift'))
     master_hdulist.append(fits.ImageHDU(data = mean_jz, header = colhdr, name = 'mean_jz'))
     master_hdulist.append(fits.ImageHDU(data = smoothed_mn , header = colhdr, name = 'smoothed_mn'))
 
@@ -63,14 +64,12 @@ def write_fits(fits_filename, gal, mean_jz, smoothed_mn):
 def measure_average_momentum(gal):
     print gal
     fits_filename = '/nobackupp2/rcsimons/average_momentum/%s_avg_momentum.fits'%gal
-
     sn_files = glob.glob('/nobackupp2/rcsimons/momentum_measurements/%s/*momentum.fits'%(gal))
     anames = array([sn.split('_')[2] for sn in sn_files])
     anames = anames[0:40]
     zs = zeros(len(anames))*nan
     a_arr = zeros(len(anames))*nan 
     mean_jz = zeros((4, len(anames), 2))*nan
-    print len(anames)
     for a, aname in enumerate(anames):
         a_arr[a] = float(aname.strip('a'))
         zs[a] = 1./a_arr[a] - 1.
@@ -112,7 +111,7 @@ def measure_average_momentum(gal):
         smoothed_mn[i,:,1] = savgol_filter(mean_jz[i,:,0]+mean_jz[i,:,1], window_length=wl, polyorder=po)
         smoothed_mn[i,:,2] = savgol_filter(mean_jz[i,:,0]-mean_jz[i,:,1], window_length=wl, polyorder=po)
 
-    write_fits(fits_filename, gal, mean_jz, smoothed_mn)
+    write_fits(fits_filename, gal, zs, mean_jz, smoothed_mn)
     return
 
 
