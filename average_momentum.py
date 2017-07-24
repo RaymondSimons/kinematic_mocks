@@ -38,37 +38,24 @@ def weighted_avg_and_std(values, weights):
 
 
 
-def write_fits(filename, nir_mstar_cat):
+def write_fits(fits_filename, gal, mean_jz, smoothed_mn):
     print '\tGenerating fits for %s...'%filename
     master_hdulist = []
     prihdr = fits.Header()
     prihdr['COMMENT'] = "Storing average momentum measurements in this FITS file."
     prihdr['simname'] = gal
-    prihdr['scale'] = aname
 
     prihdu = fits.PrimaryHDU(header=prihdr)    
     master_hdulist.append(prihdu)
 
     colhdr = fits.Header()
 
-    master_hdulist.append(fits.ImageHDU(data = nir_mstar_cat                                                            , header = colhdr, name = 'nir_mstar_cat'))
-    master_hdulist.append(fits.ImageHDU(data = self.L_disk                                                              , header = colhdr, name = 'nir_net_momentum'))
-    master_hdulist.append(fits.ImageHDU(data = self.L_disk_s                                                            , header = colhdr, name = 'nir_net_momentum_s'))
-    master_hdulist.append(fits.ImageHDU(data = self.stars_id                                                            , header = colhdr, name = 'stars_id'))
-    master_hdulist.append(fits.ImageHDU(data = np.stack((self.stars_metallicity1 , self.stars_metallicity2))            , header = colhdr, name = 'stars_metallicity'))
-    master_hdulist.append(fits.ImageHDU(data = np.stack((self.stars_x_cen , self.stars_y_cen , self.stars_z_cen))       , header = colhdr, name = 'stars_xyz_position'))
-    master_hdulist.append(fits.ImageHDU(data = np.stack((self.stars_vx_cen , self.stars_vy_cen , self.stars_vz_cen))    , header = colhdr, name = 'stars_xyz_velocity'))
-    master_hdulist.append(fits.ImageHDU(data = np.stack((self.rr_stars, self.zz_stars))                                 , header = colhdr, name = 'stars_cylindrical_position'))
-    master_hdulist.append(fits.ImageHDU(data = np.stack((self.stars_jx_cen, self.stars_jy_cen, self.stars_jz_cen))      , header = colhdr, name = 'stars_xyz_momentum'))
-    master_hdulist.append(fits.ImageHDU(data = self.epsilon_stars                                                       , header = colhdr, name = 'stars_epsilon'))
-    master_hdulist.append(fits.ImageHDU(data = self.mass_profile                                                        , header = colhdr, name = 'mass_profile'))
-    master_hdulist.append(fits.ImageHDU(data = self.star_mass                                                           , header = colhdr, name = 'star_mass'))
-    master_hdulist.append(fits.ImageHDU(data = self.star_creation_time                                                  , header = colhdr, name = 'star_creation_time'))
-    master_hdulist.append(fits.ImageHDU(data = self.star_age                                                            , header = colhdr, name = 'star_age'))
+    master_hdulist.append(fits.ImageHDU(data = mean_jz, header = colhdr, name = 'mean_jz'))
+    master_hdulist.append(fits.ImageHDU(data = smoothed_mn , header = colhdr, name = 'smoothed_mn'))
 
-    print '\tSaving to ' + self.fits_name
+    print '\tSaving to ' + fits_filename
     thdulist = fits.HDUList(master_hdulist)
-    thdulist.writeto(fits_name, clobber = True)
+    thdulist.writeto(fits_filename, clobber = True)
 
     return
 
@@ -84,8 +71,49 @@ def measure_average_momentum(gal):
     a_arr = zeros(len(anames))*nan 
     mean_jz = zeros((4, len(anames), 2))*nan
 
+    for a, aname in enumerate(anames):
+        a_arr[a] = float(aname.strip('a'))
+        zs[a] = 1./a_arr[a] - 1.
+        print '\t', aname, zs[a]
+        data = pyfits.open('../momentum_measurements/%s/%s_%s_momentum.fits'%(gal, gal, aname))
+        epsilon_stars = data['STARS_EPSILON'].data
+        rad_stars = sqrt(sum(data['STARS_XYZ_POSITION'].data**2., axis = 0))
+        star_age=data['STAR_AGE'].data
+        star_mass=data['STAR_MASS'].data
+
+        gas_epsilon = sum(data['GAS_RAD_EPSILON'].data[:,0:100], axis = 1) #only summing up within 50 kpc
+        gas_epsilon_edges =  data['GAS_RAD_EPSILON_EDGES'].data[0]
+        min_eps = min(gas_epsilon_edges)
+        max_eps = max(gas_epsilon_edges)
+
+        mn, st = weighted_avg_and_std(arange(len(gas_epsilon)), gas_epsilon)
+        mn = mn*(max_eps - min_eps)/len(gas_epsilon) + min_eps
+        st = st*(max_eps - min_eps)/len(gas_epsilon)
+
+        mean_jz[0,a,0], mean_jz[0,a,1] = mn, st
 
 
+        good_young = where((rad_stars < rad_max) & (star_age < 20.e6) & isfinite(epsilon_stars))[0]
+        good_intermediate = where((rad_stars < rad_max) & (star_age > 1.e8) & (star_age < 3.e8) & isfinite(epsilon_stars))[0]
+        good_old = where((rad_stars < rad_max) & (star_age > 1.e9) & isfinite(epsilon_stars))[0]
+
+        for g, good in enumerate(array([good_young, good_intermediate, good_old])):
+            if len(good) > 0:
+                mn, st = weighted_avg_and_std(epsilon_stars[good], star_mass[good])
+                mean_jz[g+1,a,0], mean_jz[g+1,a,1] = mn, st
+
+    smoothed_mn = zeros((4, len(anames), 3))
+
+    wl = 5
+    po = 0
+    for i in arange(len(smoothed_mn)):
+        print i
+        smoothed_mn[i,:,0] = savgol_filter(mean_jz[i,:,0], window_length=wl, polyorder=po)
+        smoothed_mn[i,:,1] = savgol_filter(mean_jz[i,:,0]+mean_jz[i,:,1], window_length=wl, polyorder=po)
+        smoothed_mn[i,:,2] = savgol_filter(mean_jz[i,:,0]-mean_jz[i,:,1], window_length=wl, polyorder=po)
+
+    write_fits(fits_filename, gal, mean_jz, smoothed_mn)
+    return
 
 
 if __name__ == "__main__":
