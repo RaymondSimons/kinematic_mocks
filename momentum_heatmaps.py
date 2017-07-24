@@ -248,7 +248,7 @@ if __name__ == "__main__":
     anames = array([sn.split('_')[2] for sn in sn_files])
     anames = anames
 
-    Parallel(n_jobs = -1, backend = 'threading')(delayed(run_momentum_figure)(gal, aname) for aname in anames:)
+    Parallel(n_jobs = -1, backend = 'threading')(delayed(run_momentum_figure)(gal, aname) for aname in anames)
 
 
 
