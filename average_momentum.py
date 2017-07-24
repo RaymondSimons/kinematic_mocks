@@ -64,18 +64,18 @@ def measure_average_momentum(gal):
     print gal
     fits_filename = '/nobackupp2/rcsimons/average_momentum/%s_avg_momentum.fits'%gal
 
-    sn_files = glob.glob('../momentum_measurements/%s/*momentum.fits'%(gal))
+    sn_files = glob.glob('/nobackupp2/rcsimons/momentum_measurements/%s/*momentum.fits'%(gal))
     anames = array([sn.split('_')[2] for sn in sn_files])
     anames = anames[0:40]
     zs = zeros(len(anames))*nan
     a_arr = zeros(len(anames))*nan 
     mean_jz = zeros((4, len(anames), 2))*nan
-
+    print len(anames)
     for a, aname in enumerate(anames):
         a_arr[a] = float(aname.strip('a'))
         zs[a] = 1./a_arr[a] - 1.
         print '\t', aname, zs[a]
-        data = pyfits.open('../momentum_measurements/%s/%s_%s_momentum.fits'%(gal, gal, aname))
+        data = pyfits.open('/nobackupp2/rcsimons/momentum_measurements/%s/%s_%s_momentum.fits'%(gal, gal, aname))
         epsilon_stars = data['STARS_EPSILON'].data
         rad_stars = sqrt(sum(data['STARS_XYZ_POSITION'].data**2., axis = 0))
         star_age=data['STAR_AGE'].data
