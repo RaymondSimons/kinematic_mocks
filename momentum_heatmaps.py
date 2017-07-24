@@ -109,29 +109,17 @@ def parse():
     args = vars(parser.parse_args())
     return args
 
+    def run_momentum_figure(gal, aname):
+        print 'Making plot...'
+        eps_min = -2
+        eps_max = 2
+        rr_min = 0
+        rr_max = 30
+        zz_min = -10
+        zz_max = 10
+        rad_min = 0
+        rad_max = 100.
 
-
-if __name__ == "__main__":
-
-    print 'Making plot...'
-    eps_min = -2
-    eps_max = 2
-    rr_min = 0
-    rr_max = 30
-    zz_min = -10
-    zz_max = 10
-    rad_min = 0
-    rad_max = 100.
-
-    args = parse()
-    import yt
-    if args['gal'] is not None: gal = args['gal']
-
-    sn_files = glob.glob('../momentum_measurements/%s/*momentum.fits'%(gal))
-
-    anames = array([sn.split('_')[2] for sn in sn_files])
-    anames = anames
-    for aname in anames:
         print aname
         plt.ioff()
         plt.close('all')
@@ -246,6 +234,21 @@ if __name__ == "__main__":
 
         savefig('/nobackupp2/rcsimons/figures/momentum_figures/%s_%s_momentum_heat.png'%(gal, aname), dpi = 300)
         plt.close('all')
+        return
+
+
+if __name__ == "__main__":
+
+    args = parse()
+    import yt
+    if args['gal'] is not None: gal = args['gal']
+
+    sn_files = glob.glob('../momentum_measurements/%s/*momentum.fits'%(gal))
+
+    anames = array([sn.split('_')[2] for sn in sn_files])
+    anames = anames
+
+    Parallel(n_jobs = -1, backend = 'threading')(delayed(run_momentum_figure)(gal, aname) for aname in anames:)
 
 
 
