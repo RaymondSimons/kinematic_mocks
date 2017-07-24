@@ -243,7 +243,6 @@ def run_momentum_figure(gal, aname):
 if __name__ == "__main__":
 
     args = parse()
-    import yt
     if args['gal'] is not None: gal = args['gal']
 
     sn_files = glob.glob('/nobackupp2/rcsimons/momentum_measurements/%s/*momentum.fits'%(gal))
