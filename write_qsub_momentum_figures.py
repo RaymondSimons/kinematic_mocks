@@ -35,6 +35,7 @@ if __name__ == "__main__":
     gals = ['VELA%.2i'%(i+1) for i in np.arange(35)]
 
     for gal in gals:
+        print gal
         fname = qsub_direct+'/mergers_%s.qsub'%gal
         fsh.write('qsub '+fname+'\n')
         f = open(fname, 'w+')
