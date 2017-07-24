@@ -50,7 +50,7 @@ if __name__ == "__main__":
         f.write('#PBS -e ./out_err/%s_momentum_figures_pbs.err\n'%gal)
         f.write('#PBS -V\n')
 
-        f.write('python /u/rcsimons/scripts/kinematic_mocks/momentum_heatmap.py %s> /nobackupp2/rcsimons/momentum_measurements/qsub/out_err/%s_momentum_figures.out 2> /nobackupp2/rcsimons/momentum_measurements/qsub/out_err/%s_momentum_figures.err\n\n\n'%(gal, gal, gal))
+        f.write('python /u/rcsimons/scripts/kinematic_mocks/momentum_heatmaps.py %s> /nobackupp2/rcsimons/momentum_measurements/qsub/out_err/%s_momentum_figures.out 2> /nobackupp2/rcsimons/momentum_measurements/qsub/out_err/%s_momentum_figures.err\n\n\n'%(gal, gal, gal))
 
         f.close()
 
