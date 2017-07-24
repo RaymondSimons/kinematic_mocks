@@ -112,132 +112,132 @@ def parse():
     args = vars(parser.parse_args())
     return args
 
-    def run_momentum_figure(gal, aname):
-        print 'Making plot...'
-        eps_min = -2
-        eps_max = 2
-        rr_min = 0
-        rr_max = 30
-        zz_min = -10
-        zz_max = 10
-        rad_min = 0
-        rad_max = 100.
+def run_momentum_figure(gal, aname):
+    print 'Making plot...'
+    eps_min = -2
+    eps_max = 2
+    rr_min = 0
+    rr_max = 30
+    zz_min = -10
+    zz_max = 10
+    rad_min = 0
+    rad_max = 100.
 
-        print aname
-        plt.ioff()
-        plt.close('all')
-        fig = figure(figsize=(9,12))
+    print aname
+    plt.ioff()
+    plt.close('all')
+    fig = figure(figsize=(9,12))
 
-        a = pyfits.open('/nobackupp2/rcsimons/momentum_measurements/%s/%s_%s_momentum.fits'%(gal, gal, aname))
+    a = pyfits.open('/nobackupp2/rcsimons/momentum_measurements/%s/%s_%s_momentum.fits'%(gal, gal, aname))
 
-        epsilon_stars = a['STARS_EPSILON'].data
-        rr_stars=a['STARS_CYLINDRICAL_POSITION'].data[0]
-        zz_stars=a['STARS_CYLINDRICAL_POSITION'].data[1]
-        rad_stars = sqrt(sum(a['STARS_XYZ_POSITION'].data**2., axis = 0))
+    epsilon_stars = a['STARS_EPSILON'].data
+    rr_stars=a['STARS_CYLINDRICAL_POSITION'].data[0]
+    zz_stars=a['STARS_CYLINDRICAL_POSITION'].data[1]
+    rad_stars = sqrt(sum(a['STARS_XYZ_POSITION'].data**2., axis = 0))
 
-        star_age=a['STAR_AGE'].data
-        star_mass=a['STAR_MASS'].data
+    star_age=a['STAR_AGE'].data
+    star_mass=a['STAR_MASS'].data
 
-        ax = fig.add_subplot(431)
-        cg_str = "Cold Gas\n"+r"T < 10$^4$ K"
-        ax = make_cold_gas_heatmap(ax, a['GAS_ZZ_EPSILON'].data, a['GAS_ZZ_EPSILON_EDGES'].data[0], a['GAS_ZZ_EPSILON_EDGES'].data[1],
-                                     xlabel = '', ylabel = r'$\frac{j_z}{j_{circ}}$')
-        add_at(ax, cg_str, loc=4)
-
-
-        ax = fig.add_subplot(432)
-        ax = make_cold_gas_heatmap(ax, a['GAS_RR_EPSILON'].data, a['GAS_RR_EPSILON_EDGES'].data[0], a['GAS_RR_EPSILON_EDGES'].data[1],
-                                     xlabel = '', ylabel = '')
-        add_at(ax, cg_str, loc=4)
-
-        ax.set_title(gal+"\n"+r"$z=%.2f$"%(1./float(aname.strip('a'))-1.), fontweight = 'bold')
-
-        ax = fig.add_subplot(433)
-        ax = make_cold_gas_heatmap(ax, a['GAS_RAD_EPSILON'].data, a['GAS_RAD_EPSILON_EDGES'].data[0], a['GAS_RAD_EPSILON_EDGES'].data[1],
-                                     xlabel = '', ylabel = '')
-        add_at(ax, cg_str, loc=4)
+    ax = fig.add_subplot(431)
+    cg_str = "Cold Gas\n"+r"T < 10$^4$ K"
+    ax = make_cold_gas_heatmap(ax, a['GAS_ZZ_EPSILON'].data, a['GAS_ZZ_EPSILON_EDGES'].data[0], a['GAS_ZZ_EPSILON_EDGES'].data[1],
+                                 xlabel = '', ylabel = r'$\frac{j_z}{j_{circ}}$')
+    add_at(ax, cg_str, loc=4)
 
 
+    ax = fig.add_subplot(432)
+    ax = make_cold_gas_heatmap(ax, a['GAS_RR_EPSILON'].data, a['GAS_RR_EPSILON_EDGES'].data[0], a['GAS_RR_EPSILON_EDGES'].data[1],
+                                 xlabel = '', ylabel = '')
+    add_at(ax, cg_str, loc=4)
 
+    ax.set_title(gal+"\n"+r"$z=%.2f$"%(1./float(aname.strip('a'))-1.), fontweight = 'bold')
 
-
-        ax = fig.add_subplot(434)
-        good = where((abs(rr_stars) < rr_max) & (star_age < 20.e6))
-        ys_str = "Young stars\nage < 20 Myr"
-        ax = make_heatmap(ax, epsilon_stars, zz_stars, zz_min, zz_max, weights = star_mass, good = good, xlabel = '', ylabel = r'$\frac{j_z}{j_{circ}}$', 
-                     bins_n = 50, eps_min = eps_min, eps_max = eps_max)
-        add_at(ax, ys_str, loc=4)
-        
-
-        ax = fig.add_subplot(435)
-        good = where((abs(zz_stars) < zz_max) & (star_age < 20.e6) & isfinite(epsilon_stars))
-        ax = make_heatmap(ax, epsilon_stars, rr_stars, rr_min, rr_max, weights = star_mass, good = good, xlabel = '', ylabel = '', 
-                     bins_n = 50, eps_min = eps_min, eps_max = eps_max)
-        add_at(ax, ys_str, loc=4)
-
-
-        ax = fig.add_subplot(436)
-        good = where((rad_stars < rad_max) & (star_age < 20.e6) & isfinite(epsilon_stars))
-        ax = make_heatmap(ax, epsilon_stars, rad_stars, rad_min, rad_max, weights = star_mass, good = good, xlabel = '', ylabel = '', 
-                     bins_n = 50, eps_min = eps_min, eps_max = eps_max)
-        add_at(ax, ys_str, loc=4)
-
-
-
-        is_str = "Intermediate stars\n100 < age < 300 Myr"
-        ax = fig.add_subplot(437)
-        good = where((abs(rr_stars) < rr_max) & (star_age > 1.e8) & (star_age < 3.e8))
-        ax = make_heatmap(ax, epsilon_stars, zz_stars, zz_min, zz_max, weights = star_mass, good = good, xlabel = '', ylabel = r'$\frac{j_z}{j_{circ}}$', 
-                     bins_n = 50, eps_min = eps_min, eps_max = eps_max)
-        add_at(ax, is_str, loc=4)
-        
-
-        ax = fig.add_subplot(438)
-        good = where((abs(zz_stars) < zz_max) & (star_age > 1.e8) & (star_age < 3.e8) & isfinite(epsilon_stars))
-        ax = make_heatmap(ax, epsilon_stars, rr_stars, rr_min, rr_max, weights = star_mass, good = good, xlabel = '', ylabel = '', 
-                     bins_n = 50, eps_min = eps_min, eps_max = eps_max)
-        add_at(ax, is_str, loc=4)
-
-        ax = fig.add_subplot(439)
-        good = where((rad_stars < rad_max) & (star_age > 1.e8) & (star_age < 3.e8) & isfinite(epsilon_stars))
-        ax = make_heatmap(ax, epsilon_stars, rad_stars, rad_min, rad_max, weights = star_mass, good = good, xlabel = '', ylabel = '', 
-                     bins_n = 50, eps_min = eps_min, eps_max = eps_max)
-        add_at(ax, is_str, loc=4)
+    ax = fig.add_subplot(433)
+    ax = make_cold_gas_heatmap(ax, a['GAS_RAD_EPSILON'].data, a['GAS_RAD_EPSILON_EDGES'].data[0], a['GAS_RAD_EPSILON_EDGES'].data[1],
+                                 xlabel = '', ylabel = '')
+    add_at(ax, cg_str, loc=4)
 
 
 
 
-        ax = fig.add_subplot(4,3,10)
-        os_str = "Old stars\nage > 1 Gyr"
-        good = where((abs(rr_stars) < rr_max) & (star_age > 1.e9))
-        ax = make_heatmap(ax, epsilon_stars, zz_stars, zz_min, zz_max, weights = star_mass, good = good, xlabel = 'distance above disk\n(kpc)', ylabel = r'$\frac{j_z}{j_{circ}}$', 
-                     bins_n = 50, eps_min = eps_min, eps_max = eps_max)
-        add_at(ax, os_str, loc=4)
+
+    ax = fig.add_subplot(434)
+    good = where((abs(rr_stars) < rr_max) & (star_age < 20.e6))
+    ys_str = "Young stars\nage < 20 Myr"
+    ax = make_heatmap(ax, epsilon_stars, zz_stars, zz_min, zz_max, weights = star_mass, good = good, xlabel = '', ylabel = r'$\frac{j_z}{j_{circ}}$', 
+                 bins_n = 50, eps_min = eps_min, eps_max = eps_max)
+    add_at(ax, ys_str, loc=4)
+    
+
+    ax = fig.add_subplot(435)
+    good = where((abs(zz_stars) < zz_max) & (star_age < 20.e6) & isfinite(epsilon_stars))
+    ax = make_heatmap(ax, epsilon_stars, rr_stars, rr_min, rr_max, weights = star_mass, good = good, xlabel = '', ylabel = '', 
+                 bins_n = 50, eps_min = eps_min, eps_max = eps_max)
+    add_at(ax, ys_str, loc=4)
+
+
+    ax = fig.add_subplot(436)
+    good = where((rad_stars < rad_max) & (star_age < 20.e6) & isfinite(epsilon_stars))
+    ax = make_heatmap(ax, epsilon_stars, rad_stars, rad_min, rad_max, weights = star_mass, good = good, xlabel = '', ylabel = '', 
+                 bins_n = 50, eps_min = eps_min, eps_max = eps_max)
+    add_at(ax, ys_str, loc=4)
 
 
 
-        ax = fig.add_subplot(4,3,11)
-        good = where((abs(zz_stars) < zz_max) & (star_age > 1.e9) & isfinite(epsilon_stars))
-        ax = make_heatmap(ax, epsilon_stars, rr_stars, rr_min, rr_max, weights = star_mass, good = good, xlabel = 'distance along disk\n(kpc)', ylabel = '', 
-                     bins_n = 50, eps_min = eps_min, eps_max = eps_max)
+    is_str = "Intermediate stars\n100 < age < 300 Myr"
+    ax = fig.add_subplot(437)
+    good = where((abs(rr_stars) < rr_max) & (star_age > 1.e8) & (star_age < 3.e8))
+    ax = make_heatmap(ax, epsilon_stars, zz_stars, zz_min, zz_max, weights = star_mass, good = good, xlabel = '', ylabel = r'$\frac{j_z}{j_{circ}}$', 
+                 bins_n = 50, eps_min = eps_min, eps_max = eps_max)
+    add_at(ax, is_str, loc=4)
+    
 
-        add_at(ax, os_str, loc=4)
+    ax = fig.add_subplot(438)
+    good = where((abs(zz_stars) < zz_max) & (star_age > 1.e8) & (star_age < 3.e8) & isfinite(epsilon_stars))
+    ax = make_heatmap(ax, epsilon_stars, rr_stars, rr_min, rr_max, weights = star_mass, good = good, xlabel = '', ylabel = '', 
+                 bins_n = 50, eps_min = eps_min, eps_max = eps_max)
+    add_at(ax, is_str, loc=4)
 
-        ax = fig.add_subplot(4,3,12)
-        good = where((rad_stars < rad_max) & (star_age > 1.e9) & isfinite(epsilon_stars))
-        ax = make_heatmap(ax, epsilon_stars, rad_stars, rad_min, rad_max, weights = star_mass, good = good, xlabel = 'distance radial\n(kpc)', ylabel = '', 
-                     bins_n = 50, eps_min = eps_min, eps_max = eps_max)
-        add_at(ax, os_str, loc=4)
+    ax = fig.add_subplot(439)
+    good = where((rad_stars < rad_max) & (star_age > 1.e8) & (star_age < 3.e8) & isfinite(epsilon_stars))
+    ax = make_heatmap(ax, epsilon_stars, rad_stars, rad_min, rad_max, weights = star_mass, good = good, xlabel = '', ylabel = '', 
+                 bins_n = 50, eps_min = eps_min, eps_max = eps_max)
+    add_at(ax, is_str, loc=4)
 
 
 
-        fig.subplots_adjust(hspace = 0.0)
 
-        print 'Saving plot...'
+    ax = fig.add_subplot(4,3,10)
+    os_str = "Old stars\nage > 1 Gyr"
+    good = where((abs(rr_stars) < rr_max) & (star_age > 1.e9))
+    ax = make_heatmap(ax, epsilon_stars, zz_stars, zz_min, zz_max, weights = star_mass, good = good, xlabel = 'distance above disk\n(kpc)', ylabel = r'$\frac{j_z}{j_{circ}}$', 
+                 bins_n = 50, eps_min = eps_min, eps_max = eps_max)
+    add_at(ax, os_str, loc=4)
 
-        savefig('/nobackupp2/rcsimons/figures/momentum_figures/%s_%s_momentum_heat.png'%(gal, aname), dpi = 300)
-        plt.close('all')
-        return
+
+
+    ax = fig.add_subplot(4,3,11)
+    good = where((abs(zz_stars) < zz_max) & (star_age > 1.e9) & isfinite(epsilon_stars))
+    ax = make_heatmap(ax, epsilon_stars, rr_stars, rr_min, rr_max, weights = star_mass, good = good, xlabel = 'distance along disk\n(kpc)', ylabel = '', 
+                 bins_n = 50, eps_min = eps_min, eps_max = eps_max)
+
+    add_at(ax, os_str, loc=4)
+
+    ax = fig.add_subplot(4,3,12)
+    good = where((rad_stars < rad_max) & (star_age > 1.e9) & isfinite(epsilon_stars))
+    ax = make_heatmap(ax, epsilon_stars, rad_stars, rad_min, rad_max, weights = star_mass, good = good, xlabel = 'distance radial\n(kpc)', ylabel = '', 
+                 bins_n = 50, eps_min = eps_min, eps_max = eps_max)
+    add_at(ax, os_str, loc=4)
+
+
+
+    fig.subplots_adjust(hspace = 0.0)
+
+    print 'Saving plot...'
+
+    savefig('/nobackupp2/rcsimons/figures/momentum_figures/%s_%s_momentum_heat.png'%(gal, aname), dpi = 300)
+    plt.close('all')
+    return
 
 
 if __name__ == "__main__":
