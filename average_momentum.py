@@ -107,7 +107,7 @@ def measure_average_momentum(gal):
     wl = 5
     po = 0
     for i in arange(len(smoothed_mn)):
-        print i
+        print i, print mean_jz.shape
         smoothed_mn[i,:,0] = savgol_filter(mean_jz[i,:,0], window_length=wl, polyorder=po)
         smoothed_mn[i,:,1] = savgol_filter(mean_jz[i,:,0]+mean_jz[i,:,1], window_length=wl, polyorder=po)
         smoothed_mn[i,:,2] = savgol_filter(mean_jz[i,:,0]-mean_jz[i,:,1], window_length=wl, polyorder=po)
