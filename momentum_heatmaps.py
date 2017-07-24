@@ -18,7 +18,8 @@ from scipy.ndimage.measurements import label
 from scipy.optimize import curve_fit
 import glob
 import os, sys, argparse
-
+from matplotlib.pyplot import *
+from numpy import *
 
 
 
