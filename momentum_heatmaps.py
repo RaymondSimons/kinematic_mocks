@@ -246,7 +246,7 @@ if __name__ == "__main__":
     import yt
     if args['gal'] is not None: gal = args['gal']
 
-    sn_files = glob.glob('../momentum_measurements/%s/*momentum.fits'%(gal))
+    sn_files = glob.glob('/nobackupp2/rcsimons/momentum_measurements/%s/*momentum.fits'%(gal))
 
     anames = array([sn.split('_')[2] for sn in sn_files])
     anames = anames
