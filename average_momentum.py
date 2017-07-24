@@ -66,7 +66,7 @@ def measure_average_momentum(gal):
     fits_filename = '/nobackupp2/rcsimons/average_momentum/%s_avg_momentum.fits'%gal
     sn_files = glob.glob('/nobackupp2/rcsimons/momentum_measurements/%s/*momentum.fits'%(gal))
     anames = array([sn.split('_')[2] for sn in sn_files])
-    anames = anames[0:20]
+    anames = anames
     zs = zeros(len(anames))*nan
     a_arr = zeros(len(anames))*nan 
     mean_jz = zeros((4, len(anames), 2))*nan
