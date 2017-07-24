@@ -122,10 +122,10 @@ if __name__ == "__main__":
 
     rad_min = 0
     rad_max = 50.
-    gals = ['VELA%.2i'%(i+1) for i in np.arange(1)]
+    gals = ['VELA%.2i'%(i+1) for i in np.arange(35)]
 
 
-    Parallel(n_jobs = -1, backend = 'threading')(delayed(measure_average_momentum)(gal) for gal in gals)
+    Parallel(n_jobs = 5, backend = 'threading')(delayed(measure_average_momentum)(gal) for gal in gals)
 
 
 
