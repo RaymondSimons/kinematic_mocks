@@ -288,11 +288,8 @@ def run_measure_merger(gal, scale, make_cat = True, do_plot = True):
                                     good = None, xlabel = '', ylabel = '', bins_n = bins_n, 
                                     eps_min = eps_min, eps_max = eps_max, do_plot = do_plot)
 
-
-            npix = 20
             #find_thresh
-            mn = 4
-            mx = 8
+            npix, mn, mx = 20, 4, 8
             thresh, temp_heatmap = find_thresh(mn, mx, npix, heatmap)
 
 
@@ -327,10 +324,6 @@ def run_measure_merger(gal, scale, make_cat = True, do_plot = True):
                 ax3.minorticks_on()
                 ax3.tick_params(axis="both", which='major', color='black', labelcolor='black',size=5, width=1.5)
                 ax3.tick_params(axis="both", which='minor', color='black', labelcolor='black',size=3, width=1.5)
-
-
-
-
 
             radii = array([weighted_avg_and_std(values = where(segm.array == lbl)[1], weights = temp_heatmap[segm.array == lbl])[0] for lbl in arange(1, segm.nlabels+1)])
             jz = array([weighted_avg_and_std(values = where(segm.array == lbl)[0], weights = temp_heatmap[segm.array == lbl])[0] for lbl in arange(1, segm.nlabels+1)])
@@ -519,22 +512,9 @@ def run_measure_merger(gal, scale, make_cat = True, do_plot = True):
 
     if make_cat: m_cat.close()
 
-
-if __name__ == "__main__":
-
-    args = parse()
-    import yt
-
-    if args['gal'] is not None: gal = args['gal']
-    else: print 'no galaxy entered'        
-    print "Generating Sunrise Input for: ", gal
-    scales = arange(200, 550, 10)
-    #scales = arange(450, 550, 10)
-    #scales = arange(350, 550, 50)
-
-    Parallel(n_jobs = -1, backend = 'threading')(delayed(run_measure_merger)(gal, scale) for scale in scales)
-
-    m_cat =  open('/nobackupp2/rcsimons/mergers/catalogs/%s.cat'%gal, 'w+')
+def make_main_cat(gal):
+    cat_name = '/nobackupp2/rcsimons/mergers/catalogs/%s.cat'%gal
+    m_cat =  open(cat_name, 'w+')
     cat_hdrs = ['scale',
                 'number of central/satellites',
                 'mean jz/jcirc of young stars in central galaxy-- galaxy coordinates',
@@ -585,13 +565,27 @@ if __name__ == "__main__":
 
     for s, scale in enumerate(scales):
         cat_s = np.loadtxt('/nobackupp2/rcsimons/mergers/catalogs/individual/%s_%i.cat'%(gal,scale), dtype = 'str', delimiter = 'notarealword')
-        
         if size(cat_s) > 0: m_cat.write('%s\n'%cat_s)
         else: os.system('rm /nobackupp2/rcsimons/mergers/catalogs/individual/%s_%i.cat'%(gal,scale))
-
     m_cat.close()
+    return
 
 
+
+if __name__ == "__main__":
+    import yt
+    args = parse()
+    if args['gal'] is not None: gal = args['gal']
+    else: print 'no galaxy entered'        
+    print "Generating Sunrise Input for: ", gal
+
+    scales = arange(200, 550, 10)
+
+    fig = plt.figure(1)
+    fig.savefig('/nobackupp2/rcsimons/mergers/figures/merger_maps/test.png')
+
+    #Parallel(n_jobs = -1, backend = 'threading')(delayed(run_measure_merger)(gal, scale) for scale in scales)
+    #make_main_cat(gal)
 
 
 
