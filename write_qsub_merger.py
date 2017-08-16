@@ -49,7 +49,7 @@ if __name__ == "__main__":
         f.write('#PBS -e ./out_err/%s_mergers_pbs.err\n'%gal)
         f.write('#PBS -V\n')
 
-        f.write('python /u/rcsimons/scripts/kinematic_mocks/measure_mergers.py %s> /nobackupp2/rcsimons/momentum_measurements/qsub/out_err/%s_mergers.out 2> /nobackupp2/rcsimons/momentum_measurements/qsub/out_err/%s_mergers.err\n\n\n'%(gal, gal, gal))
+        f.write('python /u/rcsimons/scripts/kinematic_mocks/measure_mergers_20kpc.py %s> /nobackupp2/rcsimons/momentum_measurements/qsub/out_err/%s_mergers.out 2> /nobackupp2/rcsimons/momentum_measurements/qsub/out_err/%s_mergers.err\n\n\n'%(gal, gal, gal))
 
         f.close()
 
