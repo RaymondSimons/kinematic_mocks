@@ -595,7 +595,7 @@ if __name__ == "__main__":
     else: print 'no galaxy entered'        
     print "Generating Sunrise Input for: ", gal
 
-    scales = arange(200, 550, 10)
+    scales = arange(220, 550, 10)
 
     Parallel(n_jobs = -1, backend = 'threading')(delayed(run_measure_merger)(gal, scale) for scale in scales)
     make_main_cat(gal)
