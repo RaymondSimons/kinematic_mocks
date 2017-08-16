@@ -580,7 +580,8 @@ if __name__ == "__main__":
     print "Generating Sunrise Input for: ", gal
 
     scales = arange(200, 550, 10)
-
+    plt.ioff()
+    plt.close('all')
     fig = plt.figure(1)
     fig.savefig('/nobackupp2/rcsimons/mergers/figures/merger_maps/test.png')
 
