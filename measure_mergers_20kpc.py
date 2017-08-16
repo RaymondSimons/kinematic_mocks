@@ -186,44 +186,12 @@ def parse():
 
     parser.add_argument('gal', nargs='?', default=None, help='Galaxy to be analyzed')
 
-    #parser.add_argument('-s', '--snap_base', default='10MpcBox_csf512_',
-    #                    help='Base of the snapshots file names.') 
-
-    #parser.add_argument('-d', '--distance', default=100000, type=float,
-    #                    help='Distance between cameras and the center of the galaxy (in [kpc]).')
-
-    #parser.add_argument('--no_export',action='store_true',
-    #                    help='Do not export data to fits for Sunrise.') 
-
     args = vars(parser.parse_args())
     return args
 
 
 
-
-#gals = ['VELA01', 'VELA06', 'VELA07', 'VELA11']
-
-#gals = ['VELA20','VELA21'] 
-
-#gals = ['VELA24', 'VELA27', 'VELA28']
-
-#gals = ['VELA29', 'VELA33', 'VELA34']
-#gals = ['VELA34']
-
-#gals = ['VELA01', 'VELA06', 'VELA07', 'VELA11', 'VELA15', 'VELA17', 'VELA20', \
-#       'VELA21', 'VELA24', 'VELA27', 'VELA28', 'VELA29', 'VELA33', 'VELA34']
-
-#gals = ['VELA21']
-#gals = ['VELA01', 'VELA07', 'VELA11']
-#gals = ['VELA01']
-
-
-
-#scales = arange(200, 550, 10)
-#scales = arange(390, 550, 300)
-
-
-def run_measure_merger(gal, scale, make_cat = True, do_plot = False):    
+def run_measure_merger(gal, scale, make_cat = True, do_plot = True):    
     eps_min = -2.5
     eps_max = 2.5
     rr_min = 0.
