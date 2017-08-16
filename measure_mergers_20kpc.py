@@ -79,7 +79,7 @@ def make_heatmap(ax, epsilon, zz_gas, min_z, max_z, weights = None, good = None,
         X = arange(heatmap.data.shape[0])
         Y = arange(heatmap.data.shape[1])
         Z = log10(heatmap.data)
-        ax.contour(X, Y, Z, 8, colors = 'grey')
+        ax.contour(X, Y, Z, 3, colors = 'grey')
 
 
 
@@ -195,10 +195,10 @@ def run_measure_merger(gal, scale, make_cat = True, do_plot = True):
     eps_min = -2.5
     eps_max = 2.5
     rr_min = 0.
-    rr_max = 20
+    rr_max = 35
     zz_min = -10
     zz_max = 10
-    bins_n = 200
+    bins_n = 500
 
     rec_cat = np.loadtxt('/nobackupp2/rcsimons/catalogs/recenter_%s.cat'%gal, skiprows = 12)
     if make_cat: 
@@ -346,7 +346,7 @@ def run_measure_merger(gal, scale, make_cat = True, do_plot = True):
 
             #plot the correct stars
             merger_tag = np.empty(len(r_stars))
-
+            '''
             for i in arange(200-1):
                 for j in arange(200-1):
                     for lll in srt_labels:
@@ -372,7 +372,7 @@ def run_measure_merger(gal, scale, make_cat = True, do_plot = True):
             mn_box_vel[0:len(masses),2] = array([weighted_avg_and_std(values = vz_stars_box[merger_tag == lbl], weights = star_mass[merger_tag == lbl])[0] for lbl in arange(1, segm.nlabels+1)])
 
 
-
+            '''
 
 
 
@@ -380,6 +380,7 @@ def run_measure_merger(gal, scale, make_cat = True, do_plot = True):
 
 
             if do_plot:
+                '''
                 ax5.set_xlim(rr_min,  rr_max)
                 ax5.set_ylim(eps_min, eps_max)
                 ax5.minorticks_on()
@@ -387,36 +388,51 @@ def run_measure_merger(gal, scale, make_cat = True, do_plot = True):
                 ax5.tick_params(axis="both", which='minor', color='black', labelcolor='black',size=3, width=1.5)
                 ax5.set_xticks([0,35, 70])
                 ax5.set_yticks([-2, -1, 0, 1, 2])
-                #ax2.imshow(masked_contours, cmap = 'Set1', origin = 'lower', vmin = 0., vmax = 8)
-                ax3.annotate(r"%2s%5s%2s%.1f"%('M$_{sum}$','/M$_{tot}$','=',sum(srt_masses)/nansum(heatmap.data)), (107, 55), color = 'black', fontweight = 'bold')
-
+                '''
+                x_st = 280
+                ax3.annotate(r"%2s%5s%2s%.1f"%('M$_{sum}$','/M$_{tot}$','=',sum(srt_masses)/nansum(heatmap.data)), (x_st-7, 105), color = 'black', fontweight = 'bold')
                 if len(masses) > 1:
                     mass_ratio = srt_masses[0]/srt_masses[1]
-                    ax3.annotate("%4s%6s%5s"%('m1','',''), (110, 40),  color = cm.Set1(srt_labels[0]/8.), fontweight = 'bold')
-                    ax3.annotate("%4s%6s%5s"%('','/m2',''), (110, 40), color = cm.Set1(srt_labels[1]/8.), fontweight = 'bold')
-                    ax3.annotate("%4s%6s%5s%.1f"%('','','=',mass_ratio), (110, 40), color = 'black', fontweight = 'bold')
+
+                    ax3.annotate("%4s%6s%5s"%('m1','',''), (x_st, 75),  color = cm.Set1(srt_labels[0]/8.), fontweight = 'bold')
+                    ax3.annotate("%4s%6s%5s"%('','/m2',''), (x_st, 75), color = cm.Set1(srt_labels[1]/8.), fontweight = 'bold')
+                    ax3.annotate("%4s%6s%5s%.1f"%('','','=',mass_ratio), (x_st, 75), color = 'black', fontweight = 'bold')
                     ax3.errorbar(srt_radii[0], srt_jz[0], xerr = srt_radii_std[0], yerr = srt_jz_std[0],  fmt = 'o', color = 'black')
                     ax3.errorbar(srt_radii[1], srt_jz[1],  xerr = srt_radii_std[1], yerr = srt_jz_std[1],  fmt = 'o', color = 'black')
 
                     if len(masses) > 2:
                         mass_ratio = srt_masses[0]/srt_masses[2]
-                        ax3.annotate("%4s%6s%5s"%('m1','',''), (110, 25),  color = cm.Set1(srt_labels[0]/8.), fontweight = 'bold')
-                        ax3.annotate("%4s%6s%5s"%('','/m3',''), (110, 25), color = cm.Set1(srt_labels[2]/8.), fontweight = 'bold')
-                        ax3.annotate("%4s%6s%5s%.1f"%('','','=',mass_ratio), (110, 25), color = 'black', fontweight = 'bold')
+                        ax3.annotate("%4s%6s%5s"%('m1','',''), (x_st, 45),  color = cm.Set1(srt_labels[0]/8.), fontweight = 'bold')
+                        ax3.annotate("%4s%6s%5s"%('','/m3',''), (x_st, 45), color = cm.Set1(srt_labels[2]/8.), fontweight = 'bold')
+                        ax3.annotate("%4s%6s%5s%.1f"%('','','=',mass_ratio), (x_st, 45), color = 'black', fontweight = 'bold')
                         ax3.errorbar(srt_radii[2], srt_jz[2], xerr = srt_radii_std[2], yerr = srt_jz_std[2],  fmt = 'o', color = 'black')
 
                         if len(masses) > 3:
                             mass_ratio = srt_masses[0]/srt_masses[3]
-                            ax3.annotate("%4s%6s%5s"%('m1','',''), (110, 10),  color = cm.Set1(srt_labels[0]/8.), fontweight = 'bold')
-                            ax3.annotate("%4s%6s%5s"%('','/m4',''), (110, 10), color = cm.Set1(srt_labels[3]/8.), fontweight = 'bold')
-                            ax3.annotate("%4s%6s%5s%.1f"%('','','=',mass_ratio), (110, 10), color = 'black', fontweight = 'bold')
+                            ax3.annotate("%4s%6s%5s"%('m1','',''), (x_st, 15),  color = cm.Set1(srt_labels[0]/8.), fontweight = 'bold')
+                            ax3.annotate("%4s%6s%5s"%('','/m4',''), (x_st, 15), color = cm.Set1(srt_labels[3]/8.), fontweight = 'bold')
+                            ax3.annotate("%4s%6s%5s%.1f"%('','','=',mass_ratio), (x_st, 15), color = 'black', fontweight = 'bold')
                             ax3.errorbar(srt_radii[3], srt_jz[3], xerr = srt_radii_std[3], yerr = srt_jz_std[3],  fmt = 'o', color = 'black')
 
-            masses_arr[0:len(masses)] = srt_masses
-            radii_arr[0:len(masses)] = srt_radii*(rr_max - rr_min)/temp_heatmap.shape[1] +rr_min 
-            jz_arr[0:len(masses)] = srt_jz*(eps_max - eps_min)/temp_heatmap.shape[1] +eps_min 
-            radii_std_arr[0:len(masses)] = srt_radii_std*(rr_max - rr_min)/temp_heatmap.shape[1]
-            jz_std_arr[0:len(masses)] = srt_jz_std*(eps_max - eps_min)/temp_heatmap.shape[1]
+
+
+
+            #masses_arr[0:len(masses)] = srt_masses
+            #radii_arr[0:len(masses)] = srt_radii*(rr_max - rr_min)/temp_heatmap.shape[1] +rr_min 
+            #jz_arr[0:len(masses)] = srt_jz*(eps_max - eps_min)/temp_heatmap.shape[1] +eps_min 
+            #radii_std_arr[0:len(masses)] = srt_radii_std*(rr_max - rr_min)/temp_heatmap.shape[1]
+            #jz_std_arr[0:len(masses)] = srt_jz_std*(eps_max - eps_min)/temp_heatmap.shape[1]
+
+            sats_write_number = min(max_nmergers,len(masses))
+
+
+            masses_arr[0:sats_write_number] = srt_masses[0:sats_write_number]
+            radii_arr[0:sats_write_number] = srt_radii[0:sats_write_number]*(rr_max - rr_min)/temp_heatmap.shape[1] +rr_min 
+            jz_arr[0:sats_write_number] = srt_jz[0:sats_write_number]*(eps_max - eps_min)/temp_heatmap.shape[1] +eps_min 
+            radii_std_arr[0:sats_write_number] = srt_radii_std[0:sats_write_number]*(rr_max - rr_min)/temp_heatmap.shape[1]
+            jz_std_arr[0:sats_write_number] = srt_jz_std[0:sats_write_number]*(eps_max - eps_min)/temp_heatmap.shape[1]
+
+
 
             
             #m = segm.array
@@ -437,7 +453,7 @@ def run_measure_merger(gal, scale, make_cat = True, do_plot = True):
                 ax4, heatmap_young   = make_heatmap(ax4, epsilon_stars, r_stars, min_z = rr_min, max_z = rr_max, weights = star_mass, 
                                     good = where(star_age < 20), xlabel = '', ylabel = '', bins_n = bins_n, 
                                     eps_min = eps_min, eps_max = eps_max, segm = segm, srt_labels = srt_labels)
-                ax4.annotate("young stars (<20 Myr)\nof m1", (80, 170), color = 'blue', fontweight = 'bold')
+                ax4.annotate("young stars (<20 Myr)\nof m1", (200, 450), color = 'blue', fontweight = 'bold')
 
             else:
                 heatmap_young   = make_heatmap(None, epsilon_stars, r_stars, min_z = rr_min, max_z = rr_max, weights = star_mass, 
@@ -580,13 +596,9 @@ if __name__ == "__main__":
     print "Generating Sunrise Input for: ", gal
 
     scales = arange(200, 550, 10)
-    plt.ioff()
-    plt.close('all')
-    fig = plt.figure(1)
-    fig.savefig('/nobackupp2/rcsimons/mergers/figures/merger_maps/test.png')
 
-    #Parallel(n_jobs = -1, backend = 'threading')(delayed(run_measure_merger)(gal, scale) for scale in scales)
-    #make_main_cat(gal)
+    Parallel(n_jobs = -1, backend = 'threading')(delayed(run_measure_merger)(gal, scale) for scale in scales)
+    make_main_cat(gal)
 
 
 
