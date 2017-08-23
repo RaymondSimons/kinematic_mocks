@@ -316,91 +316,95 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir, arc_per_pixel = 0.2):# 
 
     #reading in data
     #print '\tReading in mcrx file for (%s, %.3f)'%(gal, scale)
-    mcrx_data = fits.open(abspath) #testing
+    print '\n\n\n\t\t Opening mcrx.fits file for on (%s, %.3f, %i)'%(gal, scale, cam_n)
 
-    #reading number of cameras
-    ncams = mcrx_data['MCRX'].header['N_CAMERA']
+    try:
+        mcrx_data = fits.open(abspath) #testing
 
-
-    #generate empty fits file
-    master_hdulist = []
-
-    #generate primary header for fits file
-    prihdr = fits.Header()
-    prihdr['COMMENT'] = "Storing the kinematic maps in this FITS file."
-    prihdr['name'] = gal
-    prihdr['filename'] = kmap_name
-    prihdr['ncams'] = ncams
-
-    prihdr['z'] = (round(1./scale - 1,4), 'redshift (w/ %s)'%cosmo.name)
-    prihdr['ascale'] = (scale, 'scale factor')
-
-    prihdu = fits.PrimaryHDU(header=prihdr)    
-    master_hdulist.append(prihdu)
+        #reading number of cameras
+        ncams = mcrx_data['MCRX'].header['N_CAMERA']
 
 
-    #reading in lambda and velocity arrays
-    lam = mcrx_data['LAMBDA'].data['lambda']
-    vel_pixel = c_kms*(lam[1]-lam[0])/lam[0]
-    vel_arr = vel_pixel * arange(len(lam))
-    loc_Ha = argmin(abs(lam-Ha_m))
-    vel_arr-=vel_arr[loc_Ha]
+        #generate empty fits file
+        master_hdulist = []
 
-    #add the velocity and lambda arrays in the first header
-    cols = fits.ColDefs([fits.Column(name='velocity', format = 'D',array=vel_arr, unit = 'km/s'), 
-                         fits.Column(name='lambda', format = 'D', array=lam, unit = 'm')])
-    colhdr = fits.Header()
-    master_hdulist.append(fits.BinTableHDU.from_columns(cols, name = 'props', header = colhdr))
+        #generate primary header for fits file
+        prihdr = fits.Header()
+        prihdr['COMMENT'] = "Storing the kinematic maps in this FITS file."
+        prihdr['name'] = gal
+        prihdr['filename'] = kmap_name
+        prihdr['ncams'] = ncams
 
+        prihdr['z'] = (round(1./scale - 1,4), 'redshift (w/ %s)'%cosmo.name)
+        prihdr['ascale'] = (scale, 'scale factor')
 
-    #run kinematic fitting routine for all cameras
-    #for cam_n in array([7, 18]):#arange(7,8): #testing
-    for cam_n in arange(ncams):
-        np.random.seed()
-        print '\n\n\n\t\t Running on (%s, %.3f, %i)'%(gal, scale, cam_n)
-        camera = mcrx_data['CAMERA%i'%(cam_n)]   
-        camera_params =  mcrx_data['CAMERA%i-PARAMETERS'%(cam_n)].header
-        if True:
-            camera.header['z'] = (round(1./scale - 1,4), 'redshift (w/ %s)'%cosmo.name)
-            camera.header['ascale'] = (scale, 'scale factor')
-            camera.header['camera'] = (cam_n, 'camera')
+        prihdu = fits.PrimaryHDU(header=prihdr)    
+        master_hdulist.append(prihdu)
 
 
-            camera.header['cameradist'] = (camera_params['cameradist'], '[kpc] Distance from origin to camera')
-            camera.header['theta'] = (camera_params['theta'], '[rad] Angular coordinate theta of camera positi')
-            camera.header['phi']   = (camera_params['phi'], '[rad] Angular coordinate phi of camera position')
+        #reading in lambda and velocity arrays
+        lam = mcrx_data['LAMBDA'].data['lambda']
+        vel_pixel = c_kms*(lam[1]-lam[0])/lam[0]
+        vel_arr = vel_pixel * arange(len(lam))
+        loc_Ha = argmin(abs(lam-Ha_m))
+        vel_arr-=vel_arr[loc_Ha]
 
-            camera.header['CAMPOSX'] = (camera_params['CAMPOSX'], '[kpc] X position of camera        ')
-            camera.header['CAMPOSY'] = (camera_params['CAMPOSY'], '[kpc] Y position of camera        ')
-            camera.header['CAMPOSZ'] = (camera_params['CAMPOSZ'], '[kpc] Z position of camera        ')
-            camera.header['CAMDIRX'] = (camera_params['CAMDIRX'], '[kpc] X comp of camera viewing dir')
-            camera.header['CAMDIRY'] = (camera_params['CAMDIRY'], '[kpc] Y comp of camera viewing dir')
-            camera.header['CAMDIRZ'] = (camera_params['CAMDIRZ'], '[kpc] Z comp of camera viewing dir')
-            camera.header['CAMUPX']  = (camera_params['CAMUPX'] , '[kpc] X comp of camera Y axis dir ')
-            camera.header['CAMUPY']  = (camera_params['CAMUPY'] , '[kpc] Y comp of camera Y axis dir ')
-            camera.header['CAMUPZ']  = (camera_params['CAMUPZ'] , '[kpc] Z comp of camera Y axis dir ')
-            camera.header['linear_fov'] = (camera_params['linear_fov'], '[kpc] Linear field of view in y-dir at origin') 
+        #add the velocity and lambda arrays in the first header
+        cols = fits.ColDefs([fits.Column(name='velocity', format = 'D',array=vel_arr, unit = 'km/s'), 
+                             fits.Column(name='lambda', format = 'D', array=lam, unit = 'm')])
+        colhdr = fits.Header()
+        master_hdulist.append(fits.BinTableHDU.from_columns(cols, name = 'props', header = colhdr))
 
 
-        kmap = kin_map(camera.data, camera.header, vel_arr, lam,  cam_n, scale)
-        print 'Generating intrinsic kinematic map'
-        kmap.generate_intrinsic_kin_map()
+        #run kinematic fitting routine for all cameras
+        #for cam_n in array([7, 18]):#arange(7,8): #testing
+        for cam_n in arange(ncams):
+            np.random.seed()
+            print '\n\n\n\t\t Running on (%s, %.3f, %i)'%(gal, scale, cam_n)
+            camera = mcrx_data['CAMERA%i'%(cam_n)]   
+            camera_params =  mcrx_data['CAMERA%i-PARAMETERS'%(cam_n)].header
+            if True:
+                camera.header['z'] = (round(1./scale - 1,4), 'redshift (w/ %s)'%cosmo.name)
+                camera.header['ascale'] = (scale, 'scale factor')
+                camera.header['camera'] = (cam_n, 'camera')
 
-        print 'linear fov', kmap.cube_hdr['linear_fov']
-        npix_new = ceil((kmap.cube_hdr['linear_fov']*cosmo.arcsec_per_kpc_proper(2).value)/arc_per_pixel/2.)*2.
-        kmap.rebin_and_dim([npix_new, npix_new])
-        kmap.generate_blurred_map(kernel_size_arc = 0.70/2.35) #jwst
-        #kmap.generate_blurred_map(kernel_size_arc = 0.05/2.35)
-            
 
-        kmap.generate_observed_kin_map()
-        master_hdulist = kmap.get_hdulist(master_hdulist)
+                camera.header['cameradist'] = (camera_params['cameradist'], '[kpc] Distance from origin to camera')
+                camera.header['theta'] = (camera_params['theta'], '[rad] Angular coordinate theta of camera positi')
+                camera.header['phi']   = (camera_params['phi'], '[rad] Angular coordinate phi of camera position')
 
-    #Save the fits file
-    thdulist = fits.HDUList(master_hdulist)
-    print '\tSaving to ' + outdir+'/'+kmap_name
-    thdulist.writeto(outdir+'/'+kmap_name, clobber = True)
+                camera.header['CAMPOSX'] = (camera_params['CAMPOSX'], '[kpc] X position of camera        ')
+                camera.header['CAMPOSY'] = (camera_params['CAMPOSY'], '[kpc] Y position of camera        ')
+                camera.header['CAMPOSZ'] = (camera_params['CAMPOSZ'], '[kpc] Z position of camera        ')
+                camera.header['CAMDIRX'] = (camera_params['CAMDIRX'], '[kpc] X comp of camera viewing dir')
+                camera.header['CAMDIRY'] = (camera_params['CAMDIRY'], '[kpc] Y comp of camera viewing dir')
+                camera.header['CAMDIRZ'] = (camera_params['CAMDIRZ'], '[kpc] Z comp of camera viewing dir')
+                camera.header['CAMUPX']  = (camera_params['CAMUPX'] , '[kpc] X comp of camera Y axis dir ')
+                camera.header['CAMUPY']  = (camera_params['CAMUPY'] , '[kpc] Y comp of camera Y axis dir ')
+                camera.header['CAMUPZ']  = (camera_params['CAMUPZ'] , '[kpc] Z comp of camera Y axis dir ')
+                camera.header['linear_fov'] = (camera_params['linear_fov'], '[kpc] Linear field of view in y-dir at origin') 
 
+
+            kmap = kin_map(camera.data, camera.header, vel_arr, lam,  cam_n, scale)
+            print 'Generating intrinsic kinematic map'
+            kmap.generate_intrinsic_kin_map()
+
+            print 'linear fov', kmap.cube_hdr['linear_fov']
+            npix_new = ceil((kmap.cube_hdr['linear_fov']*cosmo.arcsec_per_kpc_proper(2).value)/arc_per_pixel/2.)*2.
+            kmap.rebin_and_dim([npix_new, npix_new])
+            kmap.generate_blurred_map(kernel_size_arc = 0.70/2.35) #jwst
+            #kmap.generate_blurred_map(kernel_size_arc = 0.05/2.35)
+                
+
+            kmap.generate_observed_kin_map()
+            master_hdulist = kmap.get_hdulist(master_hdulist)
+
+        #Save the fits file
+        thdulist = fits.HDUList(master_hdulist)
+        print '\tSaving to ' + outdir+'/'+kmap_name
+        thdulist.writeto(outdir+'/'+kmap_name, clobber = True)
+    except:
+        print 'broken mcrx.fits.gz file'
 
 
 
