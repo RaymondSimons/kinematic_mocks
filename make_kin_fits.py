@@ -307,7 +307,7 @@ class kin_map():
         return master_hdulist
 
 
-def run_kin_fits(abspath, scale, kmap_name, gal, outdir, mcrx_data, arc_per_pixel = 0.2):# testing #jwst
+def run_kin_fits(abspath, scale, kmap_name, gal, outdir, arc_per_pixel = 0.2):# testing #jwst
 #def run_kin_fits(abspath, scale, kmap_name, gal, outdir, arc_per_pixel = 0.2):
 
     #setting constants
@@ -316,7 +316,7 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir, mcrx_data, arc_per_pixe
 
     #reading in data
     #print '\tReading in mcrx file for (%s, %.3f)'%(gal, scale)
-    #mcrx_data = fits.open(abspath) #testing
+    mcrx_data = fits.open(abspath) #testing
 
     #reading number of cameras
     ncams = mcrx_data['MCRX'].header['N_CAMERA']
