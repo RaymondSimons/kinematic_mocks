@@ -316,7 +316,7 @@ def run_kin_fits(abspath, scale, kmap_name, gal, outdir, arc_per_pixel = 0.2):# 
 
     #reading in data
     #print '\tReading in mcrx file for (%s, %.3f)'%(gal, scale)
-    print '\n\n\n\t\t Opening mcrx.fits file for on (%s, %.3f, %i)'%(gal, scale, cam_n)
+    print '\n\n\n\t Opening mcrx.fits file for on (%s, %.3f)'%(gal, scale)
 
     try:
         mcrx_data = fits.open(abspath) #testing
