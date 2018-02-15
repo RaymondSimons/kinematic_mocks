@@ -20,7 +20,7 @@ def parse():
 if __name__ == "__main__":
     args = parse()
     if args['gal'] is not None: gal = args['gal']
-    else: gal = 'VELA28'
+    else: gal = 'VELA20'
 
     qsub_direct = '/nobackupp2/rcsimons/tracers/simple_kmaps/qsub'
     fsh = open(qsub_direct+'/'+gal+'_submit_simplekmaps.sh', 'w+')
