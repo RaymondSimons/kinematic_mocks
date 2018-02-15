@@ -22,7 +22,7 @@ if __name__ == "__main__":
     if args['gal'] is not None: gal = args['gal']
     else: gal = 'VELA28'
 
-    qsub_direct = '/nobackupp2/rcsimons/simple_kmaps/qsub'
+    qsub_direct = '/nobackupp2/rcsimons/tracers/simple_kmaps/qsub'
     fsh = open(qsub_direct+'/'+gal+'_submit_simplekmaps.sh', 'w+')
 
     snaps = np.asarray(glob.glob("/nobackupp2/gfsnyder/VELA_sunrise/Runs/VELA_v2/%s/*.d"%gal))
@@ -46,8 +46,8 @@ if __name__ == "__main__":
 
         f.write('cd /nobackupp2/gfsnyder/VELA_sunrise/Runs/VELA_v2/%s\n'%gal)
         f.write('python /u/rcsimons/scripts/kinematic_mocks/make_simple_kin_maps.py %s> \
-                /nobackupp2/rcsimons/simple_kmaps/qsub/out_err/%s_%s.out 2> \
-                /nobackupp2/rcsimons/simple_kmaps/qsub/out_err/%s_%s.err\n\n\n'%(dname, gal, aname, gal, aname))
+                /nobackupp2/rcsimons/tracers/simple_kmaps/qsub/out_err/%s_%s.out 2> \
+                /nobackupp2/rcsimons/tracers/simple_kmaps/qsub/out_err/%s_%s.err\n\n\n'%(dname, gal, aname, gal, aname))
 
         f.close()
 
