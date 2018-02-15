@@ -23,8 +23,8 @@ if __name__ == "__main__":
     else: gal = 'VELA20'
     print gal
 
-    
-    '''
+
+
     qsub_direct = '/nobackupp2/rcsimons/tracers/simple_kmaps/qsub'
     fsh = open(qsub_direct+'/'+gal+'_submit_simplekmaps.sh', 'w+')
 
@@ -55,7 +55,7 @@ if __name__ == "__main__":
         f.close()
 
     fsh.close()
-    '''
+
 
 
 
