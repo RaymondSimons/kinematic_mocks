@@ -133,10 +133,6 @@ def build_vel_maps(min_x, max_x, im_size, fact, vel_los, Lbol, weights_all, y1_1
                 vel_map[i,j], disp_map[i,j] = weighted_avg_and_std(vel_los[good], weights_all[good]) #weight by Lbol
     return vel_map, disp_map, L_map
 
-
-
-
-
 class camera:
     ###This class has been adopted from Greg Snyder
 
@@ -200,7 +196,6 @@ class camera:
 
         return y1,y2
 
-
 def make_maps(mass, x_pos, y_pos, z_pos, vel_x, vel_y, vel_z, im_size, max_x, min_x, camobj_1, star_age = None, star_age_min = 0., star_age_max = 2.e7, gas_temp = None):
 
     rad_pos = sqrt(x_pos**2.+y_pos**2.+z_pos**2.)
@@ -234,10 +229,7 @@ def make_maps(mass, x_pos, y_pos, z_pos, vel_x, vel_y, vel_z, im_size, max_x, mi
                                                                       y1_1 = y1_1, y2_1 = y2_1)
     return vel_los, vel_map, disp_map
 
-
-
 snaps = [['/Volumes/wd/vela_v2/tracers/data/10MpcBox_csf512_a0.370.d', 'VELA_v2_20']]
-
 
 define read_data(snap_file, gal):
     ds = yt.load(snap_file)
@@ -323,7 +315,10 @@ define read_data(snap_file, gal):
 
 
 
-define make_simple_kmaps(scale, simname, scale, cam_n):
+define make_simple_kmaps(simname, scale, cam_n):
+    rad_min = 0
+    rad_max = 50.
+
     nir_cat_name = simname[0:-2]+'_v2_'+simname[-2:]
     nir_cat = np.loadtxt('/nobackupp2/rcsimons/catalogs/nir_catalogs/GEN3/'+nir_cat_name+'/galaxy_catalogue/Nir_simplified_disc_cat.txt', skiprows = 1, dtype='str')
     nir_disc_cat = np.loadtxt('/nobackupp2/rcsimons/catalogs/nir_catalogs/GEN3/'+nir_cat_name+'/galaxy_catalogue/Nir_disc_cat.txt', skiprows = 1, dtype='str')
@@ -401,6 +396,8 @@ define make_simple_kmaps(scale, simname, scale, cam_n):
     write_fits('../fits/%s.fits'%gal_name, gal_name, kmaps)
 
 
+
+
 if __name__ == "__main__":
 
     args = parse()
@@ -419,16 +416,13 @@ if __name__ == "__main__":
 
 
 
-    rad_min = 0
-    rad_max = 50.
-    gals = ['VELA%.2i'%(i+1) for i in np.arange(35)]
-
-
-    Parallel(n_jobs = -1, backend = 'threading')(delayed(make_simple_kmaps)(scale, simname) for scale in scales)
 
 
 
+    Parallel(n_jobs = -1, backend = 'threading')(delayed(make_simple_kmaps)(scale, simname) for cam in cams)
 
+
+    combine_fits()
 
 
 
